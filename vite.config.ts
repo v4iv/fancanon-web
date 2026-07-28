@@ -1,8 +1,8 @@
+import { defineConfig } from 'vite'
 import { mdsvex } from 'mdsvex'
 import tailwindcss from '@tailwindcss/vite'
-import adapter from '@sveltejs/adapter-cloudflare'
 import { sveltekit } from '@sveltejs/kit/vite'
-import { defineConfig } from 'vite'
+import adapter from '@sveltejs/adapter-cloudflare'
 
 export default defineConfig({
   plugins: [
@@ -15,10 +15,13 @@ export default defineConfig({
         experimental: { async: true },
       },
       adapter: adapter(),
+      alias: {
+        $lib: './src/lib',
+      },
       preprocess: [mdsvex({ extensions: ['.svx', '.md'] })],
       extensions: ['.svelte', '.svx', '.md'],
+      inlineStyleThreshold: Infinity,
       experimental: { remoteFunctions: true },
-      inlineStyleThreshold: 10000,
     }),
   ],
 })
