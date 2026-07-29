@@ -13,6 +13,6 @@
   <meta name="description" content="The Ultimate Fanfiction Platform" />
 </svelte:head>
 
-<ModeWatcher />
+<ModeWatcher themeColors={{ dark: '#042F2E', light: '#134E4A' }} />
 
 {@render children()}
