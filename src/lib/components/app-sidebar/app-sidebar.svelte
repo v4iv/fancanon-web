@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { browser } from '$app/env'
   import type { ComponentProps } from 'svelte'
   import {
     BookmarkIcon,
@@ -7,6 +8,7 @@
     CrownIcon,
     HouseIcon,
     NewspaperIcon,
+    OrbitIcon,
   } from '@lucide/svelte'
 
   import { CATEGORIES, LINKS } from '$lib/constants'
@@ -25,7 +27,9 @@
   const media = useMedia()
   const sidebar = Sidebar.useSidebar()
 
-  sidebar.setOpen(media['lg'] || media['xl'] || media['2xl'])
+  if (browser) {
+    sidebar.setOpen(media['lg'] || media['xl'] || media['2xl'])
+  }
 </script>
 
 <Sidebar.Root bind:ref {collapsible} {...restProps}>
@@ -49,6 +53,39 @@
               <a href="/" {...props}>
                 <NewspaperIcon class="size-5" />
                 <span>Feed</span>
+              </a>
+            {/snippet}
+          </Sidebar.MenuButton>
+        </Sidebar.MenuItem>
+
+        <Sidebar.MenuItem>
+          <Sidebar.MenuButton tooltipContent="Crossovers">
+            {#snippet child({ props })}
+              <a href="/" {...props}>
+                <OrbitIcon class="size-5" />
+                <span>Crossovers</span>
+              </a>
+            {/snippet}
+          </Sidebar.MenuButton>
+        </Sidebar.MenuItem>
+
+        <Sidebar.MenuItem>
+          <Sidebar.MenuButton tooltipContent="Bookmarks">
+            {#snippet child({ props })}
+              <a href="/" {...props}>
+                <BookmarkIcon class="size-5" />
+                <span>Bookmarks</span>
+              </a>
+            {/snippet}
+          </Sidebar.MenuButton>
+        </Sidebar.MenuItem>
+
+        <Sidebar.MenuItem>
+          <Sidebar.MenuButton tooltipContent="Reading List">
+            {#snippet child({ props })}
+              <a href="/" {...props}>
+                <ClockIcon class="size-5" />
+                <span>Reading List</span>
               </a>
             {/snippet}
           </Sidebar.MenuButton>
@@ -87,28 +124,6 @@
             </Sidebar.MenuItem>
           {/snippet}
         </Collapsible.Root>
-
-        <Sidebar.MenuItem>
-          <Sidebar.MenuButton tooltipContent="Bookmarks">
-            {#snippet child({ props })}
-              <a href="/" {...props}>
-                <BookmarkIcon class="size-5" />
-                <span>Bookmarks</span>
-              </a>
-            {/snippet}
-          </Sidebar.MenuButton>
-        </Sidebar.MenuItem>
-
-        <Sidebar.MenuItem>
-          <Sidebar.MenuButton tooltipContent="Reading List">
-            {#snippet child({ props })}
-              <a href="/" {...props}>
-                <ClockIcon class="size-5" />
-                <span>Reading List</span>
-              </a>
-            {/snippet}
-          </Sidebar.MenuButton>
-        </Sidebar.MenuItem>
       </Sidebar.Menu>
     </Sidebar.Group>
     <Sidebar.Group />
