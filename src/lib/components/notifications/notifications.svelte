@@ -1,6 +1,7 @@
 <script lang="ts">
   import { BellIcon } from '@lucide/svelte'
 
+  import { m } from '$lib/paraglide/messages.js'
   import { buttonVariants } from '$lib/components/ui/button'
   import * as Popover from '$lib/components/ui/popover'
 </script>
@@ -13,13 +14,13 @@
       <circle r="3" cx="21" cy="5" stroke="none" fill="#F56565" />
     </BellIcon>
 
-    <span class="sr-only">notifications</span>
+    <span class="sr-only">{m['navbar.notifications']()}</span>
   </Popover.Trigger>
 
   <Popover.Content align="end" class="h-96 w-sm">
     <div class="space-y-4">
       <div class="space-y-2">
-        <h4 class="text-sm font-semibold">Notifications</h4>
+        <h4 class="text-sm font-semibold">{m['navbar.notifications']()}</h4>
         <p class="text-xs text-muted-foreground">You have no new notifications</p>
       </div>
       <div class="max-h-80 space-y-3 overflow-y-auto"></div>

@@ -1,11 +1,11 @@
 <script lang="ts">
+  import './layout.css'
+  import type { LayoutProps } from './$types'
   import type { Pathname } from '$app/types'
   import { resolve } from '$app/paths'
   import { page } from '$app/state'
-  import { locales, localizeHref } from '$lib/paraglide/runtime'
-  import './layout.css'
-  import type { LayoutProps } from './$types'
   import { ModeWatcher } from 'mode-watcher'
+  import { locales, localizeHref } from '$lib/paraglide/runtime'
 
   const { children }: LayoutProps = $props()
 </script>
