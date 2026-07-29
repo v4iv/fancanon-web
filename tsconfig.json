@@ -12,6 +12,8 @@
     "strict": true,
     "moduleResolution": "bundler",
     "types": [
+      "$app/types",
+      "./drizzle.config.ts",
       "./src/worker-configuration.d.ts",
       "./worker-configuration.d.ts",
       "node"
