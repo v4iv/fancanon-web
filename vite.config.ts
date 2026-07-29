@@ -1,3 +1,4 @@
+import { paraglideVitePlugin } from '@inlang/paraglide-js'
 import { defineConfig } from 'vite'
 import { mdsvex } from 'mdsvex'
 import tailwindcss from '@tailwindcss/vite'
@@ -15,15 +16,17 @@ export default defineConfig({
         experimental: { async: true },
       },
       adapter: adapter(),
-      alias: {
-        $lib: './src/lib',
-      },
+      alias: { $lib: './src/lib' },
       preprocess: [mdsvex({ extensions: ['.svx', '.md'] })],
       extensions: ['.svelte', '.svx', '.md'],
       inlineStyleThreshold: Infinity,
-      experimental: {
-        remoteFunctions: false,
-      },
+      experimental: { remoteFunctions: false },
+    }),
+
+    paraglideVitePlugin({
+      project: './project.inlang',
+      outdir: './src/lib/paraglide',
+      emitTsDeclarations: true,
     }),
   ],
 })

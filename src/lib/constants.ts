@@ -43,27 +43,27 @@ export const CATEGORIES = [
 
 export const LINKS = [
   {
-    href: '/faqs',
+    href: 'faqs',
     label: 'FAQs',
   },
   {
-    href: '/roadmap',
+    href: 'roadmap',
     label: 'Roadmap',
   },
   {
-    href: '/privacy-policy',
+    href: 'privacy-policy',
     label: 'Privacy Policy',
   },
   {
-    href: '/terms-and-conditions',
+    href: 'terms-and-conditions',
     label: 'Terms & Conditions',
   },
   {
-    href: '/content-policy',
+    href: 'content-policy',
     label: 'Content Policy',
   },
   {
-    href: '/licenses',
+    href: 'licenses',
     label: 'Licenses',
   },
 ]

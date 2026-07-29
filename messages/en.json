@@ -1,0 +1,57 @@
+{
+  "$schema": "https://inlang.com/schema/inlang_message_format",
+  "app-name": "fancanon",
+  "navbar": {
+    "sidebar-toggle": "Sidebar Toggle",
+    "search-placeholder": "Search...",
+    "search-label": "Search",
+    "create": "Create",
+    "new-story": "New Story",
+    "add-chapter": "Add Chapter",
+    "theme-switcher": "Switch Themes",
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System",
+    "notifications": "Notifications",
+    "user-options": "User Options",
+    "user-menu": "User Menu",
+    "sign-in": "Sign In",
+    "sign-up": "Sign Up",
+    "home": "Home",
+    "categories": "Categories",
+    "feed": "Feed"
+  },
+  "sidebar": {
+    "home": "Home",
+    "feed": "Feed",
+    "crossovers": "Crossovers",
+    "bookmarks": "Bookmarks",
+    "reading-lists": "Reading List",
+    "categories": "Categories"
+  },
+  "footer": {
+    "copyright": "© {year} fancanon",
+    "faqs": "FAQs",
+    "roadmap": "Roadmap",
+    "privacy-policy": "Privacy Policy",
+    "terms-and-conditions": "Terms & Conditions",
+    "content-policy": "Content Policy",
+    "licenses": "Licenses"
+  },
+  "categories": {
+    "anime-manga": "Anime/Manga",
+    "books": "Books",
+    "cartoons": "Cartoons",
+    "comics": "Comics",
+    "video-games": "Video Games",
+    "movies-tv": "Movies/TV",
+    "music": "Music",
+    "plays": "Plays",
+    "podcasts": "Podcasts",
+    "others": "Others"
+  },
+  "hero": {
+    "title": "Welcome to",
+    "subtitle": "Discover amazing stories from your favorite fandoms"
+  }
+}

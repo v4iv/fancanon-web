@@ -2,6 +2,7 @@
   import SunIcon from '@lucide/svelte/icons/sun'
   import MoonIcon from '@lucide/svelte/icons/moon'
 
+  import { m } from '$lib/paraglide/messages.js'
   import { resetMode, setMode } from 'mode-watcher'
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js'
   import { buttonVariants } from '$lib/components/ui/button/index.js'
@@ -15,14 +16,14 @@
     <MoonIcon
       class="absolute size-5 scale-0 rotate-90 transition-all! dark:scale-100 dark:rotate-0"
     />
-    <span class="sr-only">Toggle theme</span>
+    <span class="sr-only">{m['navbar.theme-switcher']()}</span>
   </DropdownMenu.Trigger>
 
   <DropdownMenu.Content align="end">
-    <DropdownMenu.Item onclick={() => setMode('light')}>Light</DropdownMenu.Item>
+    <DropdownMenu.Item onclick={() => setMode('light')}>{m['navbar.light']()}</DropdownMenu.Item>
 
-    <DropdownMenu.Item onclick={() => setMode('dark')}>Dark</DropdownMenu.Item>
+    <DropdownMenu.Item onclick={() => setMode('dark')}>{m['navbar.dark']()}</DropdownMenu.Item>
 
-    <DropdownMenu.Item onclick={() => resetMode()}>System</DropdownMenu.Item>
+    <DropdownMenu.Item onclick={() => resetMode()}>{m['navbar.system']()}</DropdownMenu.Item>
   </DropdownMenu.Content>
 </DropdownMenu.Root>

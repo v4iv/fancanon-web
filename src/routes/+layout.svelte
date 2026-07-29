@@ -1,7 +1,10 @@
 <script lang="ts">
+  import type { Pathname } from '$app/types'
+  import { resolve } from '$app/paths'
+  import { page } from '$app/state'
+  import { locales, localizeHref } from '$lib/paraglide/runtime'
   import './layout.css'
   import type { LayoutProps } from './$types'
-
   import { ModeWatcher } from 'mode-watcher'
 
   const { children }: LayoutProps = $props()
@@ -10,9 +13,16 @@
 <svelte:head>
   <link rel="icon" href="/favicon.svg" />
   <title>fancanon</title>
+
   <meta name="description" content="The Ultimate Fanfiction Platform" />
 </svelte:head>
 
 <ModeWatcher themeColors={{ dark: '#042F2E', light: '#134E4A' }} />
 
 {@render children()}
+
+<div style="display:none">
+  {#each locales as locale (locale)}
+    <a href={resolve(localizeHref(page.url.pathname, { locale }) as Pathname)}>{locale}</a>
+  {/each}
+</div>

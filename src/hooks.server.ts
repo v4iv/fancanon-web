@@ -1,7 +1,9 @@
+import { sequence } from '@sveltejs/kit/hooks'
+import { getTextDirection } from '$lib/paraglide/runtime'
+import { paraglideMiddleware } from '$lib/paraglide/server'
 import type { Handle } from '@sveltejs/kit'
 import { svelteKitHandler } from 'better-auth/svelte-kit'
 import { building } from '$app/env'
-
 import { auth } from '$lib/server/auth'
 
 const handleBetterAuth: Handle = async ({ event, resolve }) => {
@@ -15,4 +17,16 @@ const handleBetterAuth: Handle = async ({ event, resolve }) => {
   return svelteKitHandler({ event, resolve, auth, building })
 }
 
-export const handle: Handle = handleBetterAuth
+const handleParaglide: Handle = ({ event, resolve }) =>
+  paraglideMiddleware(event.request, ({ request, locale }) => {
+    event.request = request
+
+    return resolve(event, {
+      transformPageChunk: ({ html }) =>
+        html
+          .replace('%paraglide.lang%', locale)
+          .replace('%paraglide.dir%', getTextDirection(locale)),
+    })
+  })
+
+export const handle: Handle = sequence(handleBetterAuth, handleParaglide)

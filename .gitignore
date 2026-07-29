@@ -29,5 +29,7 @@ vite.config.ts.timestamp-*
 .idea/
 .vscode/
 
-# Prisma
-src/lib/generated
+# Paraglide
+src/lib/paraglide
+project.inlang/cache/
+.lazyi18n/

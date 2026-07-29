@@ -1,6 +1,14 @@
 <script lang="ts">
-  import { PlusIcon, MenuIcon, SearchIcon, UserRoundIcon } from '@lucide/svelte'
+  import {
+    PlusIcon,
+    MenuIcon,
+    LogInIcon,
+    SearchIcon,
+    UserRoundIcon,
+    UserRoundPlusIcon,
+  } from '@lucide/svelte'
 
+  import { m } from '$lib/paraglide/messages.js'
   import { useSidebar } from '$lib/components/ui/sidebar'
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu'
   import * as Sheet from '$lib/components/ui/sheet'
@@ -19,7 +27,7 @@
   <div class="hidden shrink-0 md:flex">
     <Button variant="ghost" size="icon-lg" onclick={() => sidebar.toggle()}>
       <MenuIcon class="size-5" />
-      <span class="sr-only">sidebar toggle</span>
+      <span class="sr-only">{m['navbar.sidebar-toggle']()}</span>
     </Button>
   </div>
 
@@ -27,11 +35,11 @@
   <div class="flex shrink-0 items-center gap-1">
     <a href="/" class="p-2">
       <img src="/logo.svg" alt="fancanon logo that links to home" width={24} height={24} />
-      <span class="sr-only">fancanon home</span>
+      <span class="sr-only">{m['app-name']()}</span>
     </a>
 
     <a href="/" class="hidden md:block">
-      <span class="text-2xl font-thin tracking-wider">fancanon</span>
+      <span class="text-2xl font-thin tracking-wider">{m['app-name']()}</span>
     </a>
   </div>
 
@@ -48,18 +56,18 @@
       <DropdownMenu.Root>
         <DropdownMenu.Trigger class={buttonVariants({ variant: 'outline', class: 'rounded-full' })}>
           <PlusIcon class="size-4" />
-          Create
+          {m['navbar.create']()}
         </DropdownMenu.Trigger>
 
         <DropdownMenu.Content align="end" class="w-full">
           <DropdownMenu.Item>
             <PlusIcon />
-            <a href="/" class="w-full">New Story</a>
+            <a href="/" class="w-full">{m['navbar.new-story']()}</a>
           </DropdownMenu.Item>
 
           <DropdownMenu.Item class="cursor-pointer">
             <PlusIcon />
-            <a href="/" class="w-full">Add Chapter</a>
+            <a href="/" class="w-full">{m['navbar.add-chapter']()}</a>
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Root>
@@ -74,7 +82,7 @@
         })}
       >
         <SearchIcon class="size-5" />
-        <span class="sr-only">Search</span>
+        <span class="sr-only">{m['navbar.search-label']()}</span>
       </Sheet.Trigger>
 
       <Sheet.Content side="top">
@@ -98,16 +106,18 @@
         })}
       >
         <UserRoundIcon class="size-5" />
-        <span class="sr-only">user menu</span>
+        <span class="sr-only">{m['navbar.user-menu']()}</span>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content align="end" class="w-full">
         <DropdownMenu.Item>
-          <a href="/" class="w-full">Sign In</a>
+          <LogInIcon />
+          <a href="/" class="w-full">{m['navbar.sign-in']()}</a>
         </DropdownMenu.Item>
 
         <DropdownMenu.Item class="cursor-pointer">
-          <a href="/" class="w-full">Sign Up</a>
+          <UserRoundPlusIcon />
+          <a href="/" class="w-full">{m['navbar.sign-up']()}</a>
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
