@@ -1,6 +1,8 @@
 {
   "$schema": "https://inlang.com/schema/inlang_message_format",
   "app-name": "fancanon",
+  "title": "fancanon",
+  "description": "The Ultimate Fan Fiction Platform.",
   "navbar": {
     "sidebar-toggle": "Sidebar Toggle",
     "search-placeholder": "Search...",
@@ -55,12 +57,18 @@
     "others": "Others"
   },
   "home-page": {
+    "title": "Home | fancanon",
+    "description": "The Ultimate Fan Fiction Platform.",
     "hero-title": "Welcome to",
     "hero-subtitle": "Discover amazing stories from your favorite fandoms"
   },
   "sign-up-page": {
-    "title": "Create Your Account",
-    "subtitle": "Enter your information to get started.",
+    "title": "Sign Up | fancanon",
+    "description": "The Ultimate Fan Fiction Platform.",
+    "heading": "Create Your Account",
+    "subheading": "Sign Up using your Google Account",
+    "sign-up-with-google": "Sign Up with Google",
+    "or": "Or continue with",
     "name": "Name",
     "name-placeholder": "John Smith",
     "username": "Username",
@@ -80,15 +88,17 @@
     "privacy-policy": "Privacy Policy"
   },
   "sign-in-page": {
+    "title": "Sign In | fancanon",
+    "description": "The Ultimate Fan Fiction Platform.",
+    "heading": "Welcome Back",
+    "subheading": "Login with your Google account",
+    "or": "Or continue with",
     "email": "Email",
     "email-placeholder": "johnsmith94@example.com",
     "password": "Password",
     "no-account": "Don't have an account?",
     "sign-up": "Sign Up",
-    "title": "Welcome Back",
     "submit": "Sign In",
-    "subtitle": "Login with your Google account",
-    "or": "Or continue with",
     "forgot-password": "Forgot your password?",
     "consent-statement": "By clicking on Sign In, you agree to our",
     "terms-and-conditions": "Terms and Condtions",
@@ -96,5 +106,46 @@
     "sign-in-with-google": "Sign In with Google",
     "email-unverified": "Email not verified",
     "verification-mail-indication": "Please verify your email and try again. We have sent you a verification mail in your inbox."
+  },
+  "forgot-password-page": {
+    "title": "Forgot Password | fancanon",
+    "description": "The Ultimate Fan Fiction Platform."
+  },
+  "reset-password-page": {
+    "title": "Reset Your Password | fancanon",
+    "description": "The Ultimate Fan Fiction Platform."
+  },
+  "pending-verification-page": {
+    "title": "Verify Your Email | fancanon",
+    "description": "The Ultimate Fan Fiction Platform.",
+    "confirm-your-email": "Confirm Your Email",
+    "check-inbox": "Check your inbox to activate your account. We sent a verification link to {email}.",
+    "did-not-recieve": "If you haven't recieved the email —",
+    "resend-timer": "Resend email in {countdown}s",
+    "resend-button": "Resend Confirmation Email",
+    "sending": "Sending...",
+    "contact-support": "Contact Support",
+    "no-account": "Don't have an account?",
+    "sign-up": "Sign up here"
+  },
+  "tnc-page": {
+    "title": "Terms and Conditions | fancanon",
+    "description": "The Ultimate Fan Fiction Platform."
+  },
+  "privacy-policy-page": {
+    "title": "Privacy Policy | fancanon",
+    "description": "The Ultimate Fan Fiction Platform."
+  },
+  "content-policy-page": {
+    "title": "Content Policy | fancanon",
+    "description": "The Ultimate Fan Fiction Platform."
+  },
+  "faqs-page": {
+    "title": "FAQs | fancanon",
+    "description": "The Ultimate Fan Fiction Platform."
+  },
+  "roadmap-page": {
+    "title": "Roadmap | fancanon",
+    "description": "The Ultimate Fan Fiction Platform."
   }
 }

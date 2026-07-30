@@ -23,7 +23,7 @@
 
 <Helmet title={`${data.frontmatter.title} | fancanon`} />
 
-<main class="min-h-screen">
+<div class="min-h-screen">
   <div class="mx-auto mb-10 flex w-full max-w-screen-md flex-col gap-5 px-2 py-10">
     <header class="flex flex-col gap-4">
       <h1 class="font-heading text-3xl md:text-5xl">{data.frontmatter.title}</h1>
@@ -41,4 +41,4 @@
       <data.content />
     </Prose>
   </div>
-</main>
+</div>

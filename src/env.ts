@@ -15,4 +15,7 @@ export const variables = defineEnvVars({
   GOOGLE_CLIENT_SECRET: {
     description: 'Google client secret',
   },
+  RESEND_API_KEY: {
+    description: 'Resend API key',
+  },
 })

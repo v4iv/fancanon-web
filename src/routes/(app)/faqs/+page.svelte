@@ -9,7 +9,7 @@
 
 <Helmet title={`${data.frontmatter.title} | fancanon`} />
 
-<main class="min-h-screen">
+<div class="min-h-screen">
   <div class="border-b">
     <header class="mx-auto w-full max-w-screen-lg space-y-3 px-2 py-10">
       <h1 class="font-heading text-3xl md:text-5xl">{data.frontmatter.title}</h1>
@@ -27,4 +27,4 @@
       {/each}
     </Accordion.Root>
   </div>
-</main>
+</div>

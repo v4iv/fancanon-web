@@ -6,7 +6,7 @@
   import { SignUpForm } from '$lib/components/forms/sign-up-form'
 </script>
 
-<Helmet title="Sign Up | fancanon" />
+<Helmet title={m['sign-up-page.title']()} />
 
 <div class="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
   <div class="flex w-full max-w-sm flex-col gap-6">
@@ -20,9 +20,9 @@
     <div class="flex flex-col gap-6">
       <Card.Root>
         <Card.Header class="text-center">
-          <Card.Title class="text-xl">{m['sign-up-page.title']()}</Card.Title>
+          <Card.Title class="text-xl">{m['sign-up-page.heading']()}</Card.Title>
 
-          <Card.Description>{m['sign-up-page.subtitle']()}</Card.Description>
+          <Card.Description>{m['sign-up-page.subheading']()}</Card.Description>
         </Card.Header>
 
         <Card.Content>

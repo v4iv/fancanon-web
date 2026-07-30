@@ -12,7 +12,9 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { customSession, username } from 'better-auth/plugins'
 
 import { db } from '$lib/server/db'
+import { resend } from '$lib/resend'
 import { RESTRICTED_USERNAMES } from '$lib/constants'
+import { resetPasswordTemplate, verifyEmailTemplate } from '$lib/email'
 
 const options = {
   baseURL: ORIGIN,
@@ -30,19 +32,20 @@ const options = {
   },
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: false,
+    requireEmailVerification: true,
     sendResetPassword: async ({ url, user }) => {
-      console.log('\nReset Password Link: ', url)
-      // if (dev) {
-      //   console.log('\nReset Password Link: ', url)
-      // } else {
-      //   const { error } = await resend.emails.send({
-      //     from: 'fancanon <noreply@fancanon.com>',
-      //     to: user.email,
-      //     subject: 'Reset Your Password — fancanon',
-      //     html: resetPasswordTemplate(url),
-      //   })
-      // }
+      if (dev) {
+        console.log('\nReset Password Link: ', url)
+      } else {
+        const { error } = await resend.emails.send({
+          from: 'fancanon <noreply@fancanon.com>',
+          to: user.email,
+          subject: 'Reset Your Password — fancanon',
+          html: resetPasswordTemplate(url),
+        })
+
+        console.error(error)
+      }
     },
   },
   emailVerification: {
@@ -50,17 +53,18 @@ const options = {
     sendOnSignIn: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
-      console.log('\nConfirm Your Email Link: ', url)
-      // if (dev) {
-      //   console.log('\nConfirm Your Email Link: ', url)
-      // } else {
-      //   const { error } = await resend.emails.send({
-      //     from: 'fancanon <noreply@fancanon.com>',
-      //     to: user.email,
-      //     subject: 'Confirm Your Email — fancanon',
-      //     html: verifyEmailTemplate(url),
-      //   })
-      // }
+      if (dev) {
+        console.log('\nConfirm Your Email Link: ', url)
+      } else {
+        const { error } = await resend.emails.send({
+          from: 'fancanon <noreply@fancanon.com>',
+          to: user.email,
+          subject: 'Confirm Your Email — fancanon',
+          html: verifyEmailTemplate(url),
+        })
+
+        console.error(error)
+      }
     },
   },
   socialProviders: {

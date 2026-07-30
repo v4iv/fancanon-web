@@ -4,7 +4,7 @@
   import { Ripple } from '$lib/components/ripple'
 </script>
 
-<Helmet title="Home | fancanon" />
+<Helmet title={m['home-page.title']()} />
 
 <div class="min-h-screen">
   <!-- Hero -->
