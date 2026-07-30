@@ -1,0 +1,132 @@
+media: static/media
+content:
+  - name: privacy
+    label: Privacy Policy
+    type: file
+    path: src/content/en/privacy-policy.md
+    fields:
+      - name: title
+        label: Title
+        type: string
+      - name: description
+        label: Description
+        type: text
+      - name: effectiveDate
+        type: date
+        format: yyyy-MM-dd
+      - name: lastUpdateDate
+        type: date
+        format: yyyy-MM-dd
+      - name: body
+        label: Body
+        type: rich-text
+  - name: terms
+    label: Terms & Conditions
+    type: file
+    path: src/content/en/terms-and-conditions.md
+    fields:
+      - name: title
+        label: Title
+        type: string
+      - name: description
+        label: Description
+        type: text
+      - name: effectiveDate
+        type: date
+        format: yyyy-MM-dd
+      - name: lastUpdateDate
+        type: date
+        format: yyyy-MM-dd
+      - name: body
+        label: Body
+        type: rich-text
+  - name: licenses
+    label: Licenses
+    type: file
+    path: src/content/en/licenses.md
+    fields:
+      - name: title
+        label: Title
+        type: string
+      - name: description
+        label: Description
+        type: text
+      - name: body
+        label: Body
+        type: rich-text
+  - name: content-policy
+    label: Content Policy
+    type: file
+    path: src/content/en/content-policy.md
+    fields:
+      - name: title
+        label: Title
+        type: string
+      - name: description
+        label: Description
+        type: text
+      - name: effectiveDate
+        type: date
+        format: yyyy-MM-dd
+      - name: lastUpdateDate
+        type: date
+        format: yyyy-MM-dd
+      - name: body
+        label: Body
+        type: rich-text
+  - name: faqs
+    label: FAQs
+    type: file
+    path: src/content/en/faqs.md
+    fields:
+      - name: title
+        label: Title
+        type: string
+      - name: description
+        label: Description
+        type: text
+      - name: subtitle
+        label: Subtitle
+        type: string
+      - name: faqs
+        label: FAQs
+        type: object
+        list: true
+        fields:
+          - name: question
+            label: Question
+            type: text
+          - name: answer
+            label: Answer
+            type: text
+  - name: roadmap
+    label: Roadmap
+    type: file
+    path: src/content/en/roadmap.md
+    fields:
+      - name: title
+        label: Title
+        type: string
+      - name: description
+        label: Description
+        type: text
+      - name: subtitle
+        label: Subtitle
+        type: string
+      - name: step
+        label: Current Step
+        type: number
+      - name: steps
+        label: Steps
+        type: object
+        list: true
+        fields:
+          - name: step
+            label: Step Number
+            type: number
+          - name: title
+            label: Title
+            type: string
+          - name: description
+            label: Description
+            type: text
