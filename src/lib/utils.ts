@@ -1,5 +1,7 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { createId } from '@paralleldrive/cuid2'
+import { text } from 'drizzle-orm/pg-core'
 
 import { CHARACTER_COUNTED_LANGUAGES, LEETSPEAK_MAP, RESTRICTED_WORDS } from '$lib/constants'
 
@@ -41,3 +43,5 @@ export function computeWordCount(content: string, language: string): number {
     ? content.length
     : content.trim().split(/\s+/).filter(Boolean).length
 }
+
+export const cuid = (name = 'id') => text(name).$defaultFn(createId).primaryKey()

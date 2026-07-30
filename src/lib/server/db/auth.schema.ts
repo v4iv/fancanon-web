@@ -1,5 +1,21 @@
 import { relations } from 'drizzle-orm'
 import { pgTable, text, timestamp, boolean, integer, index } from 'drizzle-orm/pg-core'
+import {
+  activity,
+  bookmark,
+  category,
+  chapter,
+  comment,
+  commentLike,
+  fandom,
+  feedItem,
+  follow,
+  like,
+  notification,
+  readLater,
+  report,
+  story,
+} from '$lib/server/db/schema'
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
@@ -77,9 +93,57 @@ export const verification = pgTable(
   (table) => [index('verification_identifier_idx').on(table.identifier)],
 )
 
+/* -------------------------------------------------------------------------- */
+/*                                  Relations                                 */
+/* -------------------------------------------------------------------------- */
+
 export const userRelations = relations(user, ({ many }) => ({
+  // better-auth
   sessions: many(session),
   accounts: many(account),
+
+  // Story
+  stories: many(story),
+  chapters: many(chapter),
+  fandoms: many(fandom),
+  categories: many(category),
+
+  // Social
+  likes: many(like),
+  readLaters: many(readLater),
+  bookmarks: many(bookmark),
+  comments: many(comment),
+  commentLikes: many(commentLike),
+
+  // Follow
+  followers: many(follow, {
+    relationName: 'followers',
+  }),
+
+  following: many(follow, {
+    relationName: 'following',
+  }),
+
+  // Feed
+  feedItems: many(feedItem),
+  notifications: many(notification),
+  activityActor: many(activity, {
+    relationName: 'activity_actor',
+  }),
+  activityActorTarget: many(activity, {
+    relationName: 'activity_target',
+  }),
+
+  // Reports
+  reports: many(report, {
+    relationName: 'reports',
+  }),
+  reportsReceived: many(report, {
+    relationName: 'reports_received',
+  }),
+  reportsResolved: many(report, {
+    relationName: 'reports_resolved',
+  }),
 }))
 
 export const sessionRelations = relations(session, ({ one }) => ({
