@@ -1,5 +1,5 @@
 {
-  "extends": "$app/tsconfig",
+  "extends": "./.svelte-kit/tsconfig.json",
   "compilerOptions": {
     "rewriteRelativeImportExtensions": true,
     "allowJs": true,
@@ -10,13 +10,9 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "noImplicitAny": false,
     "moduleResolution": "bundler",
     "types": [
-      "$app/types",
-      "./src/worker-configuration.d.ts",
-      "./worker-configuration.d.ts",
-      "node"
+      "./worker-configuration.d.ts"
     ]
   }
 }

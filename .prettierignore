@@ -7,6 +7,5 @@ bun.lockb
 
 # Miscellaneous
 /static/
-src/lib/generated/
 src/lib/components/ui/
 /drizzle/

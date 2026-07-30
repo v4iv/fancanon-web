@@ -1,23 +1,35 @@
 <script lang="ts">
+  import { goto } from '$app/navigation'
   import {
     PlusIcon,
     MenuIcon,
     LogInIcon,
+    LogOutIcon,
     SearchIcon,
+    SettingsIcon,
     UserRoundIcon,
     UserRoundPlusIcon,
   } from '@lucide/svelte'
 
+  import { signOut, useSession } from '$lib/client'
   import { m } from '$lib/paraglide/messages.js'
   import { useSidebar } from '$lib/components/ui/sidebar'
+  import * as Avatar from '$lib/components/ui/avatar'
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu'
   import * as Sheet from '$lib/components/ui/sheet'
   import { Button, buttonVariants } from '$lib/components/ui/button'
+  import { Skeleton } from '$lib/components/ui/skeleton'
   import { SearchInput } from '$lib/components/navbar'
   import { ThemeSwitcher } from '$lib/components/theme-switcher'
   import { Notifications } from '$lib/components/notifications'
 
   const sidebar = useSidebar()
+  const session = useSession()
+
+  const handleSignOut = async () => {
+    await signOut()
+    goto(`/auth/sign-in`)
+  }
 </script>
 
 <header
@@ -94,32 +106,73 @@
     </Sheet.Root>
 
     <ThemeSwitcher />
+    {#if $session?.isPending}
+      <Skeleton class="size-9 rounded-full" />
+    {:else if $session.data}
+      <Notifications />
 
-    <Notifications />
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger class="rounded-full">
+          <Avatar.Root class="size-9 border">
+            <Avatar.Image src={$session.data.user?.image} alt={$session.data.user.name} />
+            <Avatar.Fallback>{$session.data.user.name[0]}</Avatar.Fallback>
 
-    <DropdownMenu.Root>
-      <DropdownMenu.Trigger
-        class={buttonVariants({
-          variant: 'outline',
-          size: 'icon-lg',
-          class: 'hidden rounded-full md:flex',
-        })}
-      >
-        <UserRoundIcon class="size-5" />
-        <span class="sr-only">{m['navbar.user-menu']()}</span>
-      </DropdownMenu.Trigger>
+            <span class="sr-only">{m['navbar.user-menu']()}</span>
+          </Avatar.Root>
+        </DropdownMenu.Trigger>
 
-      <DropdownMenu.Content align="end" class="w-full">
-        <DropdownMenu.Item>
-          <LogInIcon />
-          <a href="/" class="w-full">{m['navbar.sign-in']()}</a>
-        </DropdownMenu.Item>
+        <DropdownMenu.Content align="end" class="w-full">
+          <DropdownMenu.Label>
+            {m['navbar.hi']({ name: $session.data.user.name })}
+          </DropdownMenu.Label>
 
-        <DropdownMenu.Item class="cursor-pointer">
-          <UserRoundPlusIcon />
-          <a href="/" class="w-full">{m['navbar.sign-up']()}</a>
-        </DropdownMenu.Item>
-      </DropdownMenu.Content>
-    </DropdownMenu.Root>
+          <DropdownMenu.Separator />
+
+          <DropdownMenu.Item>
+            <UserRoundIcon />
+            <a href={`/user/${$session.data.user?.username}`} class="w-full">
+              {m['navbar.profile']()}
+            </a>
+          </DropdownMenu.Item>
+
+          <DropdownMenu.Item>
+            <SettingsIcon />
+            <a href="/settings" class="w-full">
+              {m['navbar.settings']()}
+            </a>
+          </DropdownMenu.Item>
+
+          <DropdownMenu.Item class="cursor-pointer" onclick={handleSignOut}>
+            <LogOutIcon />
+            {m['navbar.sign-out']()}
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
+    {:else}
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger
+          class={buttonVariants({
+            variant: 'outline',
+            size: 'icon-lg',
+            class: 'hidden rounded-full md:flex',
+          })}
+        >
+          <UserRoundIcon class="size-5" />
+          <span class="sr-only">{m['navbar.user-menu']()}</span>
+        </DropdownMenu.Trigger>
+
+        <DropdownMenu.Content align="end" class="w-full">
+          <DropdownMenu.Item>
+            <LogInIcon />
+            <a href="/auth/sign-in" class="w-full">{m['navbar.sign-in']()}</a>
+          </DropdownMenu.Item>
+
+          <DropdownMenu.Item class="cursor-pointer">
+            <UserRoundPlusIcon />
+            <a href="/auth/sign-up" class="w-full">{m['navbar.sign-up']()}</a>
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
+    {/if}
   </nav>
 </header>

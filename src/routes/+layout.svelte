@@ -7,11 +7,15 @@
   import { ModeWatcher } from 'mode-watcher'
   import { locales, localizeHref } from '$lib/paraglide/runtime'
 
+  import favicon from '$lib/assets/favicon.svg'
+  import { Toaster } from '$lib/components/ui/sonner'
+  import { TooltipProvider } from '$lib/components/ui/tooltip'
+
   const { children }: LayoutProps = $props()
 </script>
 
 <svelte:head>
-  <link rel="icon" href="/favicon.svg" />
+  <link rel="icon" href={favicon} />
   <title>fancanon</title>
 
   <meta name="description" content="The Ultimate Fanfiction Platform" />
@@ -19,7 +23,11 @@
 
 <ModeWatcher themeColors={{ dark: '#042F2E', light: '#134E4A' }} />
 
-{@render children()}
+<TooltipProvider>
+  {@render children()}
+</TooltipProvider>
+
+<Toaster richColors />
 
 <div style="display:none">
   {#each locales as locale (locale)}

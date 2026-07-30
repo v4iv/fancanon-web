@@ -1,10 +1,10 @@
-import { paraglideVitePlugin } from '@inlang/paraglide-js'
 import { defineConfig } from 'vite'
+import { sveltekit } from '@sveltejs/kit/vite'
 import { mdsvex } from 'mdsvex'
 import tailwindcss from '@tailwindcss/vite'
-import { sveltekit } from '@sveltejs/kit/vite'
 import adapter from '@sveltejs/adapter-cloudflare'
 import { enhancedImages } from '@sveltejs/enhanced-img'
+import { paraglideVitePlugin } from '@inlang/paraglide-js'
 
 export default defineConfig({
   plugins: [
@@ -18,11 +18,19 @@ export default defineConfig({
         experimental: { async: true },
       },
       adapter: adapter(),
-      alias: { $lib: './src/lib' },
       preprocess: [mdsvex({ extensions: ['.svx', '.md'] })],
       extensions: ['.svelte', '.svx', '.md'],
       inlineStyleThreshold: Infinity,
-      experimental: { remoteFunctions: false },
+      typescript: {
+        config: (config) => {
+          config.include.push('../drizzle.config.ts')
+        },
+      },
+      experimental: {
+        remoteFunctions: true,
+        handleRenderingErrors: true,
+        explicitEnvironmentVariables: true,
+      },
     }),
 
     paraglideVitePlugin({

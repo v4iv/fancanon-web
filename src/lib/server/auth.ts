@@ -1,6 +1,11 @@
 import { getRequestEvent } from '$app/server'
 import { dev } from '$app/env'
-import { ORIGIN, BETTER_AUTH_SECRET } from '$app/env/private'
+import {
+  ORIGIN,
+  BETTER_AUTH_SECRET,
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
+} from '$app/env/private'
 import { betterAuth, type BetterAuthOptions } from 'better-auth/minimal'
 import { sveltekitCookies } from 'better-auth/svelte-kit'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
@@ -13,7 +18,6 @@ const options = {
   baseURL: ORIGIN,
   secret: BETTER_AUTH_SECRET,
   database: drizzleAdapter(db, { provider: 'pg' }),
-  emailAndPassword: { enabled: true },
   advanced: {
     crossSubDomainCookies: {
       enabled: true,
@@ -22,6 +26,56 @@ const options = {
       sameSite: 'none',
       secure: true,
       httpOnly: true,
+    },
+  },
+  emailAndPassword: {
+    enabled: true,
+    requireEmailVerification: false,
+    sendResetPassword: async ({ url, user }) => {
+      console.log('\nReset Password Link: ', url)
+      // if (dev) {
+      //   console.log('\nReset Password Link: ', url)
+      // } else {
+      //   const { error } = await resend.emails.send({
+      //     from: 'fancanon <noreply@fancanon.com>',
+      //     to: user.email,
+      //     subject: 'Reset Your Password — fancanon',
+      //     html: resetPasswordTemplate(url),
+      //   })
+      // }
+    },
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    sendOnSignIn: true,
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      console.log('\nConfirm Your Email Link: ', url)
+      // if (dev) {
+      //   console.log('\nConfirm Your Email Link: ', url)
+      // } else {
+      //   const { error } = await resend.emails.send({
+      //     from: 'fancanon <noreply@fancanon.com>',
+      //     to: user.email,
+      //     subject: 'Confirm Your Email — fancanon',
+      //     html: verifyEmailTemplate(url),
+      //   })
+      // }
+    },
+  },
+  socialProviders: {
+    google: {
+      prompt: 'select_account consent',
+      clientId: GOOGLE_CLIENT_ID as string,
+      clientSecret: GOOGLE_CLIENT_SECRET as string,
+      accessType: 'offline',
+      // Optional: Map or manipulate incoming Google profile fields
+      mapProfileToUser: async (profile) => {
+        return {
+          // Generates a tentative username from their Google email handle
+          username: profile.email.split('@')[0],
+        }
+      },
     },
   },
   // additional fields for user

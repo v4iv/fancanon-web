@@ -9,4 +9,10 @@ export const variables = defineEnvVars({
     description:
       'Secret used to sign tokens. For production use 32 characters generated with high entropy. See [Better Auth installation](https://www.better-auth.com/docs/installation).',
   },
+  GOOGLE_CLIENT_ID: {
+    description: 'Google client ID',
+  },
+  GOOGLE_CLIENT_SECRET: {
+    description: 'Google client secret',
+  },
 })

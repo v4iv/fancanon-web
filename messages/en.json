@@ -19,7 +19,11 @@
     "sign-up": "Sign Up",
     "home": "Home",
     "categories": "Categories",
-    "feed": "Feed"
+    "feed": "Feed",
+    "hi": "Hi, {name}",
+    "profile": "Profile",
+    "settings": "Settings",
+    "sign-out": "Sign Out"
   },
   "sidebar": {
     "home": "Home",
@@ -50,8 +54,47 @@
     "podcasts": "Podcasts",
     "others": "Others"
   },
-  "hero": {
-    "title": "Welcome to",
-    "subtitle": "Discover amazing stories from your favorite fandoms"
+  "home-page": {
+    "hero-title": "Welcome to",
+    "hero-subtitle": "Discover amazing stories from your favorite fandoms"
+  },
+  "sign-up-page": {
+    "title": "Create Your Account",
+    "subtitle": "Enter your information to get started.",
+    "name": "Name",
+    "name-placeholder": "John Smith",
+    "username": "Username",
+    "username-placeholder": "eg - johnsmith94",
+    "email": "Email",
+    "email-placeholder": "eg - johnsmith94@example.com",
+    "password": "Password",
+    "confirm-password": "Confirm Password",
+    "password-directive-one": "Must be at least 8 characters long",
+    "password-directive-two": "Preferably alphanumeric with a mix of upper & lowercase alphabets",
+    "password-directive-three": "Also may contain special characters (@,!,_,- etc) for extra strength",
+    "submit": "Create Account",
+    "account-exists": "Already have an account?",
+    "sign-in": "Sign In",
+    "consent-statement": "By clicking on Create Account, you agree to our",
+    "terms-and-conditions": "Terms and Condtions",
+    "privacy-policy": "Privacy Policy"
+  },
+  "sign-in-page": {
+    "email": "Email",
+    "email-placeholder": "johnsmith94@example.com",
+    "password": "Password",
+    "no-account": "Don't have an account?",
+    "sign-up": "Sign Up",
+    "title": "Welcome Back",
+    "submit": "Sign In",
+    "subtitle": "Login with your Google account",
+    "or": "Or continue with",
+    "forgot-password": "Forgot your password?",
+    "consent-statement": "By clicking on Sign In, you agree to our",
+    "terms-and-conditions": "Terms and Condtions",
+    "privacy-policy": "Privacy Policy",
+    "sign-in-with-google": "Sign In with Google",
+    "email-unverified": "Email not verified",
+    "verification-mail-indication": "Please verify your email and try again. We have sent you a verification mail in your inbox."
   }
 }
