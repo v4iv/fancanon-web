@@ -1,5 +1,6 @@
-import { error } from '@sveltejs/kit'
 import type { PageLoad } from './$types'
+import { error } from '@sveltejs/kit'
+import { captureException } from '@sentry/sveltekit'
 
 export const prerender = true
 
@@ -10,7 +11,7 @@ export const load: PageLoad = async () => {
 
     return { content: markdown.default, frontmatter: markdown.metadata }
   } catch (err) {
-    console.error(err)
+    captureException(err)
     error(404, 'Not Found')
   }
 }

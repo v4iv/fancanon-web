@@ -2,6 +2,7 @@
   import { goto } from '$app/navigation'
   import { isHttpError } from '@sveltejs/kit'
   import { toast } from 'svelte-sonner'
+  import { captureException } from '@sentry/sveltekit'
   import { CircleAlertIcon, CircleIcon } from '@lucide/svelte'
 
   import { signIn as form } from '$lib/remote/auth/data.remote'
@@ -41,7 +42,7 @@
         goto(redirect)
       }
     } catch (err) {
-      console.error(err)
+      captureException(err)
 
       if (isHttpError(err)) {
         if (err.body.message === 'Email not verified') {

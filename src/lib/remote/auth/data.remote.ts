@@ -2,6 +2,7 @@ import { Md5 } from 'ts-md5'
 import { form } from '$app/server'
 import { error } from '@sveltejs/kit'
 import { APIError } from 'better-auth/api'
+import { captureException } from '@sentry/sveltekit'
 
 import { auth } from '$lib/server/auth'
 import { schema as signUpSchema } from '$lib/components/forms/sign-up-form'
@@ -23,7 +24,7 @@ export const signUp = form(signUpSchema, async (data) => {
       },
     })
   } catch (err) {
-    console.error(err)
+    captureException(err)
 
     if (err instanceof APIError) {
       error(400, err.message)
@@ -43,7 +44,7 @@ export const signIn = form(signInSchema, async (data) => {
       },
     })
   } catch (err) {
-    console.error(err)
+    captureException(err)
 
     if (err instanceof APIError) {
       error(400, err.message)

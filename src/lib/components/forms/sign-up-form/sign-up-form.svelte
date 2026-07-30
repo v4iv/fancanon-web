@@ -2,6 +2,7 @@
   import { goto } from '$app/navigation'
   import { isHttpError } from '@sveltejs/kit'
   import { toast } from 'svelte-sonner'
+  import { captureException } from '@sentry/sveltekit'
   import { CircleIcon } from '@lucide/svelte'
 
   import { signUp as form } from '$lib/remote/auth/data.remote'
@@ -37,7 +38,7 @@
         goto('/')
       }
     } catch (err) {
-      console.error(err)
+      captureException(err)
 
       if (isHttpError(err)) {
         toast.error('Error!', { description: err.body.message })

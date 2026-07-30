@@ -10,6 +10,7 @@ import { betterAuth, type BetterAuthOptions } from 'better-auth/minimal'
 import { sveltekitCookies } from 'better-auth/svelte-kit'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { customSession, username } from 'better-auth/plugins'
+import { captureException } from '@sentry/sveltekit'
 
 import { db } from '$lib/server/db'
 import { resend } from '$lib/resend'
@@ -44,7 +45,7 @@ const options = {
           html: resetPasswordTemplate(url),
         })
 
-        console.error(error)
+        captureException(error)
       }
     },
   },
@@ -63,7 +64,7 @@ const options = {
           html: verifyEmailTemplate(url),
         })
 
-        console.error(error)
+        captureException(error)
       }
     },
   },

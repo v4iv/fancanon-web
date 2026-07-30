@@ -37,6 +37,7 @@ export const handleError = handleErrorWithSentry()
 export const handle: Handle = sequence(
   initCloudflareSentryHandle({
     dsn: SENTRY_DSN,
+    enabled: false,
     dataCollection: {
       // To disable sending user data and HTTP bodies, uncomment the lines below. For more info visit:
       // https://docs.sentry.io/platforms/javascript/guides/sveltekit/configuration/options/#dataCollection

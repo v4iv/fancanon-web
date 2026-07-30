@@ -1,11 +1,26 @@
 <script lang="ts">
   import type { LayoutProps } from './$types'
+  import { onMount, tick } from 'svelte'
+  import { page } from '$app/state'
+  import { toast } from 'svelte-sonner'
 
   import * as Sidebar from '$lib/components/ui/sidebar'
   import { Navbar, NavbarBottom } from '$lib/components/navbar'
   import { AppSidebar } from '$lib/components/app-sidebar'
 
   const { children }: LayoutProps = $props()
+
+  const searchParams = $derived(page.url.searchParams)
+
+  let emailVerified = $derived(searchParams.get('emailVerified'))
+
+  onMount(() => {
+    tick().then(() => {
+      if (emailVerified === 'true') {
+        toast.success('Email Verified :)')
+      }
+    })
+  })
 </script>
 
 <Sidebar.Provider>
