@@ -6,7 +6,6 @@ import { APIError } from 'better-auth/api'
 import { auth } from '$lib/server/auth'
 import { schema as signUpSchema } from '$lib/components/forms/sign-up-form'
 import { schema as signInSchema } from '$lib/components/forms/sign-in-form'
-import { schema as resendConfirmationMailSchema } from '$lib/components/forms/resend-confirmation-mail-form'
 
 export const signUp = form(signUpSchema, async (data) => {
   try {
@@ -53,24 +52,4 @@ export const signIn = form(signInSchema, async (data) => {
   }
 
   return { success: true, message: 'Log In Successful!' }
-})
-
-export const resendEmailConfirmation = form(resendConfirmationMailSchema, async (data) => {
-  try {
-    await auth.api.sendVerificationEmail({
-      body: {
-        email: data.email,
-        callbackURL: '/?emailVerified=true',
-      },
-    })
-  } catch (err) {
-    console.error(err)
-
-    if (err instanceof APIError) {
-      error(400, err.message)
-    }
-    error(500, 'Unexpected Error')
-  }
-
-  return { success: true, message: 'Email confirmation mail sent successfully!' }
 })
