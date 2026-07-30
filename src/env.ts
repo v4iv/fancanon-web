@@ -18,4 +18,8 @@ export const variables = defineEnvVars({
   RESEND_API_KEY: {
     description: 'Resend API key',
   },
+  SENTRY_DSN: {
+    public: true,
+    description: 'Sentry DSN',
+  },
 })
