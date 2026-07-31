@@ -29,14 +29,22 @@
 
   const client = useQueryClient()
 
-  const likeStory = async (): Promise<{ likes: number }> => {
+  const likeStory = async (): Promise<any> => {
     const res = await fetch(`/api/stories/${storyId}/like`)
+
+    if (!res.ok) {
+      throw new Error('Network response was not ok')
+    }
 
     return res.json()
   }
 
   const unlikeStory = async (): Promise<{ likes: number }> => {
     const res = await fetch(`/api/stories/${storyId}/unlike`, { method: 'DELETE' })
+
+    if (!res.ok) {
+      throw new Error('Network response was not ok')
+    }
 
     return res.json()
   }

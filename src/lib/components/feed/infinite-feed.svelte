@@ -27,7 +27,7 @@
       throw new Error('Network response was not ok')
     }
 
-    return await res.json()
+    return res.json()
   }
 
   const query = createInfiniteQuery(() => ({

@@ -61,9 +61,15 @@
     groupedTags.warnings.filter(({ tag }) => !NO_WARNING_TAG_NAMES.includes(tag.name)),
   )
 
-  const deleteStory = async (): Promise<any> =>
-    await fetch(`/api/stories/${story.id}/delete`, { method: 'DELETE' }).then((r) => r.json())
+  const deleteStory = async (): Promise<any> => {
+    const res = await fetch(`/api/stories/${story.id}/delete`, { method: 'DELETE' })
 
+    if (!res.ok) {
+      throw new Error('Network response was not ok')
+    }
+
+    return res.json()
+  }
   const deleteStoryMutation = createMutation(() => ({
     mutationFn: deleteStory,
     onMutate: async () => {

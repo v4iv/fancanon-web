@@ -30,14 +30,22 @@
 
   const client = useQueryClient()
 
-  const addToReadLater = async (): Promise<{ likes: number }> => {
+  const addToReadLater = async (): Promise<any> => {
     const res = await fetch(`/api/stories/${storyId}/add-to-read-later`)
+
+    if (!res.ok) {
+      throw new Error('Network response was not ok')
+    }
 
     return res.json()
   }
 
-  const removeFromReadLater = async (): Promise<{ likes: number }> => {
+  const removeFromReadLater = async (): Promise<any> => {
     const res = await fetch(`/api/stories/${storyId}/remove-from-read-later`, { method: 'DELETE' })
+
+    if (!res.ok) {
+      throw new Error('Network response was not ok')
+    }
 
     return res.json()
   }
