@@ -3,21 +3,29 @@
   import { isHttpError } from '@sveltejs/kit'
   import { toast } from 'svelte-sonner'
   import { captureException } from '@sentry/sveltekit'
+  import { useQueryClient } from '@tanstack/svelte-query'
   import { CircleIcon } from '@lucide/svelte'
 
   import { signUp as form } from '$lib/remote/auth/data.remote'
   import { signIn } from '$lib/client'
   import { m } from '$lib/paraglide/messages.js'
+  import { track } from '$lib/analytics'
   import * as Field from '$lib/components/ui/field'
   import { Input } from '$lib/components/ui/input'
   import { Button } from '$lib/components/ui/button'
 
   let { enhance, fields } = $derived(form)
 
+  const client = useQueryClient()
+
   let submitting = $state(false)
 
   const signUpWithGoogle = async () => {
-    signIn.social({
+    track('sign_up', { method: 'google' })
+
+    client.invalidateQueries()
+
+    await signIn.social({
       provider: 'google',
       callbackURL: '/',
     })
@@ -31,11 +39,19 @@
       const res = await submit()
 
       if (res) {
-        // const email = element.email
-        // goto(`/pending-verification?email=${email.value}`)
-        element.reset()
+        track('sign_up', {
+          method: 'credential',
+        })
+
+        const email = element.email
+
+        client.invalidateQueries()
+
         toast('Success!', { description: 'Account created successfully.' })
-        goto('/')
+
+        goto(`/pending-verification?email=${email.value}`)
+
+        element.reset()
       }
     } catch (err) {
       captureException(err)

@@ -1,11 +1,7 @@
 import { getRequestEvent } from '$app/server'
 import { dev } from '$app/env'
-import {
-  ORIGIN,
-  BETTER_AUTH_SECRET,
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-} from '$app/env/private'
+import { ORIGIN } from '$app/env/public'
+import { BETTER_AUTH_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from '$app/env/private'
 import { betterAuth, type BetterAuthOptions } from 'better-auth/minimal'
 import { sveltekitCookies } from 'better-auth/svelte-kit'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'

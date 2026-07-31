@@ -3,11 +3,13 @@
   import { isHttpError } from '@sveltejs/kit'
   import { toast } from 'svelte-sonner'
   import { captureException } from '@sentry/sveltekit'
+  import { useQueryClient } from '@tanstack/svelte-query'
   import { CircleAlertIcon, CircleIcon } from '@lucide/svelte'
 
   import { signIn as form } from '$lib/remote/auth/data.remote'
   import { signIn } from '$lib/client'
   import { m } from '$lib/paraglide/messages.js'
+  import { track } from '$lib/analytics'
   import * as Alert from '$lib/components/ui/alert'
   import * as Field from '$lib/components/ui/field'
   import { Button } from '$lib/components/ui/button'
@@ -17,11 +19,17 @@
 
   let { enhance, fields } = $derived(form)
 
+  const client = useQueryClient()
+
   let submitting = $state(false)
   let emailNotVerified = $state(false)
 
   const signInWithGoogle = async () => {
-    signIn.social({
+    track('login', { method: 'google' })
+
+    client.invalidateQueries()
+
+    await signIn.social({
       provider: 'google',
       callbackURL: redirect,
     })
@@ -38,7 +46,15 @@
 
       if (res) {
         element.reset()
+
+        track('login', {
+          method: 'credential',
+        })
+
+        client.invalidateQueries()
+
         toast.success('Success!', { description: 'Logged in successfully.' })
+
         goto(redirect)
       }
     } catch (err) {
