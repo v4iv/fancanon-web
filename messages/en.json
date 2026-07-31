@@ -5,7 +5,7 @@
   "description": "The Ultimate Fan Fiction Platform.",
   "navbar": {
     "sidebar-toggle": "Sidebar Toggle",
-    "search-placeholder": "Search...",
+    "search-placeholder": "title, description, tags or author...",
     "search-label": "Search",
     "create": "Create",
     "new-story": "New Story",
@@ -126,7 +126,7 @@
     "sending": "Sending...",
     "contact-support": "Contact Support",
     "no-account": "Don't have an account?",
-    "sign-up": "Sign up here"
+    "sign-up": "Sign Up"
   },
   "tnc-page": {
     "title": "Terms and Conditions | fancanon",

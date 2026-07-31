@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
+  import { useQueryClient } from '@tanstack/svelte-query'
   import {
     PlusIcon,
     MenuIcon,
@@ -25,9 +26,13 @@
 
   const sidebar = useSidebar()
   const session = useSession()
+  const client = useQueryClient()
 
   const handleSignOut = async () => {
     await signOut()
+
+    client.invalidateQueries()
+
     goto(`/auth/sign-in`)
   }
 </script>
@@ -112,7 +117,7 @@
       <Notifications />
 
       <DropdownMenu.Root>
-        <DropdownMenu.Trigger class="rounded-full">
+        <DropdownMenu.Trigger class="hidden rounded-full md:flex">
           <Avatar.Root class="size-9 border">
             <Avatar.Image src={$session.data.user?.image} alt={$session.data.user.name} />
             <Avatar.Fallback>{$session.data.user.name[0]}</Avatar.Fallback>

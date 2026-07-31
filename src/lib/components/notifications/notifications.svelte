@@ -17,7 +17,7 @@
     <span class="sr-only">{m['navbar.notifications']()}</span>
   </Popover.Trigger>
 
-  <Popover.Content align="end" class="h-96 w-sm">
+  <Popover.Content align="end" class="h-96 w-90">
     <div class="space-y-4">
       <div class="space-y-2">
         <h4 class="text-sm font-semibold">{m['navbar.notifications']()}</h4>
