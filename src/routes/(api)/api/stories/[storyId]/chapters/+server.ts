@@ -29,6 +29,6 @@ export const GET: RequestHandler = async ({ request, params }) => {
   } catch (err) {
     captureException(err)
 
-    return error(500, 'Something Went Wrong!')
+    error(500, 'Something Went Wrong!')
   }
 }

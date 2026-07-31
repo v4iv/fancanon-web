@@ -31,7 +31,7 @@ export const GET: RequestHandler = async ({ params, url, request }) => {
   })
 
   if (!categoryRow) {
-    return error(404, 'Category not found')
+    error(404, 'Category not found')
   }
 
   const session = await auth.api.getSession({ headers: request.headers })
@@ -89,6 +89,6 @@ export const GET: RequestHandler = async ({ params, url, request }) => {
   } catch (err) {
     captureException(err)
 
-    return error(500, 'Something Went Wrong!')
+    error(500, 'Something Went Wrong!')
   }
 }

@@ -38,13 +38,13 @@ export const GET: RequestHandler = async ({ params, request }) => {
     })
 
     if (!result) {
-      return error(404, 'Not Found')
+      error(404, 'Not Found')
     }
 
     return json({ success: true, story: result }, { status: 200 })
   } catch (err) {
     captureException(err)
 
-    return error(500, 'Something Went Wrong!')
+    error(500, 'Something Went Wrong!')
   }
 }

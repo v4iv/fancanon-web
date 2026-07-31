@@ -23,7 +23,7 @@ export const GET: RequestHandler = async ({ url, request }) => {
   const limit = parseInt(url.searchParams.get('limit') || `${DEFAULT_LIMIT}`)
 
   if (!Number.isInteger(page) || page < 1 || !Number.isInteger(limit) || limit < 1 || limit > 100) {
-    return error(400, 'Invalid pagination params')
+    error(400, 'Invalid pagination params')
   }
 
   const session = await auth.api.getSession({ headers: request.headers })
@@ -110,6 +110,6 @@ export const GET: RequestHandler = async ({ url, request }) => {
   } catch (err) {
     captureException(err)
 
-    return error(500, 'Something Went Wrong!')
+    error(500, 'Something Went Wrong!')
   }
 }

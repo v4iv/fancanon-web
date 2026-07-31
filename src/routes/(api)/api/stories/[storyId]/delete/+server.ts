@@ -12,7 +12,7 @@ export const DELETE: RequestHandler = async ({ params, request }) => {
 
   const session = await auth.api.getSession({ headers: request.headers })
   if (!session?.user) {
-    return error(401, 'Unauthorized')
+    error(401, 'Unauthorized')
   }
 
   try {
@@ -30,13 +30,13 @@ export const DELETE: RequestHandler = async ({ params, request }) => {
     const [existing] = await db.select({ id: story.id }).from(story).where(eq(story.id, storyId))
 
     if (!existing) {
-      return error(404, 'Not Found')
+      error(404, 'Not Found')
     }
 
-    return error(403, 'Forbidden')
+    error(403, 'Forbidden')
   } catch (err) {
     captureException(err)
 
-    return error(500, 'Something Went Wrong!')
+    error(500, 'Something Went Wrong!')
   }
 }

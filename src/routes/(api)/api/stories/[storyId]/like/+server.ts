@@ -12,7 +12,7 @@ export const GET: RequestHandler = async ({ params, request }) => {
 
   const session = await auth.api.getSession({ headers: request.headers })
   if (!session?.user) {
-    return error(401, 'Unauthorized')
+    error(401, 'Unauthorized')
   }
 
   try {
@@ -54,6 +54,6 @@ export const GET: RequestHandler = async ({ params, request }) => {
   } catch (err) {
     captureException(err)
 
-    return error(500, 'Failed to Like!')
+    error(500, 'Failed to Like!')
   }
 }
