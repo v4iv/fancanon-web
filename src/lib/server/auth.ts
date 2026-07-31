@@ -2,9 +2,10 @@ import { getRequestEvent } from '$app/server'
 import { dev } from '$app/env'
 import { ORIGIN } from '$app/env/public'
 import {
-  BETTER_AUTH_SECRET,
   COOKIE_DOMAIN,
+  TRUSTED_ORIGINS,
   GOOGLE_CLIENT_ID,
+  BETTER_AUTH_SECRET,
   GOOGLE_CLIENT_SECRET,
 } from '$app/env/private'
 import { betterAuth, type BetterAuthOptions } from 'better-auth/minimal'
@@ -34,6 +35,7 @@ const options = {
       domain: COOKIE_DOMAIN,
     },
   },
+  trustedOrigins: TRUSTED_ORIGINS.split(','),
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
