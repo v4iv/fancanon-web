@@ -2,6 +2,9 @@ import { defineEnvVars } from '@sveltejs/kit/env'
 
 export const variables = defineEnvVars({
   DATABASE_URL: { description: 'The database connection string.' },
+  COOKIE_DOMAIN: {
+    description: 'for cross sub domain cookie, leading dot is required',
+  },
   ORIGIN: {
     public: true,
     description: 'The app origin (base URL), e.g. `http://localhost:5173`.',
