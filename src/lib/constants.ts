@@ -193,3 +193,27 @@ export const LEETSPEAK_MAP: Record<string, string> = {
 }
 
 export const RELATIONSHIP_SEPARATOR = /\/|&/
+
+export const DEFAULT_LIMIT: number = 20
+
+export const DEFAULT_PAGE: number = 1
+
+export const LIKES_WEIGHT: number = 3
+
+export const READ_LATER_WEIGHT: number = 1
+
+export const TRENDING_GRAVITY = 1.8
+
+export enum Languages {
+  english = 'english',
+  espanol = 'espanol',
+  french = 'french',
+  other = 'other',
+}
+
+export enum ContentRating {
+  GENERAL = 'GENERAL',
+  TEEN = 'TEEN',
+  MATURE = 'MATURE',
+  EXPLICIT = 'EXPLICIT',
+}
