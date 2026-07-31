@@ -80,7 +80,9 @@
       {#if stories?.length === 0}
         <div class="py-12 text-center">
           <BookOpen class="mx-auto mb-4 size-12 text-muted-foreground" />
-          <h3 class="mb-2 font-heading text-2xl">{m['feed.empty-title']()}</h3>
+
+          <p class="mb-2 font-heading text-2xl">{m['feed.empty-title']()}</p>
+
           <p class="text-muted-foreground">
             {m['feed.empty-description']()}
           </p>

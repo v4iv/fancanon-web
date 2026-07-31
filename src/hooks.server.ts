@@ -1,5 +1,5 @@
 import type { Handle } from '@sveltejs/kit'
-import { building } from '$app/env'
+import { building, dev } from '$app/env'
 import { SENTRY_DSN } from '$app/env/public'
 import { sequence } from '@sveltejs/kit/hooks'
 import { svelteKitHandler } from 'better-auth/svelte-kit'
@@ -37,7 +37,7 @@ export const handleError = handleErrorWithSentry()
 export const handle: Handle = sequence(
   initCloudflareSentryHandle({
     dsn: SENTRY_DSN,
-    enabled: false,
+    enabled: !dev,
     dataCollection: {
       // To disable sending user data and HTTP bodies, uncomment the lines below. For more info visit:
       // https://docs.sentry.io/platforms/javascript/guides/sveltekit/configuration/options/#dataCollection

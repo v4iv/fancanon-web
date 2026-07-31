@@ -1,16 +1,17 @@
-import { json } from '@sveltejs/kit'
 import type { RequestHandler } from './$types'
-import * as Sentry from '@sentry/sveltekit'
+import { json } from '@sveltejs/kit'
 import { and, eq, sql } from 'drizzle-orm'
+import { captureException } from '@sentry/sveltekit'
+
 import { db } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
-import { category, story, storyFandom, fandom } from '$lib/server/db/schema'
-import { DEFAULT_LIMIT, DEFAULT_PAGE } from '$lib/constants'
 import {
   buildStoryFilterSql,
   getRankedStories,
   hydrateRankedStories,
 } from '$lib/server/helpers/feed-helper'
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from '$lib/constants'
+import { category, story, storyFandom, fandom } from '$lib/server/db/schema'
 
 export const GET: RequestHandler = async ({ params, url, request }) => {
   const page = parseInt(url.searchParams.get('page') || `${DEFAULT_PAGE}`)
@@ -85,7 +86,7 @@ export const GET: RequestHandler = async ({ params, url, request }) => {
       { status: 200 },
     )
   } catch (err) {
-    Sentry.captureException(err)
+    captureException(err)
     return json(
       { success: false, message: 'Something went wrong!' },
       { status: 500, statusText: 'internal server error' },

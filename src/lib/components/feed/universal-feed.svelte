@@ -11,7 +11,7 @@
   import { ContentRating, DEFAULT_LIMIT, DEFAULT_PAGE, Languages } from '$lib/constants'
   import * as Alert from '$lib/components/ui/alert'
   import * as Pagination from '$lib/components/ui/pagination'
-  import { Toolbar } from './index'
+  import { Toolbar } from '$lib/components/feed'
   import * as StoryCard from '$lib/components/story-card'
 
   interface Props {
@@ -148,7 +148,9 @@
         {#if query.data.stories.length === 0}
           <div class="min-h-screen py-12 text-center">
             <BookOpen class="mx-auto mb-4 size-12 text-muted-foreground" />
-            <h3 class="mb-2 font-heading text-2xl">{m['feed.empty-title']()}</h3>
+
+            <p class="mb-2 font-heading text-2xl">{m['feed.empty-title']()}</p>
+
             <p class="text-muted-foreground">
               {m['feed.empty-description']()}
             </p>
