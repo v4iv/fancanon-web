@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types'
-import { json } from '@sveltejs/kit'
+import { error, json } from '@sveltejs/kit'
 import { asc, eq } from 'drizzle-orm'
 import { captureException } from '@sentry/sveltekit'
 
@@ -28,9 +28,7 @@ export const GET: RequestHandler = async ({ request, params }) => {
     return json({ success: true, chapters }, { status: 200 })
   } catch (err) {
     captureException(err)
-    return json(
-      { success: false, message: 'Something went wrong!' },
-      { status: 500, statusText: 'internal server error' },
-    )
+
+    return error(500, 'Something Went Wrong!')
   }
 }

@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types'
-import { json } from '@sveltejs/kit'
+import { error, json } from '@sveltejs/kit'
 import { and, eq, sql } from 'drizzle-orm'
 import { captureException } from '@sentry/sveltekit'
 
@@ -22,15 +22,16 @@ export const GET: RequestHandler = async ({ params, url, request }) => {
   const slug = params.slug
 
   if (!Number.isInteger(page) || page < 1 || !Number.isInteger(limit) || limit < 1 || limit > 100) {
-    return json({ message: 'Invalid pagination params' }, { status: 400 })
+    return error(400, 'Invalid pagination params')
   }
 
   const categoryRow = await db.query.category.findFirst({
     where: eq(category.slug, slug),
     columns: { id: true },
   })
+
   if (!categoryRow) {
-    return json({ message: 'Category not found' }, { status: 404 })
+    return error(404, 'Category not found')
   }
 
   const session = await auth.api.getSession({ headers: request.headers })
@@ -87,9 +88,7 @@ export const GET: RequestHandler = async ({ params, url, request }) => {
     )
   } catch (err) {
     captureException(err)
-    return json(
-      { success: false, message: 'Something went wrong!' },
-      { status: 500, statusText: 'internal server error' },
-    )
+
+    return error(500, 'Something Went Wrong!')
   }
 }

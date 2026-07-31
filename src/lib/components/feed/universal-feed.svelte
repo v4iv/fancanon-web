@@ -71,9 +71,11 @@
     queryKey: ['feed', ...queryKeys, queryParams],
     queryFn: async (): Promise<APIResponse> => {
       const response = await fetch(`${api}?${queryParams}`)
+
       if (!response.ok) {
         throw new Error('Failed to fetch stories')
       }
+
       return response.json()
     },
     staleTime: 5 * 60 * 1000,

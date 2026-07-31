@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types'
-import { json } from '@sveltejs/kit'
+import { error, json } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
 import { captureException } from '@sentry/sveltekit'
 
@@ -38,15 +38,13 @@ export const GET: RequestHandler = async ({ params, request }) => {
     })
 
     if (!result) {
-      return json({ success: false, message: 'Not Found' }, { status: 404 })
+      return error(404, 'Not Found')
     }
 
     return json({ success: true, story: result }, { status: 200 })
   } catch (err) {
     captureException(err)
-    return json(
-      { success: false, message: 'Something went wrong!' },
-      { status: 500, statusText: 'internal server error' },
-    )
+
+    return error(500, 'Something Went Wrong!')
   }
 }

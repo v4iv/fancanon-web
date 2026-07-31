@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types'
-import { json } from '@sveltejs/kit'
+import { error, json } from '@sveltejs/kit'
 import { and, eq } from 'drizzle-orm'
 
 import { db } from '$lib/server/db'
@@ -12,7 +12,7 @@ export const DELETE: RequestHandler = async ({ params, request }) => {
 
   const session = await auth.api.getSession({ headers: request.headers })
   if (!session?.user) {
-    return json({ success: false, message: 'Unauthorized' }, { status: 401 })
+    return error(401, 'Unauthorized')
   }
 
   try {
@@ -30,14 +30,13 @@ export const DELETE: RequestHandler = async ({ params, request }) => {
     const [existing] = await db.select({ id: story.id }).from(story).where(eq(story.id, storyId))
 
     if (!existing) {
-      return json({ success: false, message: 'Not Found' }, { status: 404 })
+      return error(404, 'Not Found')
     }
-    return json({ success: false, message: 'Forbidden' }, { status: 403 })
+
+    return error(403, 'Forbidden')
   } catch (err) {
     captureException(err)
-    return json(
-      { success: false, message: 'Failed To Delete' },
-      { status: 500, statusText: 'internal server error' },
-    )
+
+    return error(500, 'Something Went Wrong!')
   }
 }

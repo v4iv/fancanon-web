@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types'
-import { json } from '@sveltejs/kit'
+import { error, json } from '@sveltejs/kit'
 import { desc, eq, sql } from 'drizzle-orm'
 import { captureException } from '@sentry/sveltekit'
 
@@ -11,8 +11,9 @@ import { story, like, readLater } from '$lib/server/db/schema'
 export const GET: RequestHandler = async ({ url, request }) => {
   const page = parseInt(url.searchParams.get('page') || `${DEFAULT_PAGE}`)
   const limit = parseInt(url.searchParams.get('limit') || `${DEFAULT_LIMIT}`)
+
   if (!Number.isInteger(page) || page < 1 || !Number.isInteger(limit) || limit < 1 || limit > 100) {
-    return json({ message: 'Invalid pagination params' }, { status: 400 })
+    return error(400, 'Invalid pagination params')
   }
 
   const session = await auth.api.getSession({ headers: request.headers })
@@ -59,9 +60,7 @@ export const GET: RequestHandler = async ({ url, request }) => {
     )
   } catch (err) {
     captureException(err)
-    return json(
-      { success: false, message: 'Something went wrong!' },
-      { status: 500, statusText: 'internal server error' },
-    )
+
+    return error(500, 'Something Went Wrong!')
   }
 }

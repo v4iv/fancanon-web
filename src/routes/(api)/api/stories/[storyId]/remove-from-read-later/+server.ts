@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types'
-import { json } from '@sveltejs/kit'
+import { error, json } from '@sveltejs/kit'
 import { and, eq, sql } from 'drizzle-orm'
 import { captureException } from '@sentry/sveltekit'
 
@@ -12,7 +12,7 @@ export const DELETE: RequestHandler = async ({ params, request }) => {
 
   const session = await auth.api.getSession({ headers: request.headers })
   if (!session?.user) {
-    return json({ success: false, message: 'Unauthorized' }, { status: 401 })
+    return error(401, 'Unauthorized')
   }
 
   try {
@@ -49,9 +49,6 @@ export const DELETE: RequestHandler = async ({ params, request }) => {
   } catch (err) {
     captureException(err)
 
-    return json(
-      { success: false, message: 'Failed To Remove' },
-      { status: 500, statusText: 'internal server error' },
-    )
+    return error(500, 'Failed to remove from Read Later')
   }
 }

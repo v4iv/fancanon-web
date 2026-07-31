@@ -3,10 +3,10 @@
   import { createInfiniteQuery } from '@tanstack/svelte-query'
   import { BookOpen, CircleAlertIcon, CircleIcon } from '@lucide/svelte'
 
-  import { DEFAULT_LIMIT, DEFAULT_PAGE } from '$lib/constants'
   import { m } from '$lib/paraglide/messages.js'
   import { useSession } from '$lib/client'
   import * as Alert from '$lib/components/ui/alert'
+  import { DEFAULT_LIMIT, DEFAULT_PAGE } from '$lib/constants'
   import { StoryCard, StoryCardSkeleton } from '$lib/components/story-card'
 
   interface Props {
@@ -21,9 +21,12 @@
   const session = useSession()
 
   const fetchStories = async ({ pageParam }: { pageParam: number | undefined }): Promise<any> => {
-    const res = await fetch(`${api}?page=${pageParam}&limit=${limit}`, {
-      credentials: 'include',
-    })
+    const res = await fetch(`${api}?page=${pageParam}&limit=${limit}`)
+
+    if (!res.ok) {
+      throw new Error('Network response was not ok')
+    }
+
     return await res.json()
   }
 
