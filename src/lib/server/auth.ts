@@ -7,6 +7,7 @@ import {
   BETTER_AUTH_SECRET,
   GOOGLE_CLIENT_SECRET,
 } from '$app/env/private'
+import { ORIGIN } from '$app/env/public'
 import { betterAuth, type BetterAuthOptions } from 'better-auth/minimal'
 import { sveltekitCookies } from 'better-auth/svelte-kit'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
@@ -22,6 +23,7 @@ const options = {
   baseURL: {
     allowedHosts: ALLOWED_HOSTS.split(','),
     protocol: dev ? 'http' : 'https',
+    fallback: ORIGIN,
   },
   secret: BETTER_AUTH_SECRET,
   database: drizzleAdapter(db, { provider: 'pg' }),

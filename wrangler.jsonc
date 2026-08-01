@@ -18,7 +18,7 @@
   "preview_urls": true,
   "upload_source_maps": true,
   "vars": {
-    "ORIGIN": "https://fancanon.com"
+    "ORIGIN": "https://app.fancanon.com"
   }
   /**
 	 * Smart Placement
