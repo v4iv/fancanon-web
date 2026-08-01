@@ -3,9 +3,9 @@ import { error, json } from '@sveltejs/kit'
 import { and, eq, sql } from 'drizzle-orm'
 import { captureException } from '@sentry/sveltekit'
 
-import { db } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
 import { readLater, story } from '$lib/server/db/schema'
+import { withTransaction } from '$lib/server/helpers/db-helper'
 
 export const DELETE: RequestHandler = async ({ params, request }) => {
   const storyId = params.storyId
@@ -16,7 +16,7 @@ export const DELETE: RequestHandler = async ({ params, request }) => {
   }
 
   try {
-    const readLaterCount = await db.transaction(async (tx) => {
+    const readLaterCount = await withTransaction(async (tx) => {
       const [deleted] = await tx
         .delete(readLater)
         .where(and(eq(readLater.userId, session.user.id), eq(readLater.storyId, storyId)))

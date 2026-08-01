@@ -1,9 +1,10 @@
-import { json, error } from '@sveltejs/kit'
 import type { RequestHandler } from './$types'
-import { captureException } from '@sentry/sveltekit'
+import { json, error } from '@sveltejs/kit'
 import { and, eq, sql } from 'drizzle-orm'
-import { db } from '$lib/server/db'
+import { captureException } from '@sentry/sveltekit'
+
 import { auth } from '$lib/server/auth'
+import { withTransaction } from '$lib/server/helpers/db-helper'
 import { activity, comment, commentLike } from '$lib/server/db/schema'
 
 export const DELETE: RequestHandler = async ({ params, request }) => {
@@ -15,7 +16,7 @@ export const DELETE: RequestHandler = async ({ params, request }) => {
   }
 
   try {
-    await db.transaction(async (tx) => {
+    await withTransaction(async (tx) => {
       const [deleted] = await tx
         .delete(commentLike)
         .where(and(eq(commentLike.userId, session.user.id), eq(commentLike.commentId, commentId)))

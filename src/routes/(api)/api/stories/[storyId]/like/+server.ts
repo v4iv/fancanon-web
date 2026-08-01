@@ -3,8 +3,8 @@ import { error, json } from '@sveltejs/kit'
 import { eq, sql } from 'drizzle-orm'
 import { captureException } from '@sentry/sveltekit'
 
-import { db } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
+import { withTransaction } from '$lib/server/helpers/db-helper'
 import { activity, like, notification, story } from '$lib/server/db/schema'
 
 export const GET: RequestHandler = async ({ params, request }) => {
@@ -16,7 +16,7 @@ export const GET: RequestHandler = async ({ params, request }) => {
   }
 
   try {
-    await db.transaction(async (tx) => {
+    await withTransaction(async (tx) => {
       const [inserted] = await tx
         .insert(like)
         .values({ userId: session.user.id, storyId })

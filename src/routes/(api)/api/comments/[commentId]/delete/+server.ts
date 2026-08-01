@@ -5,6 +5,7 @@ import { and, eq, sql } from 'drizzle-orm'
 
 import { db } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
+import { withTransaction } from '$lib/server/helpers/db-helper'
 import { comment, chapter, story } from '$lib/server/db/schema'
 
 // TODO: switch to soft delete (e.g. a `deletedAt` timestamp + blank out
@@ -22,7 +23,7 @@ export const DELETE: RequestHandler = async ({ params, request }) => {
   }
 
   try {
-    const result = await db.transaction(async (tx) => {
+    const result = await withTransaction(async (tx) => {
       const [deleted] = await tx
         .delete(comment)
         .where(and(eq(comment.id, commentId), eq(comment.authorId, session.user.id)))

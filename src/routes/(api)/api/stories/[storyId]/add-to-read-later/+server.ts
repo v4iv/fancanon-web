@@ -3,9 +3,9 @@ import { error, json } from '@sveltejs/kit'
 import { eq, sql } from 'drizzle-orm'
 import { captureException } from '@sentry/sveltekit'
 
-import { db } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
 import { readLater, story } from '$lib/server/db/schema'
+import { withTransaction } from '$lib/server/helpers/db-helper'
 
 export const GET: RequestHandler = async ({ params, request }) => {
   const storyId = params.storyId
@@ -16,7 +16,7 @@ export const GET: RequestHandler = async ({ params, request }) => {
   }
 
   try {
-    const readLaterCount = await db.transaction(async (tx) => {
+    const readLaterCount = await withTransaction(async (tx) => {
       const [inserted] = await tx
         .insert(readLater)
         .values({ userId: session.user.id, storyId })
@@ -49,7 +49,6 @@ export const GET: RequestHandler = async ({ params, request }) => {
     return json({ success: true, readLaterCount }, { status: 200 })
   } catch (err) {
     captureException(err)
-
     error(500, 'Failed To Add To Read Later')
   }
 }

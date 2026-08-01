@@ -204,6 +204,10 @@ export const READ_LATER_WEIGHT: number = 1
 
 export const TRENDING_GRAVITY = 1.8
 
+export const MAX_THREAD_LIMIT: number = 6
+
+export const TAG_LIMIT: number = 10
+
 export enum Languages {
   english = 'english',
   espanol = 'espanol',
@@ -217,3 +221,36 @@ export enum ContentRating {
   MATURE = 'MATURE',
   EXPLICIT = 'EXPLICIT',
 }
+
+export const REASONS: readonly [string, ...string[]] = [
+  'inappropriate content',
+  'hate speech',
+  'harrassment',
+  'plagiarism',
+  'spam',
+  'misleading tags or description',
+  'wrong language or category',
+  'copyright infringement',
+  'other',
+]
+
+export const COMMENT_REASONS: readonly [string, ...string[]] = [
+  'inappropriate language',
+  'hate speech',
+  'harrassment',
+  'spam',
+  'spoilers without warning',
+  'threats',
+  'other',
+]
+
+export const USER_REASONS: readonly [string, ...string[]] = [
+  'impersonation',
+  'hate speech',
+  'harrassment',
+  'inappropriate username or profile',
+  'spamming',
+  'stolen content',
+  'ban evasion',
+  'other',
+]

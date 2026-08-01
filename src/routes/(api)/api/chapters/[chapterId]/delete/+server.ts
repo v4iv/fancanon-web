@@ -6,6 +6,7 @@ import { and, eq, sql } from 'drizzle-orm'
 import { db } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
 import { chapter, story } from '$lib/server/db/schema'
+import { withTransaction } from '$lib/server/helpers/db-helper'
 
 export const DELETE: RequestHandler = async ({ params, request }) => {
   const chapterId = params.chapterId
@@ -16,7 +17,7 @@ export const DELETE: RequestHandler = async ({ params, request }) => {
   }
 
   try {
-    const result = await db.transaction(async (tx) => {
+    const result = await withTransaction(async (tx) => {
       const [deleted] = await tx
         .delete(chapter)
         .where(and(eq(chapter.id, chapterId), eq(chapter.authorId, session.user.id)))

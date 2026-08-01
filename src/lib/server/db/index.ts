@@ -6,7 +6,7 @@ import * as schema from './schema'
 
 if (!DATABASE_URL) throw new Error('DATABASE_URL is not set')
 
-export const db = await (async () => {
+export const db = await (async (): Promise<NeonHttpDatabase<typeof schema>> => {
   if (dev) {
     const [{ drizzle }, { default: postgres }] = await Promise.all([
       import('drizzle-orm/postgres-js'),
@@ -14,7 +14,12 @@ export const db = await (async () => {
       import('postgres'),
     ])
 
-    return drizzle(postgres(DATABASE_URL), { schema })
+    // Cast: both drivers expose the same pg-core query-builder surface
+    // for standard select/insert/update/delete/transaction — the
+    // concrete generic types just differ enough that a runtime union
+    // breaks overload resolution on methods like .returning({...}).
+    // Pinning db's exported type to one shape fixes that everywhere.
+    return drizzle(postgres(DATABASE_URL), { schema }) as unknown as NeonHttpDatabase<typeof schema>
   }
 
   // neon-http does NOT support db.transaction() — throws at runtime.
