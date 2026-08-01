@@ -1,9 +1,8 @@
 import { getRequestEvent } from '$app/server'
 import { dev } from '$app/env'
-import { ORIGIN } from '$app/env/public'
 import {
   COOKIE_DOMAIN,
-  TRUSTED_ORIGINS,
+  ALLOWED_HOSTS,
   GOOGLE_CLIENT_ID,
   BETTER_AUTH_SECRET,
   GOOGLE_CLIENT_SECRET,
@@ -20,10 +19,14 @@ import { RESTRICTED_USERNAMES } from '$lib/constants'
 import { resetPasswordTemplate, verifyEmailTemplate } from '$lib/email'
 
 const options = {
-  baseURL: ORIGIN,
+  baseURL: {
+    allowedHosts: ALLOWED_HOSTS.split(','),
+    protocol: dev ? 'http' : 'https',
+  },
   secret: BETTER_AUTH_SECRET,
   database: drizzleAdapter(db, { provider: 'pg' }),
   advanced: {
+    cookiePrefix: 'fancanon',
     crossSubDomainCookies: {
       enabled: true,
       domain: COOKIE_DOMAIN,
@@ -35,7 +38,6 @@ const options = {
       domain: COOKIE_DOMAIN,
     },
   },
-  trustedOrigins: TRUSTED_ORIGINS.split(','),
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,

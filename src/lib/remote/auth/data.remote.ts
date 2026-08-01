@@ -1,5 +1,5 @@
 import { Md5 } from 'ts-md5'
-import { form } from '$app/server'
+import { form, getRequestEvent } from '$app/server'
 import { error } from '@sveltejs/kit'
 import { APIError } from 'better-auth/api'
 import { captureException } from '@sentry/sveltekit'
@@ -9,6 +9,8 @@ import { schema as signUpSchema } from '$lib/components/forms/sign-up-form'
 import { schema as signInSchema } from '$lib/components/forms/sign-in-form'
 
 export const signUp = form(signUpSchema, async (data) => {
+  const event = getRequestEvent()
+
   try {
     // Gravatar uses MD5 hashes from an email address to get the image
     const hash = Md5.hashStr(data.email.toLowerCase())
@@ -22,6 +24,7 @@ export const signUp = form(signUpSchema, async (data) => {
         password: data._newPassword,
         image: `https://www.gravatar.com/avatar/${hash}?d=identicon`,
       },
+      headers: event.request.headers,
     })
   } catch (err) {
     captureException(err)
@@ -36,14 +39,18 @@ export const signUp = form(signUpSchema, async (data) => {
 })
 
 export const signIn = form(signInSchema, async (data) => {
+  const event = getRequestEvent()
+
   try {
     await auth.api.signInEmail({
       body: {
         email: data.email,
         password: data._password,
       },
+      headers: event.request.headers,
     })
   } catch (err) {
+    console.error(err)
     captureException(err)
 
     if (err instanceof APIError) {

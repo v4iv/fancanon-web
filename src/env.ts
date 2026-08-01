@@ -5,8 +5,8 @@ export const variables = defineEnvVars({
   COOKIE_DOMAIN: {
     description: 'for cross subdomain cookie, leading dot is required',
   },
-  TRUSTED_ORIGINS: {
-    description: 'trusted origins for the cross subdomain cookie',
+  ALLOWED_HOSTS: {
+    description: 'the app dynamic origin urls for the cross subdomain authentication',
   },
   ORIGIN: {
     public: true,
