@@ -1,14 +1,31 @@
 services:
   db:
     image: postgres
-    restart: always
+    command: '-d 1'
+    restart: no
     ports:
       - 5432:5432
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: mysecretpassword
       POSTGRES_DB: local
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U root']
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - pgdata:/var/lib/postgresql
+
+  neon-proxy:
+    image: ghcr.io/timowilhelm/local-neon-http-proxy:main
+    environment:
+      - PG_CONNECTION_STRING=postgres://root:mysecretpassword@localhost:5432/local
+    ports:
+      - '4444:4444'
+    depends_on:
+      db:
+        condition: service_healthy
+
 volumes:
   pgdata:
