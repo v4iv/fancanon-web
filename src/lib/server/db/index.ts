@@ -1,5 +1,6 @@
 import { dev } from '$app/env'
 import { DATABASE_URL } from '$app/env/private'
+import type { NeonHttpDatabase } from 'drizzle-orm/neon-http'
 
 import * as schema from './schema'
 
@@ -16,11 +17,14 @@ export const db = await (async () => {
     return drizzle(postgres(DATABASE_URL), { schema })
   }
 
-  const [{ drizzle }, { neon }] = await Promise.all([
-    import('drizzle-orm/neon-http'),
-
+  // neon-http does NOT support db.transaction() — throws at runtime.
+  // neon-serverless (WebSocket) does, and is Cloudflare Workers–compatible.
+  const [{ drizzle }, { Pool }] = await Promise.all([
+    import('drizzle-orm/neon-serverless'),
     import('@neondatabase/serverless'),
   ])
 
-  return drizzle(neon(DATABASE_URL), { schema })
+  const pool = new Pool({ connectionString: DATABASE_URL })
+
+  return drizzle(pool, { schema }) as unknown as NeonHttpDatabase<typeof schema>
 })()

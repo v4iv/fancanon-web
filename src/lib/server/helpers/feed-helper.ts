@@ -1,7 +1,7 @@
 // $lib/server/db/queries/ranked-stories.ts
 import { and, desc, eq, inArray, sql, type SQL } from 'drizzle-orm'
 import { db } from '$lib/server/db'
-import { like, readLater, story } from '$lib/server/db/schema'
+import { activity, feedItem, follow, like, readLater, story } from '$lib/server/db/schema'
 
 interface RankedStoriesArgs {
   /** Extra condition ANDed onto the base filter, e.g. eq(story.contentRating, 'GENERAL') */
@@ -117,4 +117,32 @@ export async function hydrateRankedStories(
       return s ? { ...s, score: scoreMap[id] } : null
     })
     .filter((s) => s !== null)
+}
+
+export async function fanoutActivity(activityId: string) {
+  const activityRow = await db.query.activity.findFirst({
+    where: eq(activity.id, activityId),
+  })
+
+  if (!activityRow) {
+    throw new Error(`fanoutActivity: activity ${activityId} not found`)
+  }
+
+  const followers = await db
+    .select({ followerId: follow.followerId })
+    .from(follow)
+    .where(eq(follow.followeeId, activityRow.actorId))
+
+  if (followers.length === 0) return
+
+  await db
+    .insert(feedItem)
+    .values(
+      followers.map((f) => ({
+        ownerId: f.followerId,
+        activityId: activityRow.id,
+        createdAt: activityRow.createdAt,
+      })),
+    )
+    .onConflictDoNothing()
 }
