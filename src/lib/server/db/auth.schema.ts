@@ -1,4 +1,4 @@
-import { relations } from 'drizzle-orm'
+import { relations, sql } from 'drizzle-orm'
 import { pgTable, text, timestamp, boolean, integer, index } from 'drizzle-orm/pg-core'
 import {
   activity,
@@ -17,22 +17,31 @@ import {
   story,
 } from '$lib/server/db/schema'
 
-export const user = pgTable('user', {
-  id: text('id').primaryKey(),
-  name: text('name').notNull(),
-  email: text('email').notNull().unique(),
-  emailVerified: boolean('email_verified').default(false).notNull(),
-  image: text('image'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at')
-    .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-  username: text('username').unique(),
-  displayUsername: text('display_username'),
-  explicitConsentAt: timestamp('explicit_consent_at'),
-  explicitConsentVersion: integer('explicit_consent_version'),
-})
+export const user = pgTable(
+  'user',
+  {
+    id: text('id').primaryKey(),
+    name: text('name').notNull(),
+    email: text('email').notNull().unique(),
+    emailVerified: boolean('email_verified').default(false).notNull(),
+    image: text('image'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    username: text('username').unique(),
+    displayUsername: text('display_username'),
+    explicitConsentAt: timestamp('explicit_consent_at'),
+    explicitConsentVersion: integer('explicit_consent_version'),
+  },
+  (table) => [
+    index('user_search_idx').using(
+      'gin',
+      sql`to_tsvector('english', coalesce(${table.username}, '') || ' ' || coalesce(${table.name}, ''))`,
+    ),
+  ],
+)
 
 export const session = pgTable(
   'session',

@@ -1,4 +1,4 @@
-import { relations } from 'drizzle-orm'
+import { relations, sql } from 'drizzle-orm'
 import {
   pgTable,
   text,
@@ -85,7 +85,18 @@ export const story = pgTable(
       .notNull(),
   },
 
-  (table) => [index('story_created_at_idx').on(table.createdAt)],
+  (table) => [
+    index('story_created_at_idx').on(table.createdAt), // your existing index
+
+    // Matches: to_tsvector('english', story.title || ' ' || coalesce(story.description, ''))
+    // — must stay byte-for-byte identical to the expression used in the
+    // search query's WHERE/ORDER BY, or Postgres won't recognize this
+    // index as applicable and will fall back to a full table scan.
+    index('story_search_idx').using(
+      'gin',
+      sql`to_tsvector('english', ${table.title} || ' ' || coalesce(${table.description}, ''))`,
+    ),
+  ],
 )
 
 export const chapter = pgTable(
