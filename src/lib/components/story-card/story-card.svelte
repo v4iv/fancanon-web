@@ -70,6 +70,7 @@
 
     return res.json()
   }
+
   const deleteStoryMutation = createMutation(() => ({
     mutationFn: deleteStory,
     onMutate: async () => {

@@ -1,0 +1,7 @@
+export { default as Bluesky } from './bluesky.svelte'
+export { default as Facebook } from './facebook.svelte'
+export { default as Reddit } from './reddit.svelte'
+export { default as Whatsapp } from './whatsapp.svelte'
+export { default as Discord } from './discord.svelte'
+export { default as X } from './x.svelte'
+export { default as Google } from './google.svelte'

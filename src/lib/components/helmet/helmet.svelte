@@ -19,7 +19,7 @@
 </script>
 
 <svelte:head>
-  <!-- <link rel="sitemap" href="/sitemap-index.xml" /> -->
+  <link rel="sitemap" href="/sitemap.xml" />
 
   <!-- Canonical URL -->
   <link rel="canonical" href={url} />

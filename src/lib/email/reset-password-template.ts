@@ -30,7 +30,7 @@ export default function resetPasswordTemplate(url: string) {
                             Reset Password
                           </a>
                         </p>
-                        <p style="color: #5eead4; font-size: 14px;">
+                        <p style="color: #115e59; font-size: 14px;">
                           If you didn’t request a password reset, you can safely ignore this email.
                         </p>
                       </td>

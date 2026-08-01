@@ -77,7 +77,21 @@
     "like-story": "Like Story",
     "unlike-story": "Unlike Story",
     "cancel": "Cancel",
-    "proceed": "Proceed"
+    "proceed": "Proceed",
+    "like": "Like",
+    "unlike": "Unlike",
+    "warnings": "Warnings",
+    "relationships": "Relationships",
+    "characters": "Characters",
+    "additional-tags": "Additional Tags",
+    "words": "{count} Words",
+    "chapter-error-subheading": "An unexpected error occurred! Please try again.",
+    "chapter-error-heading": "Error",
+    "chapter-empty-heading": "No Chapters Found",
+    "chapter-empty-subheading": "This story doesn't have any published chapters yet.",
+    "chapter-index": "Chapter {index}",
+    "add-chapter": "Add Chapter",
+    "chapter-delete-confirmation": "Are you sure you want to delete this Chapter? Once deleted it cannot be recovered."
   },
   "feed": {
     "error-title": "Error",

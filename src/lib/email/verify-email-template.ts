@@ -28,7 +28,7 @@ export default function verifyEmailTemplate(url: string) {
                         <p style="margin: 30px 0; text-align: center;">
                           <a href="${url}" style="background-color: #0d9488; color: #f0fdfa; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block;">Confirm Email</a>
                         </p>
-                        <p style="color: #5eead4; font-size: 14px;">If you didn't sign up for <span style="font-weight: 100;">fancanon</span>, <a href="mailto:support@fancanon.com" style="color: #0f766e;">Contact Us</a> immediately.</p>
+                        <p style="color: #115e59; font-size: 14px;">If you didn't sign up for <span style="font-weight: 100;">fancanon</span>, <a href="mailto:support@fancanon.com" style="color: #0f766e;">Contact Us</a> immediately.</p>
                       </td>
                     </tr>
                     <!-- Footer -->
