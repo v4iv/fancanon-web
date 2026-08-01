@@ -132,13 +132,10 @@
   </Sidebar.Content>
 
   <Sidebar.Footer class="space-y-2 border-t py-4 group-data-[collapsible=icon]:hidden">
-    <div class="flex flex-wrap items-center justify-center gap-2 text-xs font-bold">
+    <div class="flex flex-wrap items-center justify-center gap-2 text-xs font-semibold">
       {#each LINKS as link}
         {@const key = `footer.${link.href}`}
-        <a
-          href={`/${link.href}`}
-          class="block text-muted-foreground duration-150 hover:text-primary"
-        >
+        <a href={`/${link.href}`} class="block text-foreground duration-150 hover:text-primary">
           <span>{m[key]()}</span>
         </a>
       {/each}
