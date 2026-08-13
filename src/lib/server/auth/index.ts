@@ -41,6 +41,14 @@ const options = {
       domain: COOKIE_DOMAIN,
     },
   },
+  secondaryStorage: !dev ? redisSecondaryStorage : undefined,
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60,
+    },
+    storeSessionInDatabase: true,
+  },
   experimental: { joins: true },
   emailAndPassword: {
     enabled: true,
@@ -127,7 +135,6 @@ const options = {
       },
     }),
   ],
-  secondaryStorage: !dev ? redisSecondaryStorage : undefined,
 } satisfies BetterAuthOptions
 
 export const auth = betterAuth({
