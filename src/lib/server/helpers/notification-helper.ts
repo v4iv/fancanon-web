@@ -1,6 +1,5 @@
 import { db } from '$lib/server/db'
 
-// $lib/server/db/queries/notification-include.ts
 export const notificationWith = {
   activity: {
     columns: { id: true, verb: true, createdAt: true },

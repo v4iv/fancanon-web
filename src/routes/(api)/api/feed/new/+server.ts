@@ -5,8 +5,9 @@ import { captureException } from '@sentry/sveltekit'
 
 import { db } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
+import { story } from '$lib/server/db/schema'
+import { storyWithForUser } from '$lib/server/helpers/story-helper'
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '$lib/constants'
-import { story, like, readLater } from '$lib/server/db/schema'
 
 export const GET: RequestHandler = async ({ url, request }) => {
   const page = parseInt(url.searchParams.get('page') || `${DEFAULT_PAGE}`)
@@ -25,25 +26,7 @@ export const GET: RequestHandler = async ({ url, request }) => {
       orderBy: desc(story.createdAt),
       limit,
       offset,
-      with: {
-        author: { columns: { id: true, username: true } },
-        tags: {
-          columns: {},
-          with: { tag: { columns: { id: true, name: true, slug: true, type: true } } },
-        },
-        fandoms: {
-          columns: {},
-          with: { fandom: { columns: { id: true, name: true, slug: true } } },
-        },
-        likes: {
-          where: eq(like.userId, userId),
-          columns: { userId: true, storyId: true },
-        },
-        readLaters: {
-          where: eq(readLater.userId, userId),
-          columns: { userId: true, storyId: true },
-        },
-      },
+      with: storyWithForUser(userId),
     })
 
     const [{ count: totalCount }] = await db

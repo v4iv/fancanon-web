@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
-  import { Tooltip as TooltipPrimitive } from 'bits-ui'
+  import { BASE_API_URL } from '$app/env/public'
+  import type { Tooltip as TooltipPrimitive } from 'bits-ui'
   import { createMutation, useQueryClient } from '@tanstack/svelte-query'
   import { captureException } from '@sentry/sveltekit'
   import { HeartIcon } from '@lucide/svelte'
@@ -30,7 +31,9 @@
   const client = useQueryClient()
 
   const likeStory = async (): Promise<any> => {
-    const res = await fetch(`/api/stories/${storyId}/like`)
+    const res = await fetch(`${BASE_API_URL}/stories/${storyId}/like`, {
+      credentials: 'include',
+    })
 
     if (!res.ok) {
       throw new Error('Network response was not ok')
@@ -40,7 +43,10 @@
   }
 
   const unlikeStory = async (): Promise<{ likes: number }> => {
-    const res = await fetch(`/api/stories/${storyId}/unlike`, { method: 'DELETE' })
+    const res = await fetch(`${BASE_API_URL}/stories/${storyId}/unlike`, {
+      method: 'DELETE',
+      credentials: 'include',
+    })
 
     if (!res.ok) {
       throw new Error('Network response was not ok')

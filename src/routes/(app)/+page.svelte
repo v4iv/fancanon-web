@@ -1,10 +1,10 @@
 <script lang="ts">
   import { m } from '$lib/paraglide/messages.js'
+  import { DEFAULT_LIMIT } from '$lib/constants'
   import * as Tabs from '$lib/components/ui/underline-tabs'
   import { Helmet } from '$lib/components/helmet'
   import { Ripple } from '$lib/components/ripple'
   import InfiniteFeed from '$lib/components/feed/infinite-feed.svelte'
-  import { DEFAULT_LIMIT } from '$lib/constants'
 
   const feeds = [
     { name: 'new', slug: 'new' },
@@ -34,10 +34,10 @@
 
 <Helmet title={m['home-page.title']()} />
 
-<div class="min-h-screen">
+<div class="relative min-h-screen w-full">
   <!-- Hero -->
   <div class="relative w-full py-20">
-    <div class="mx-auto w-full max-w-screen-lg space-y-5 px-2 py-3 text-center">
+    <div class="mx-auto w-full max-w-screen-lg space-y-5 p-3 text-center">
       <h1 class="font-heading text-3xl">
         {m['home-page.hero-title']()}
         <span class="font-sans font-thin tracking-wider">{m['app-name']()}</span>
@@ -51,7 +51,7 @@
 
   <div class="w-full py-5">
     <Tabs.Root bind:value={getValue, setValue} class="relative w-full">
-      <Tabs.List class="sticky top-0 w-full bg-background">
+      <Tabs.List class="sticky top-0 z-30 w-full bg-background">
         <div class="mx-auto flex w-full max-w-screen-lg items-center px-3">
           {#each feeds as feed, idx (idx)}
             {@const key = `categories.${feed.slug}`}
@@ -64,7 +64,7 @@
         {#each feeds as feed, idx (idx)}
           <Tabs.Content value={feed.slug}>
             <InfiniteFeed
-              api={`/api/feed/${feed.slug}`}
+              api={`/feed/${feed.slug}`}
               queryKeys={[feed.slug, 'stories']}
               limit={DEFAULT_LIMIT}
               enabled={currentTab === feed.slug || feed.slug === 'hot' || feed.slug === 'new'}

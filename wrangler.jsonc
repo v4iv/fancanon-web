@@ -17,9 +17,13 @@
   "workers_dev": true,
   "preview_urls": true,
   "upload_source_maps": true,
-  "vars": {
-    "ORIGIN": "https://app.fancanon.com"
-  }
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "686529197cab41778e9017a8c5fc2066",
+      "localConnectionString": "postgres://root:mysecretpassword@localhost:5432/local",
+    },
+  ],
   /**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement

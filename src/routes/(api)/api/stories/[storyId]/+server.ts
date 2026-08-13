@@ -1,11 +1,11 @@
 import type { RequestHandler } from './$types'
 import { error, json } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
-import { captureException } from '@sentry/sveltekit'
 
 import { db } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
-import { story, like, readLater } from '$lib/server/db/schema'
+import { story } from '$lib/server/db/schema'
+import { storyWithForUser } from '$lib/server/helpers/story-helper'
 
 export const GET: RequestHandler = async ({ params, request }) => {
   const storyId = params.storyId
@@ -13,38 +13,14 @@ export const GET: RequestHandler = async ({ params, request }) => {
   const session = await auth.api.getSession({ headers: request.headers })
   const userId = session?.user?.id ?? ''
 
-  try {
-    const result = await db.query.story.findFirst({
-      where: eq(story.id, storyId),
-      with: {
-        author: { columns: { id: true, name: true, username: true, image: true } },
-        tags: {
-          columns: {},
-          with: { tag: { columns: { id: true, name: true, slug: true, type: true } } },
-        },
-        fandoms: {
-          columns: {},
-          with: { fandom: { columns: { id: true, name: true, slug: true } } },
-        },
-        likes: {
-          where: eq(like.userId, userId),
-          columns: { userId: true, storyId: true },
-        },
-        readLaters: {
-          where: eq(readLater.userId, userId),
-          columns: { userId: true, storyId: true },
-        },
-      },
-    })
+  const storyRow = await db.query.story.findFirst({
+    where: eq(story.id, storyId),
+    with: storyWithForUser(userId),
+  })
 
-    if (!result) {
-      error(404, 'Not Found')
-    }
-
-    return json({ success: true, story: result }, { status: 200 })
-  } catch (err) {
-    captureException(err)
-
-    error(500, 'Something Went Wrong!')
+  if (!storyRow) {
+    error(404, 'Not Found')
   }
+
+  return json({ success: true, story: storyRow }, { status: 200 })
 }

@@ -2,14 +2,14 @@
   "$schema": "https://inlang.com/schema/inlang_message_format",
   "app-name": "fancanon",
   "title": "fancanon",
-  "description": "The Ultimate Fan Fiction Platform.",
+  "description": "The Ultimate Fan Fiction Platform. For Humans, By Humans. Read, write, and share fan fiction across every fandom in a modern, community-driven experience.",
   "navbar": {
     "sidebar-toggle": "Sidebar Toggle",
-    "search-placeholder": "title, description, tags or author...",
+    "search-placeholder": "Search...",
     "search-label": "Search",
     "create": "Create",
     "new-story": "New Story",
-    "add-chapter": "Add Chapter",
+    "add-chapter": "New Chapter",
     "theme-switcher": "Switch Themes",
     "dark": "Dark",
     "light": "Light",
@@ -19,21 +19,28 @@
     "user-menu": "User Menu",
     "sign-in": "Sign In",
     "sign-up": "Sign Up",
+    "sign-in-with-google": "Sign In with Google",
     "home": "Home",
-    "categories": "Categories",
-    "feed": "Feed",
+    "explore": "Explore",
+    "reading-lists": "Reading Lists",
+    "bookmarks": "Bookmarks",
+    "history": "History",
+    "feed": "My Feed",
+    "user": "User",
     "hi": "Hi, {name}",
     "profile": "Profile",
+    "dashboard": "Dashboard",
     "settings": "Settings",
     "sign-out": "Sign Out"
   },
   "sidebar": {
     "home": "Home",
-    "feed": "Feed",
+    "feed": "My Feed",
+    "history": "History",
     "crossovers": "Crossovers",
+    "reading-lists": "Reading Lists",
     "bookmarks": "Bookmarks",
-    "reading-lists": "Reading List",
-    "categories": "Categories"
+    "explore": "Explore"
   },
   "footer": {
     "copyright": "© {year} fancanon",
@@ -67,10 +74,11 @@
     "delete": "Delete",
     "delete-confirmation": "Are you sure you want to delete this story? Once deleted it cannot be recovered.",
     "report": "Report",
-    "chapters": "{count} Chapters",
+    "views": "{count} views",
+    "chapters": "{count} chapters",
     "comments": "{count} Comments",
     "read-later": "Read Later",
-    "in-read-later": "In Read Later",
+    "in-read-later": "In Reading List",
     "confirmation-title": "View Explicit Content?",
     "confirmation-description": "This story is marked Explicit and may contain mature themes intended for adults. If you proceed you might be taken to content consent page.",
     "hidden-tags": "+{count} more tags",
@@ -112,13 +120,13 @@
   },
   "home-page": {
     "title": "Home | fancanon",
-    "description": "The Ultimate Fan Fiction Platform.",
+    "description": "The Ultimate Fan Fiction Platform. For Humans, By Humans. Read, write, and share fan fiction across every fandom in a modern, community-driven experience.",
     "hero-title": "Welcome to",
     "hero-subtitle": "Discover amazing stories from your favorite fandoms"
   },
   "sign-up-page": {
     "title": "Sign Up | fancanon",
-    "description": "The Ultimate Fan Fiction Platform.",
+    "description": "The Ultimate Fan Fiction Platform. For Humans, By Humans. Read, write, and share fan fiction across every fandom in a modern, community-driven experience.",
     "heading": "Create Your Account",
     "subheading": "Sign Up using your Google Account",
     "sign-up-with-google": "Sign Up with Google",
@@ -137,13 +145,13 @@
     "submit": "Create Account",
     "account-exists": "Already have an account?",
     "sign-in": "Sign In",
-    "consent-statement": "By clicking on Create Account, you agree to our",
+    "consent-statement": "By continuing, you agree to our",
     "terms-and-conditions": "Terms and Condtions",
     "privacy-policy": "Privacy Policy"
   },
   "sign-in-page": {
     "title": "Sign In | fancanon",
-    "description": "The Ultimate Fan Fiction Platform.",
+    "description": "The Ultimate Fan Fiction Platform. For Humans, By Humans. Read, write, and share fan fiction across every fandom in a modern, community-driven experience.",
     "heading": "Welcome Back",
     "subheading": "Login with your Google account",
     "or": "Or continue with",
@@ -154,7 +162,7 @@
     "sign-up": "Sign Up",
     "submit": "Sign In",
     "forgot-password": "Forgot your password?",
-    "consent-statement": "By clicking on Sign In, you agree to our",
+    "consent-statement": "By continuing, you agree to our",
     "terms-and-conditions": "Terms and Condtions",
     "privacy-policy": "Privacy Policy",
     "sign-in-with-google": "Sign In with Google",
@@ -163,15 +171,21 @@
   },
   "forgot-password-page": {
     "title": "Forgot Password | fancanon",
-    "description": "The Ultimate Fan Fiction Platform."
+    "description": "The Ultimate Fan Fiction Platform. For Humans, By Humans. Read, write, and share fan fiction across every fandom in a modern, community-driven experience.",
+    "heading": "Forgot Password?",
+    "subheading": "Enter your email address to reset your password.",
+    "no-account": "Don't have an account?",
+    "sign-up": "Sign Up"
   },
   "reset-password-page": {
-    "title": "Reset Your Password | fancanon",
-    "description": "The Ultimate Fan Fiction Platform."
+    "title": "Reset Password | fancanon",
+    "description": "The Ultimate Fan Fiction Platform.",
+    "heading": "Reset Password",
+    "subheading": "Enter your new password."
   },
   "pending-verification-page": {
     "title": "Verify Your Email | fancanon",
-    "description": "The Ultimate Fan Fiction Platform.",
+    "description": "The Ultimate Fan Fiction Platform. For Humans, By Humans. Read, write, and share fan fiction across every fandom in a modern, community-driven experience.",
     "confirm-your-email": "Confirm Your Email",
     "check-inbox": "Check your inbox to activate your account. We sent a verification link to {email}.",
     "did-not-recieve": "If you haven't recieved the email —",
@@ -184,22 +198,22 @@
   },
   "tnc-page": {
     "title": "Terms and Conditions | fancanon",
-    "description": "The Ultimate Fan Fiction Platform."
+    "description": "The Ultimate Fan Fiction Platform. For Humans, By Humans. Read, write, and share fan fiction across every fandom in a modern, community-driven experience."
   },
   "privacy-policy-page": {
     "title": "Privacy Policy | fancanon",
-    "description": "The Ultimate Fan Fiction Platform."
+    "description": "The Ultimate Fan Fiction Platform. For Humans, By Humans. Read, write, and share fan fiction across every fandom in a modern, community-driven experience."
   },
   "content-policy-page": {
     "title": "Content Policy | fancanon",
-    "description": "The Ultimate Fan Fiction Platform."
+    "description": "The Ultimate Fan Fiction Platform. For Humans, By Humans. Read, write, and share fan fiction across every fandom in a modern, community-driven experience."
   },
   "faqs-page": {
     "title": "FAQs | fancanon",
-    "description": "The Ultimate Fan Fiction Platform."
+    "description": "The Ultimate Fan Fiction Platform. For Humans, By Humans. Read, write, and share fan fiction across every fandom in a modern, community-driven experience."
   },
   "roadmap-page": {
     "title": "Roadmap | fancanon",
-    "description": "The Ultimate Fan Fiction Platform."
+    "description": "The Ultimate Fan Fiction Platform. For Humans, By Humans. Read, write, and share fan fiction across every fandom in a modern, community-driven experience."
   }
 }

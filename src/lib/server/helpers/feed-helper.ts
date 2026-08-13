@@ -1,7 +1,8 @@
-// $lib/server/db/queries/ranked-stories.ts
 import { and, desc, eq, inArray, sql, type SQL } from 'drizzle-orm'
+
 import { db } from '$lib/server/db'
-import { activity, feedItem, follow, like, readLater, story } from '$lib/server/db/schema'
+import { storyWithForUser } from '$lib/server/helpers/story-helper'
+import { activity, feedItem, follow, story } from '$lib/server/db/schema'
 
 interface RankedStoriesArgs {
   /** Extra condition ANDed onto the base filter, e.g. eq(story.contentRating, 'GENERAL') */
@@ -88,25 +89,7 @@ export async function hydrateRankedStories(
 
   const stories = await db.query.story.findMany({
     where: inArray(story.id, ids),
-    with: {
-      author: { columns: { id: true, username: true } },
-      tags: {
-        columns: {},
-        with: { tag: { columns: { id: true, name: true, slug: true, type: true } } },
-      },
-      fandoms: {
-        columns: {},
-        with: { fandom: { columns: { id: true, name: true, slug: true } } },
-      },
-      likes: {
-        where: eq(like.userId, userId),
-        columns: { userId: true, storyId: true },
-      },
-      readLaters: {
-        where: eq(readLater.userId, userId),
-        columns: { userId: true, storyId: true },
-      },
-    },
+    with: storyWithForUser(userId),
   })
 
   const storyMap = new Map(stories.map((s) => [s.id, s]))

@@ -1,20 +1,23 @@
 <script lang="ts">
-	import { cn } from '$lib/utils'
+  import type { Snippet } from 'svelte'
 
-	interface Props {
-		proseSize?: 'prose-xs' | 'prose-sm' | 'prose-md' | 'prose-lg' | 'prose-xl'
-		class?: string
-		children?: any
-	}
+  import { cn } from '$lib/utils'
 
-	let { class: className = '', children }: Props = $props()
+  interface Props {
+    proseSize?: 'prose-xs' | 'prose-sm' | 'prose-md' | 'prose-lg' | 'prose-xl'
+    class?: string
+    children: Snippet<[]>
+  }
+
+  let { proseSize = 'prose-xl', class: className = '', children }: Props = $props()
 </script>
 
 <div
-	class={cn(
-		'prose prose-xl prose-zinc dark:prose-invert prose-headings:font-heading prose-img:w-full',
-		className,
-	)}
+  class={cn(
+    'prose  prose-zinc dark:prose-invert prose-headings:font-heading prose-img:w-full',
+    proseSize,
+    className,
+  )}
 >
-	{@render children()}
+  {@render children()}
 </div>

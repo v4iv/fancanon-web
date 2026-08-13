@@ -7,7 +7,6 @@ import { db } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
 import type { CommentType } from '$lib/types'
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '$lib/constants'
-import { executeRows } from '$lib/server/helpers/db-helper'
 import { comment, commentLike } from '$lib/server/db/schema'
 
 export const GET: RequestHandler = async ({ params, url, request }) => {
@@ -56,21 +55,21 @@ export const GET: RequestHandler = async ({ params, url, request }) => {
     const topLevelIds = topLevel.map((c) => c.id)
 
     const replyIds = (
-      await executeRows<{ id: string }>(
+      await db.execute<{ id: string }>(
         sql`
-	WITH RECURSIVE reply_tree AS (
-		SELECT id, parent_id, 1 AS depth
-		FROM ${comment}
-		WHERE parent_id IN ${topLevelIds}
-		UNION ALL
-		SELECT c.id, c.parent_id, rt.depth + 1
-		FROM ${comment} c
-		JOIN reply_tree rt ON c.parent_id = rt.id
-	)
-	SELECT id FROM reply_tree
-`,
+        WITH RECURSIVE reply_tree AS (
+          SELECT id, parent_id, 1 AS depth
+          FROM ${comment}
+          WHERE parent_id IN ${topLevelIds}
+          UNION ALL
+          SELECT c.id, c.parent_id, rt.depth + 1
+          FROM ${comment} c
+          JOIN reply_tree rt ON c.parent_id = rt.id
+        )
+        SELECT id FROM reply_tree
+        `,
       )
-    ).map((r) => r.id)
+    ).map((r: any) => r.id)
 
     const replies =
       replyIds.length > 0
@@ -119,6 +118,7 @@ export const GET: RequestHandler = async ({ params, url, request }) => {
       nextPage: hasMore ? page + 1 : null,
     })
   } catch (err) {
+    console.error(err)
     captureException(err)
     error(500, 'Failed To Fetch Comments')
   }

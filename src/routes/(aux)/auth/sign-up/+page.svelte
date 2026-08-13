@@ -1,9 +1,13 @@
 <script lang="ts">
+  import { page } from '$app/state'
+
   import { m } from '$lib/paraglide/messages.js'
   import { Helmet } from '$lib/components/helmet'
   import * as Card from '$lib/components/ui/card'
   import * as Field from '$lib/components/ui/field'
   import { SignUpForm } from '$lib/components/forms/sign-up-form'
+
+  const redirect = $derived(page.url?.searchParams?.get('redirect') || '/')
 </script>
 
 <Helmet title={m['sign-up-page.title']()} />
@@ -26,7 +30,7 @@
         </Card.Header>
 
         <Card.Content>
-          <SignUpForm />
+          <SignUpForm {redirect} />
         </Card.Content>
       </Card.Root>
 

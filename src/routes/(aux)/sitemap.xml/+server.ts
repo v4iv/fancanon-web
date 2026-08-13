@@ -1,8 +1,8 @@
 import type { RequestHandler } from './$types'
-import { ne } from 'drizzle-orm'
-import { db } from '$lib/server/db'
 import { ORIGIN } from '$app/env/public'
+import { ne } from 'drizzle-orm'
 
+import { db } from '$lib/server/db'
 import { story, category, fandom, tag } from '$lib/server/db/schema'
 
 const SITE_URL = ORIGIN
@@ -46,8 +46,12 @@ export const GET: RequestHandler = async () => {
 
   const staticUrls = [
     urlEntry(SITE_URL, undefined, 'daily', 1.0),
-    urlEntry(`${SITE_URL}/categories`, undefined, 'weekly', 0.8),
-    urlEntry(`${SITE_URL}/tags`, undefined, 'weekly', 0.6),
+    urlEntry(`${SITE_URL}/faqs`, undefined, 'weekly', 0.8),
+    urlEntry(`${SITE_URL}/roadmap`, undefined, 'weekly', 0.8),
+    urlEntry(`${SITE_URL}/terms-and-conditions`, undefined, 'weekly', 0.8),
+    urlEntry(`${SITE_URL}/privacy-policy`, undefined, 'weekly', 0.8),
+    urlEntry(`${SITE_URL}/content-policy`, undefined, 'weekly', 0.8),
+    urlEntry(`${SITE_URL}/licenses`, undefined, 'weekly', 0.8),
   ]
 
   const categoryUrls = categories.map((c) =>

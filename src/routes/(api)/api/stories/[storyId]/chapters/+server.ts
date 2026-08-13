@@ -17,6 +17,16 @@ export const GET: RequestHandler = async ({ request, params }) => {
     const chapters = await db.query.chapter.findMany({
       where: eq(chapter.storyId, storyId),
       orderBy: asc(chapter.chapterIndex),
+      columns: {
+        storyId: true,
+        authorId: true,
+        id: true,
+        chapterIndex: true,
+        title: true,
+        viewCount: true,
+        createdAt: true,
+        updatedAt: true,
+      },
       with: {
         bookmarks: {
           where: eq(bookmark.userId, userId),

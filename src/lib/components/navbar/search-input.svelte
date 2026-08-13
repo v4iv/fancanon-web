@@ -1,54 +1,56 @@
 <script lang="ts">
   import { SearchIcon } from '@lucide/svelte'
+  import { goto } from '$app/navigation'
 
   import { m } from '$lib/paraglide/messages.js'
-  import * as InputGroup from '$lib/components/ui/input-group'
-  import { Label } from '$lib/components/ui/label'
+  import * as ButtonGroup from '$lib/components/ui/button-group'
+  import { Input } from '$lib/components/ui/input'
+  import { Button } from '$lib/components/ui/button'
 
   interface Props {
-    query?: string
+    query: string | null
+    open?: boolean
   }
 
   const uid = $props.id()
 
-  let { query = '' }: Props = $props()
+  // eslint-disable-next-line no-useless-assignment
+  let { query = '', open = $bindable(false) }: Props = $props()
 
   let value = $derived(query)
 
-  const handleSubmit = () => {}
+  const handleSubmit = () => {
+    const trimmed = value?.trim() ?? ''
+    if (!trimmed) return
+    open = false
+    goto(`/search?q=${encodeURIComponent(trimmed)}`)
+  }
 
   const keydown = (e: KeyboardEvent) => {
-    const target = e.target as HTMLInputElement
     if (e.key === 'Enter') {
       // prevent form submit
       e.preventDefault()
-
       handleSubmit()
-      return
     }
   }
 </script>
 
-<InputGroup.Root class="rounded-full">
-  <Label for={`search-${uid}`} class="sr-only">{m['navbar.search-label']()}</Label>
-
-  <InputGroup.Input
-    id={`search-${uid}`}
+<ButtonGroup.Root class="w-full">
+  <Input
     bind:value
+    type="search"
     onkeydown={keydown}
+    id={`search-${uid}`}
+    aria-label={m['navbar.search-label']()}
     placeholder={m['navbar.search-placeholder']()}
   />
 
-  <InputGroup.Addon>
+  <Button
+    variant="outline"
+    size="icon"
+    onclick={handleSubmit}
+    aria-label={m['navbar.search-label']()}
+  >
     <SearchIcon />
-  </InputGroup.Addon>
-
-  <InputGroup.Addon align="inline-end">
-    <InputGroup.Button
-      variant="secondary"
-      class="rounded-full hover:bg-primary hover:text-primary-foreground"
-    >
-      {m['navbar.search-label']()}
-    </InputGroup.Button>
-  </InputGroup.Addon>
-</InputGroup.Root>
+  </Button>
+</ButtonGroup.Root>

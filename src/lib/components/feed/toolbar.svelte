@@ -12,7 +12,6 @@
   import { Separator } from '$lib/components/ui/separator'
 
   interface Props {
-    limit: number
     sort: string
     selectedLanguages: string[]
     selectedContentRatings: string[]
@@ -21,7 +20,6 @@
   }
 
   let {
-    limit = $bindable(),
     sort = $bindable(),
     selectedLanguages = $bindable(),
     selectedContentRatings = $bindable(),
@@ -64,8 +62,8 @@
   }
 </script>
 
-<div class="sticky top-0 border-y border-dashed bg-background">
-  <div class="mx-auto w-full max-w-screen-lg px-2 py-3">
+<div class="sticky top-0 z-30 border-y bg-background">
+  <div class="mx-auto w-full max-w-screen-lg px-3 py-3">
     <div class="flex items-center justify-between">
       <!-- Sort By -->
       <div class="flex items-center gap-2">

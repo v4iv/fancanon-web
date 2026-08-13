@@ -14,7 +14,7 @@
     title?: string
   }
 
-  let { path }: Props = $props()
+  let { path, title = 'Fancanon' }: Props = $props()
 
   // svelte-ignore state_referenced_locally
   const link = `${ORIGIN}${path}`
@@ -55,7 +55,7 @@
           <DropdownMenu.Item>
             <a
               class="flex w-full items-center gap-2"
-              href={`http://www.reddit.com/submit?url=${link}`}
+              href={`http://www.reddit.com/submit?url=${link}&title=${title}`}
             >
               <Reddit className="size-4 fill-[#FF4500]" />Share on Reddit
             </a>

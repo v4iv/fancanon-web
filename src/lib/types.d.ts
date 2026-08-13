@@ -15,6 +15,7 @@ export type StoryType = {
   completed: boolean
   wordCount: number
   likeCount: number
+  viewCount: number
   chapterCount: number
   commentCount: number
   readLaterCount: number

@@ -11,7 +11,7 @@
     title?: string
   }
 
-  let { path }: Props = $props()
+  let { path, title = 'Fancanon' }: Props = $props()
 
   // svelte-ignore state_referenced_locally
   const link = `${ORIGIN}${path}`
@@ -27,7 +27,7 @@
         link,
       })
       try {
-        await navigator.share({ url: link })
+        await navigator.share({ title, url: link })
       } catch (error) {
         console.log('Sharing Cancelled: ', error)
       }

@@ -40,6 +40,8 @@ export type AnalyticsEvent =
   | 'shared_desktop'
   | 'started_narration'
   | 'accept_explicit_consent'
+  | 'delete_history'
+  | 'clear_history'
 
 export function track(event: AnalyticsEvent, params: Record<string, unknown> = {}) {
   if (!browser || dev) return

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from '$app/state'
   import { toast } from 'svelte-sonner'
+  import { captureException } from '@sentry/sveltekit'
 
   import { m } from '$lib/paraglide/messages.js'
   import { sendVerificationEmail } from '$lib/client'
@@ -46,7 +47,8 @@
         })
 
       startTimer()
-    } catch (error) {
+    } catch (err) {
+      captureException(err)
       toast.error('Error! Something Went Wrong!', { description: 'Please try again!' })
     } finally {
       isSending = false
@@ -114,7 +116,7 @@
 
       <Field.Description class="px-6 text-center">
         {m['pending-verification-page.no-account']()}&nbsp;
-        <a href={`/auth/sign-up`} class="text-sm underline underline-offset-4"
+        <a href="/auth/sign-up" class="text-sm underline underline-offset-4"
           >{m['pending-verification-page.sign-up']()}</a
         >
       </Field.Description>

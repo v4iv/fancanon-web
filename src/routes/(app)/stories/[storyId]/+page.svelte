@@ -2,9 +2,9 @@
   import type { Component } from 'svelte'
   import type { PageProps } from './$types'
   import { goto } from '$app/navigation'
+  import { numify } from 'numify'
   import { toast } from 'svelte-sonner'
   import { formatDistanceToNow } from 'date-fns'
-  import { captureException } from '@sentry/sveltekit'
   import { createMutation, useQueryClient } from '@tanstack/svelte-query'
   import {
     CalendarIcon,
@@ -12,6 +12,7 @@
     CircleCheckIcon,
     CrownIcon,
     EllipsisVerticalIcon,
+    EyeIcon,
     FlagIcon,
     HeartIcon,
     ListIcon,
@@ -21,6 +22,7 @@
     VenetianMaskIcon,
     WholeWordIcon,
   } from '@lucide/svelte'
+  import { captureException } from '@sentry/sveltekit'
 
   import { track } from '$lib/analytics'
   import { useSession } from '$lib/client'
@@ -37,7 +39,7 @@
   import { ShareWidget } from '$lib/components/sharing'
   import { ReadLaterButton } from '$lib/components/read-later-button'
   import { ChaptersList } from '$lib/components/chapters-list'
-  // import { ReportStory } from '$lib/components/reporting'
+  import { ReportStory } from '$lib/components/reporting'
 
   let { data }: PageProps = $props()
 
@@ -113,8 +115,8 @@
 
 <Helmet title={`${data.story.title} | fancanon`} />
 
-<main class="min-h-screen">
-  <div class="mx-auto w-full max-w-screen-lg space-y-3 px-2 py-5">
+<div class="min-h-screen">
+  <div class="mx-auto w-full max-w-screen-lg space-y-3 px-3 py-5">
     <div class="flex items-center">
       <div class="flex grow flex-wrap items-center gap-2">
         <Badge variant={data.story.contentRating === 'EXPLICIT' ? 'destructive' : 'default'}>
@@ -135,13 +137,11 @@
         <Tooltip.Root>
           <Tooltip.Trigger>
             <DropdownMenu.Root>
-              <DropdownMenu.Trigger>
-                {#snippet child({ props })}
-                  <Button {...props} variant="ghost" size="icon" class="rounded-full">
-                    <EllipsisVerticalIcon class="size-4" />
-                    <span class="sr-only">{m['story.more-options']()}</span>
-                  </Button>
-                {/snippet}
+              <DropdownMenu.Trigger
+                class={buttonVariants({ variant: 'ghost', size: 'icon-lg', class: 'rounded-full' })}
+              >
+                <EllipsisVerticalIcon class="size-4" />
+                <span class="sr-only">{m['story.more-options']()}</span>
               </DropdownMenu.Trigger>
 
               <DropdownMenu.Content class="w-full">
@@ -216,7 +216,7 @@
           <a href={`/user/${data.story.author.username}`}>
             <Avatar.Root class="size-5 border">
               <Avatar.Image src={data.story.author.image ?? ''} alt={data.story.author.name} />
-              <Avatar.Fallback>{data.story.author.name}</Avatar.Fallback>
+              <Avatar.Fallback>{data.story.author.name[0]}</Avatar.Fallback>
               <span class="sr-only">{data.story.author.name}</span>
             </Avatar.Root>
           </a>
@@ -252,11 +252,15 @@
             {:else}
               {#if like}
                 <span class="flex h-5 items-center gap-2"
-                  >{m['story.unlike']()} <Separator orientation="vertical" /> {likesCount}</span
+                  >{m['story.unlike']()}
+                  <Separator orientation="vertical" />
+                  {numify(likesCount)}</span
                 >
               {:else}
                 <span class="flex h-5 items-center gap-2"
-                  >{m['story.like']()} <Separator orientation="vertical" /> {likesCount}</span
+                  >{m['story.like']()}
+                  <Separator orientation="vertical" />
+                  {numify(likesCount)}</span
                 >
               {/if}
             {/if}
@@ -281,13 +285,13 @@
                 <span class="flex h-5 items-center gap-2"
                   >{m['story.in-read-later']()}
                   <Separator orientation="vertical" />
-                  {readLaterCount}</span
+                  {numify(readLaterCount)}</span
                 >
               {:else}
                 <span class="flex h-5 items-center gap-2"
                   >{m['story.read-later']()}
                   <Separator orientation="vertical" />
-                  {readLaterCount}</span
+                  {numify(readLaterCount)}</span
                 >
               {/if}
             {/if}
@@ -296,7 +300,7 @@
       </div>
 
       <!-- Tags -->
-      <div class="my-3 space-y-2 rounded-md border p-5">
+      <div class="my-3 space-y-2 rounded-xl border p-5">
         <!-- Warning Tags -->
         <div class="flex items-center gap-2">
           <CircleAlertIcon class="size-4 text-muted-foreground" />
@@ -328,7 +332,7 @@
   </div>
 
   <div class="space-y-5">
-    <div class="border-y border-dashed py-3">
+    <div class="border-y py-3">
       <div
         class="mx-auto flex h-6 w-full max-w-screen-lg items-center justify-evenly px-2 font-mono text-sm font-semibold"
       >
@@ -357,17 +361,40 @@
             <div class="flex items-center space-x-2">
               <WholeWordIcon class="size-4" />
               <span>
-                {data.story.wordCount || 0}
+                {numify(data.story.wordCount)}
               </span>
+
               <span class="sr-only">
-                {m['story.words']({ count: data.story.wordCount })}
+                {m['story.words']({ count: numify(data.story.wordCount) })}
               </span>
             </div>
           </Tooltip.Trigger>
 
           <Tooltip.Content>
             <p>
-              {m['story.words']({ count: data.story.wordCount })}
+              {m['story.words']({ count: numify(data.story.wordCount) })}
+            </p>
+          </Tooltip.Content>
+        </Tooltip.Root>
+
+        <Separator orientation="vertical" />
+
+        <Tooltip.Root>
+          <Tooltip.Trigger>
+            <div class="flex items-center space-x-2">
+              <EyeIcon class="size-4" />
+              <span>
+                {numify(data.story.viewCount)}
+              </span>
+              <span class="sr-only">
+                {m['story.views']({ count: numify(data.story.viewCount) })}
+              </span>
+            </div>
+          </Tooltip.Trigger>
+
+          <Tooltip.Content>
+            <p>
+              {m['story.views']({ count: numify(data.story.viewCount) })}
             </p>
           </Tooltip.Content>
         </Tooltip.Root>
@@ -377,13 +404,13 @@
     <!-- Chapters -->
     <ChaptersList storyId={data.story.id} {isAuthor} />
   </div>
-</main>
+</div>
 
-<!-- <ReportStory -->
-<!--   open={openReportDialog} -->
-<!--   onOpenChange={() => (openReportDialog = !openReportDialog)} -->
-<!--   storyId={data.story.id} -->
-<!-- /> -->
+<ReportStory
+  open={openReportDialog}
+  onOpenChange={() => (openReportDialog = !openReportDialog)}
+  storyId={data.story.id}
+/>
 
 {#snippet tagSection(label: string, tags: StoryTagWithTag[])}
   {@const Icon = SECTION_ICONS[label]}

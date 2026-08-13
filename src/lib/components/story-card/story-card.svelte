@@ -2,14 +2,15 @@
   import { goto } from '$app/navigation'
   import { toast } from 'svelte-sonner'
   import { ORIGIN } from '$app/env/public'
+  import { numify } from 'numify'
   import { formatDistanceToNow } from 'date-fns'
   import { createMutation, useQueryClient } from '@tanstack/svelte-query'
-  import { captureException } from '@sentry/sveltekit'
   import {
     CalendarIcon,
     CircleAlertIcon,
     CrownIcon,
     EllipsisVerticalIcon,
+    EyeIcon,
     FlagIcon,
     ListIcon,
     MessageCircleIcon,
@@ -18,6 +19,7 @@
     Trash2Icon,
     UserIcon,
   } from '@lucide/svelte'
+  import { captureException } from '@sentry/sveltekit'
 
   import { m } from '$lib/paraglide/messages.js'
   import type { StoryType } from '$lib/types'
@@ -32,7 +34,7 @@
   import { LikeButton } from '$lib/components/like-button'
   import { ReadLaterButton } from '$lib/components/read-later-button'
   import { CollapsibleText } from '$lib/components/collapsible-text'
-  // import { ReportStory } from '$lib/components/reporting'
+  import { ReportStory } from '$lib/components/reporting'
   import { ConfirmationDialog } from '$lib/components/confirmation-dialog'
 
   interface Props {
@@ -214,11 +216,11 @@
     <Card.Title class="mb-2 font-heading text-3xl font-medium">{story.title}</Card.Title>
 
     <!-- User and Publish Date -->
-    <Card.Description class="mb-2 flex h-4 items-center gap-2 text-sm text-muted-foreground">
+    <div class="mb-2 flex h-4 items-center gap-2 text-sm text-muted-foreground">
       <UserIcon class="size-4" />
 
-      <Button
-        variant="link"
+      <a
+        href={`/user/${story.author.username}`}
         onclick={(event) => {
           event.stopPropagation()
           event.preventDefault()
@@ -228,14 +230,14 @@
         class="w-fit p-0 font-mono tracking-wide underline-offset-4 hover:text-muted-foreground hover:underline"
       >
         @{story.author.username}
-      </Button>
+      </a>
 
       <Separator orientation="vertical" class="h-4" />
 
       <CalendarIcon class="size-4" />
 
       <span>{timestamp}</span>
-    </Card.Description>
+    </div>
 
     <!-- Fandoms -->
     <div class="flex flex-wrap items-center gap-2">
@@ -277,8 +279,8 @@
   </Card.Content>
 
   <Card.Footer class="items-center justify-between">
-    <!-- Chapters -->
-    <div class="flex items-center gap-4 text-sm text-muted-foreground">
+    <div class="flex items-center gap-4 text-sm">
+      <!-- Chapters -->
       <Tooltip.Root>
         <Tooltip.Trigger>
           <div class="flex items-center gap-1">
@@ -289,6 +291,19 @@
         </Tooltip.Trigger>
 
         <Tooltip.Content>{m['story.chapters']({ count: story.chapterCount })}</Tooltip.Content>
+      </Tooltip.Root>
+
+      <!-- Views -->
+      <Tooltip.Root>
+        <Tooltip.Trigger>
+          <div class="flex items-center gap-1">
+            <EyeIcon class="size-4" />
+            {numify(story.viewCount)}
+            <span class="sr-only">{m['story.views']({ count: numify(story.viewCount) })}</span>
+          </div>
+        </Tooltip.Trigger>
+
+        <Tooltip.Content>{m['story.views']({ count: numify(story.viewCount) })}</Tooltip.Content>
       </Tooltip.Root>
     </div>
 
@@ -306,7 +321,7 @@
         bind:like
         bind:likesCount
       >
-        {likesCount > 0 ? likesCount : ''}
+        {likesCount > 0 ? numify(likesCount) : ''}
       </LikeButton>
 
       <!-- Comment Count -->
@@ -314,11 +329,18 @@
         <Tooltip.Trigger>
           <div class="flex items-center gap-1 py-1 text-muted-foreground">
             <MessageCircleIcon class="size-4" />
-            <span class="text-sm text-foreground">{story.commentCount}</span>
+
+            <span class="text-sm text-foreground">
+              {numify(story.commentCount)}
+            </span>
           </div>
         </Tooltip.Trigger>
 
-        <Tooltip.Content>{m['story.comments']({ count: story.commentCount })}</Tooltip.Content>
+        <Tooltip.Content>
+          {m['story.comments']({
+            count: numify(story.commentCount),
+          })}
+        </Tooltip.Content>
       </Tooltip.Root>
 
       <!-- Read Later Button -->
@@ -340,11 +362,11 @@
   </Card.Footer>
 </Card.Root>
 
-<!-- <ReportStory -->
-<!--   storyId={story.id} -->
-<!--   open={openReportDialog} -->
-<!--   onOpenChange={() => (openReportDialog = !openReportDialog)} -->
-<!-- /> -->
+<ReportStory
+  storyId={story.id}
+  open={openReportDialog}
+  onOpenChange={() => (openReportDialog = !openReportDialog)}
+/>
 
 <ConfirmationDialog
   title={m['story.confirmation-title']()}

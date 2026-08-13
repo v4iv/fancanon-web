@@ -2,7 +2,7 @@
 title: Roadmap
 description: Roadmap of upcoming features for fancanon
 subtitle: Roadmap of upcoming features for fancanon. (No we will not be in beta forever.)
-step: 6
+step: 7
 steps:
   - step: 1
     title: Modern Reading Experience
@@ -23,20 +23,20 @@ steps:
       easy to enjoy fanfiction while commuting, relaxing, or multitasking.
   - step: 5
     title: Feed & Social Features
-    description: Follow your favorite writers, like stories, and keep up with the latest activity from
-      the community.
+    description: Follow your favorite writers, like stories, and keep up with the
+      latest activity from the community.
   - step: 6
     title: Notifications
     description: Never miss a chapter update, comment, reply, like, or new story
       from the authors and fandoms you follow.
   - step: 7
+    title: History & Analytics
+    description: Track your reading history and gain insights into story performance
+      with useful analytics.
+  - step: 8
     title: Music Pairing
     description: Authors can attach Spotify playlists to individual chapters,
       letting readers experience the soundtrack that inspired each scene.
-  - step: 8
-    title: History & Analytics
-    description: Track your reading history and gain insights into story performance
-      with detailed reader analytics.
   - step: 9
     title: Curated Collections
     description: Browse handpicked collections of exceptional stories, themed

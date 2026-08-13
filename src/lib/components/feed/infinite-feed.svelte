@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte'
+  import { BASE_API_URL } from '$app/env/public'
   import { createInfiniteQuery } from '@tanstack/svelte-query'
   import { BookOpen, CircleAlertIcon, CircleIcon } from '@lucide/svelte'
 
@@ -21,7 +22,9 @@
   const session = useSession()
 
   const fetchStories = async ({ pageParam }: { pageParam: number | undefined }): Promise<any> => {
-    const res = await fetch(`${api}?page=${pageParam}&limit=${limit}`)
+    const res = await fetch(`${BASE_API_URL}${api}?page=${pageParam}&limit=${limit}`, {
+      credentials: 'include',
+    })
 
     if (!res.ok) {
       throw new Error('Network response was not ok')

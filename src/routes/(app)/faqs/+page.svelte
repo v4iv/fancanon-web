@@ -11,13 +11,13 @@
 
 <div class="min-h-screen">
   <div class="border-b">
-    <header class="mx-auto w-full max-w-screen-lg space-y-3 px-2 py-10">
+    <header class="mx-auto w-full max-w-screen-lg space-y-3 px-3 py-10">
       <h1 class="font-heading text-3xl md:text-5xl">{data.frontmatter.title}</h1>
       <p class="text-md md:text-lg">{data.frontmatter.subtitle}</p>
     </header>
   </div>
 
-  <div class="mx-auto w-full max-w-screen-lg px-2 py-5">
+  <div class="mx-auto w-full max-w-screen-lg px-3 py-5">
     <Accordion.Root type="multiple">
       {#each data.frontmatter.faqs as { question, answer }, idx (idx)}
         <Accordion.Item value={`item-${idx}`}>

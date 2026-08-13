@@ -72,11 +72,16 @@ export const story = pgTable(
     contentRating: contentRatingEnum('content_rating').default('GENERAL').notNull(),
     language: varchar('language').default('english').notNull(),
     completed: boolean('completed').default(false).notNull(),
+
+    // stats
     likeCount: integer('like_count').default(0).notNull(),
     wordCount: integer('word_count').default(0).notNull(),
-    readLaterCount: integer('read_later_count').default(0).notNull(),
-    commentCount: integer('comment_count').default(0).notNull(),
+    viewCount: integer('view_count').default(0).notNull(),
     chapterCount: integer('chapter_count').default(0).notNull(),
+    commentCount: integer('comment_count').default(0).notNull(),
+    readLaterCount: integer('read_later_count').default(0).notNull(),
+
+    // metadata
     meta: jsonb('meta'),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at')
@@ -116,6 +121,11 @@ export const chapter = pgTable(
     chapterIndex: integer('chapter_index'),
     title: text('title').notNull(),
     content: text('content').notNull(),
+
+    // stats
+    viewCount: integer('view_count').default(0).notNull(),
+
+    // metadata
     meta: jsonb('meta'),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at')

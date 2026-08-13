@@ -40,6 +40,7 @@ const options = {
       domain: COOKIE_DOMAIN,
     },
   },
+  experimental: { joins: true },
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,

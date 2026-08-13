@@ -11,7 +11,7 @@
 
   let {
     title = 'fancanon',
-    description = 'The Ultimate Fanfiction Platform',
+    description = 'The Ultimate Fan Fiction Platform. For Humans, By Humans. Read, write, and share fan fiction across every fandom in a modern, community-driven experience.',
     image = '/banner.jpg',
     url = page.url.href,
     author,

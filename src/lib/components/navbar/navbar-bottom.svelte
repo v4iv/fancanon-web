@@ -3,236 +3,320 @@
   import { useQueryClient } from '@tanstack/svelte-query'
   import {
     PlusIcon,
-    HouseIcon,
-    LogInIcon,
-    ListTreeIcon,
-    NewspaperIcon,
     UserRoundIcon,
-    UserRoundPlusIcon,
-    CrownIcon,
     ChevronRightIcon,
-    OrbitIcon,
+    // OrbitIcon,
     BookmarkIcon,
-    ClockIcon,
     SettingsIcon,
     LogOutIcon,
+    CompassIcon,
+    LibraryBigIcon,
+    CrownIcon,
+    CirclePlusIcon,
+    CastleIcon,
+    RotateCcwClockIcon,
+    HouseIcon,
+    NewspaperIcon,
   } from '@lucide/svelte'
 
+  import { track } from '$lib/analytics'
   import { CATEGORIES } from '$lib/constants'
   import { m } from '$lib/paraglide/messages.js'
-  import { signOut, useSession } from '$lib/client'
+  import { signIn, signOut } from '$lib/client'
   import * as Avatar from '$lib/components/ui/avatar'
+  import * as Item from '$lib/components/ui/item'
   import * as Sheet from '$lib/components/ui/sheet'
   import { Button, buttonVariants } from '$lib/components/ui/button'
-  import * as Collapsible from '$lib/components/ui/collapsible'
   import { Skeleton } from '$lib/components/ui/skeleton'
+  import { Google } from '$lib/components/brand-icons'
 
-  let open = $state(true)
-  const session = useSession()
+  interface Props {
+    redirect: string
+    session: any
+  }
+
+  let { redirect, session }: Props = $props()
+
+  // let open = $state(true)
   const client = useQueryClient()
+
+  let userSheetOpen = $state(false)
+  let createSheetOpen = $state(false)
+  let categoriesSheetOpen = $state(false)
 
   const handleSignOut = async () => {
     await signOut()
-
     client.invalidateQueries()
+    userSheetOpen = !userSheetOpen
 
     goto(`/auth/sign-in`)
   }
+
+  const continueWithGoogle = async (callbackURL: string) => {
+    track('login', { method: 'google' })
+
+    client.invalidateQueries()
+
+    await signIn.social({
+      provider: 'google',
+      callbackURL,
+    })
+  }
 </script>
 
-<footer class="fixed right-0 bottom-0 left-0 z-40 flex h-16 w-full border bg-muted md:hidden">
-  <div class="flex w-full items-center justify-between gap-2 p-4">
-    <Button variant="outline" size="lg" class="rounded-full">
-      <HouseIcon class="size-6" />
+<footer
+  class="fixed bottom-0 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 border-t bg-background/40 pb-[env(safe-area-inset-bottom,0px)] backdrop-blur-md md:hidden"
+>
+  <div class="mx-auto grid h-16 max-w-lg grid-cols-5">
+    <a href="/" class="group inline-flex flex-col items-center justify-center px-5">
+      <HouseIcon class="size-6.5" />
       <span class="sr-only">{m['navbar.home']()}</span>
-    </Button>
+    </a>
 
-    <Sheet.Root>
+    <Sheet.Root bind:open={categoriesSheetOpen}>
       <Sheet.Trigger
-        class={buttonVariants({ variant: 'outline', size: 'lg', class: 'rounded-full' })}
+        class="group inline-flex flex-col items-center justify-center rounded-s-full px-5"
       >
-        <ListTreeIcon class="size-6" />
-        <span class="sr-only">{m['navbar.categories']()}</span>
+        <CompassIcon class="size-7" />
+        <span class="sr-only">{m['navbar.explore']()}</span>
       </Sheet.Trigger>
 
-      <Sheet.Content class="z-50" side="bottom">
-        <Sheet.Header />
-        <div class="space-y-3 p-4">
-          <a
-            href="/"
-            class={buttonVariants({
-              variant: 'secondary',
-              size: 'lg',
-              class: 'w-full',
-            })}
-          >
-            <OrbitIcon class="size-4" />
-            <span>{m['sidebar.crossovers']()}</span>
-          </a>
-
-          <a
-            href="/"
-            class={buttonVariants({
-              variant: 'secondary',
-              size: 'lg',
-              class: 'w-full',
-            })}
-          >
-            <BookmarkIcon class="size-4" />
-            <span>{m['sidebar.bookmarks']()}</span>
-          </a>
-
-          <a
-            href="/"
-            class={buttonVariants({
-              variant: 'secondary',
-              size: 'lg',
-              class: 'w-full',
-            })}
-          >
-            <ClockIcon class="size-4" />
-            <span>{m['sidebar.reading-lists']()}</span>
-          </a>
-
-          <Collapsible.Root bind:open class="group/collapsible">
-            <Collapsible.Trigger>
-              {#snippet child({ props })}
-                <Button variant="ghost" class="w-full" {...props}>
-                  <CrownIcon />
-                  <span>{m['sidebar.categories']()}</span>
-                  <ChevronRightIcon
-                    class="ms-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
-                  />
-                </Button>
-              {/snippet}
-            </Collapsible.Trigger>
-
-            <Collapsible.Content>
-              {#each CATEGORIES as category, idx (idx)}
-                {@const key = `categories.${category.slug}`}
-                <a
-                  href={`/categories/${category.slug}`}
-                  class={buttonVariants({
-                    variant: 'ghost',
-                    size: 'lg',
-                    class: 'w-full',
-                  })}
-                >
-                  <span>{m[key]()}</span>
-                </a>
-              {/each}
-            </Collapsible.Content>
-          </Collapsible.Root>
-        </div>
-      </Sheet.Content>
-    </Sheet.Root>
-
-    <Sheet.Root>
-      <Sheet.Trigger
-        class={buttonVariants({ variant: 'default', size: 'lg', class: 'rounded-full p-4' })}
-      >
-        <PlusIcon class="size-8" />
-        <span class="sr-only">{m['navbar.create']()}</span>
-      </Sheet.Trigger>
-
-      <Sheet.Content class="z-50" side="bottom">
-        <Sheet.Header>
-          {m['navbar.create']()}
+      <Sheet.Content class="z-50 rounded-t-xl" side="bottom" showCloseButton={true}>
+        <Sheet.Header class="flex-row items-center gap-2">
+          <CompassIcon class="size-5" />
+          <Sheet.Title>{m['navbar.explore']()}</Sheet.Title>
         </Sheet.Header>
-
-        <div class="space-y-3 p-4">
-          <a
-            href="/stories/new"
-            class={buttonVariants({ variant: 'secondary', size: 'lg', class: 'w-full text-lg' })}
-          >
-            <PlusIcon class="size-4" />{m['navbar.new-story']()}
-          </a>
-
-          <a
-            href="/dashboard"
-            class={buttonVariants({ variant: 'secondary', size: 'lg', class: 'w-full text-lg' })}
-          >
-            <PlusIcon class="size-4" />{m['navbar.add-chapter']()}
-          </a>
+        <div class="space-y-3 px-4">
+          {#each CATEGORIES as category, idx (idx)}
+            {@const key = `categories.${category.slug}`}
+            <a
+              href={`/categories/${category.slug}`}
+              onclick={() => (categoriesSheetOpen = !categoriesSheetOpen)}
+              class={buttonVariants({
+                variant: 'outline',
+                size: 'lg',
+                class: 'w-full justify-start rounded-full text-lg',
+              })}
+            >
+              <CrownIcon />
+              <span>{m[key]()}</span>
+            </a>
+          {/each}
         </div>
+        <Sheet.Footer />
       </Sheet.Content>
     </Sheet.Root>
 
-    <Button variant="outline" size="lg" class="rounded-full">
-      <NewspaperIcon class="size-6" />
-      <span class="sr-only">{m['navbar.feed']()}</span>
-    </Button>
-
-    {#if $session?.isPending}
-      <Skeleton class="size-9 w-11.5 rounded-full bg-muted-foreground" />
-    {:else if $session.data}
-      <Sheet.Root>
+    <div class="flex items-center justify-center">
+      <Sheet.Root bind:open={createSheetOpen}>
         <Sheet.Trigger
-          class={buttonVariants({ variant: 'outline', size: 'lg', class: 'rounded-full' })}
+          class="inline-flex size-12 items-center justify-center rounded-full border bg-primary text-primary-foreground shadow-xs ring-4 ring-white"
         >
-          <UserRoundIcon class="size-6" />
-          <span class="sr-only">{m['navbar.user-menu']()}</span>
+          <PlusIcon class="size-8" />
+          <span class="sr-only">{m['navbar.create']()}</span>
         </Sheet.Trigger>
 
-        <Sheet.Content class="z-50" side="bottom">
-          <Sheet.Header class="items-center gap-2">
-            <Avatar.Root class="size-9 border">
+        <Sheet.Content class="z-50 rounded-t-xl" side="bottom" showCloseButton={true}>
+          <Sheet.Header class="flex-row items-center gap-2">
+            <PlusIcon class="size-5" />
+            <Sheet.Title>{m['navbar.create']()}</Sheet.Title>
+          </Sheet.Header>
+          <div class="space-y-3 px-4">
+            <a
+              href="/stories/new"
+              onclick={() => (createSheetOpen = !createSheetOpen)}
+              class={buttonVariants({
+                variant: 'outline',
+                size: 'lg',
+                class: 'w-full justify-start rounded-full text-lg',
+              })}
+            >
+              <CirclePlusIcon class="size-4" />{m['navbar.new-story']()}
+            </a>
+
+            <a
+              href="/dashboard"
+              onclick={() => (createSheetOpen = !createSheetOpen)}
+              class={buttonVariants({
+                variant: 'outline',
+                size: 'lg',
+                class: 'w-full justify-start rounded-full text-lg',
+              })}
+            >
+              <CirclePlusIcon class="size-4" />{m['navbar.add-chapter']()}
+            </a>
+          </div>
+          <Sheet.Footer />
+        </Sheet.Content>
+      </Sheet.Root>
+    </div>
+
+    <a href="/reading-lists" class="group inline-flex flex-col items-center justify-center px-5">
+      <LibraryBigIcon class="size-6.5" />
+      <span class="sr-only">{m['navbar.reading-lists']()}</span>
+    </a>
+
+    <Sheet.Root bind:open={userSheetOpen}>
+      {#if $session?.isPending}
+        <div class="flex items-center justify-center">
+          <Skeleton class="size-8 rounded-full bg-muted-foreground" />
+        </div>
+      {:else if $session?.data?.user}
+        <Sheet.Trigger
+          class="group inline-flex flex-col items-center justify-center rounded-e-full px-5"
+        >
+          <Avatar.Root class="size-9 border">
+            <Avatar.Image src={$session.data.user?.image} alt={$session.data.user.name} />
+            <Avatar.Fallback>{$session.data.user.name[0]}</Avatar.Fallback>
+          </Avatar.Root>
+          <span class="sr-only">{m['navbar.user']()}</span>
+        </Sheet.Trigger>
+      {:else}
+        <Sheet.Trigger
+          class="group inline-flex flex-col items-center justify-center rounded-e-full px-5"
+        >
+          <UserRoundIcon class="size-7" />
+          <span class="sr-only">{m['navbar.user']()}</span>
+        </Sheet.Trigger>
+      {/if}
+
+      <Sheet.Content class="z-50 rounded-t-xl" side="bottom" showCloseButton={true}>
+        {#if $session?.data?.user}
+          <Sheet.Header class="flex-row items-center gap-2">
+            <Avatar.Root class="size-8 border">
               <Avatar.Image src={$session.data.user?.image} alt={$session.data.user.name} />
               <Avatar.Fallback>{$session.data.user.name[0]}</Avatar.Fallback>
-
-              <span class="sr-only">{m['navbar.user-menu']()}</span>
             </Avatar.Root>
-            <p>{m['navbar.hi']({ name: $session.data.user.name })}</p>
+
+            <Sheet.Title>{m['navbar.hi']({ name: $session.data.user.name })}</Sheet.Title>
           </Sheet.Header>
 
-          <div class="space-y-3 p-4">
+          <div class="space-y-3 px-4">
             <a
               href={`/user/${$session.data.user.username}`}
-              class={buttonVariants({ variant: 'secondary', size: 'lg', class: 'w-full text-lg' })}
+              onclick={() => (userSheetOpen = !userSheetOpen)}
+              class={buttonVariants({
+                variant: 'outline',
+                size: 'lg',
+                class: 'w-full justify-start rounded-full text-lg',
+              })}
             >
               <UserRoundIcon class="size-4" />{m['navbar.profile']()}
             </a>
 
             <a
+              href="/dashboard"
+              onclick={() => (userSheetOpen = !userSheetOpen)}
+              class={buttonVariants({
+                variant: 'outline',
+                size: 'lg',
+                class: 'w-full justify-start rounded-full text-lg',
+              })}
+            >
+              <CastleIcon class="size-4" />{m['navbar.dashboard']()}
+            </a>
+
+            <a
+              href="/feed"
+              onclick={() => (userSheetOpen = !userSheetOpen)}
+              class={buttonVariants({
+                variant: 'outline',
+                size: 'lg',
+                class: 'w-full justify-start rounded-full text-lg',
+              })}
+            >
+              <NewspaperIcon class="size-4" />{m['navbar.feed']()}
+            </a>
+
+            <a
+              href="/bookmarks"
+              onclick={() => (userSheetOpen = !userSheetOpen)}
+              class={buttonVariants({
+                variant: 'outline',
+                size: 'lg',
+                class: 'w-full justify-start rounded-full text-lg',
+              })}
+            >
+              <BookmarkIcon class="size-4" />{m['navbar.bookmarks']()}
+            </a>
+
+            <a
+              href="/history"
+              onclick={() => (userSheetOpen = !userSheetOpen)}
+              class={buttonVariants({
+                variant: 'outline',
+                size: 'lg',
+                class: 'w-full justify-start rounded-full text-lg',
+              })}
+            >
+              <RotateCcwClockIcon class="size-4" />{m['navbar.history']()}
+            </a>
+
+            <a
               href="/settings"
-              class={buttonVariants({ variant: 'secondary', size: 'lg', class: 'w-full text-lg' })}
+              onclick={() => (userSheetOpen = !userSheetOpen)}
+              class={buttonVariants({
+                variant: 'outline',
+                size: 'lg',
+                class: 'w-full justify-start rounded-full text-lg',
+              })}
             >
               <SettingsIcon class="size-4" />{m['navbar.settings']()}
             </a>
-            <Button variant="destructive" onclick={handleSignOut} class="w-full text-lg">
+          </div>
+
+          <Sheet.Footer>
+            <Button
+              variant="destructive"
+              onclick={handleSignOut}
+              class="w-full rounded-full text-lg"
+            >
               <LogOutIcon class="size-4" />{m['navbar.sign-out']()}
             </Button>
-          </div>
-        </Sheet.Content>
-      </Sheet.Root>
-    {:else}
-      <Sheet.Root>
-        <Sheet.Trigger
-          class={buttonVariants({ variant: 'outline', size: 'lg', class: 'rounded-full' })}
-        >
-          <UserRoundIcon class="size-6" />
-          <span class="sr-only">{m['navbar.user-menu']()}</span>
-        </Sheet.Trigger>
-
-        <Sheet.Content class="z-50" side="bottom">
-          <Sheet.Header />
-          <div class="space-y-3 p-4">
-            <a
-              href="/auth/sign-in"
-              class={buttonVariants({ variant: 'secondary', size: 'lg', class: 'w-full text-lg' })}
+          </Sheet.Footer>
+        {:else}
+          <Sheet.Header>
+            <Sheet.Title
+              >Do more with <span class="font-sans font-thin tracking-widest">fancanon</span
+              ></Sheet.Title
             >
-              <LogInIcon class="size-4" />{m['navbar.sign-in']()}
-            </a>
+            <Sheet.Description>
+              Publish stories, add stories to reading list, follow authors and more.
+            </Sheet.Description>
+          </Sheet.Header>
 
-            <a
-              href="/auth/sign-up"
-              class={buttonVariants({ variant: 'secondary', size: 'lg', class: 'w-full text-lg' })}
-            >
-              <UserRoundPlusIcon class="size-4" />{m['navbar.sign-up']()}
-            </a>
+          <div class="space-y-3 px-4">
+            <div class="rounded-xl bg-linear-[to_right,#4285F4,#EA4335,#FBBC05,#34A853] p-[4px]">
+              <Item.Root
+                class="bg-card dark:hover:bg-input/30"
+                onclick={() => continueWithGoogle(redirect)}
+              >
+                <Item.Media variant="icon">
+                  <Google />
+                </Item.Media>
+                <Item.Content>
+                  <Item.Title class="font-sans">{m['navbar.sign-in-with-google']()}</Item.Title>
+                </Item.Content>
+
+                <Item.Media variant="icon">
+                  <ChevronRightIcon />
+                </Item.Media>
+              </Item.Root>
+            </div>
+
+            <div class="text-center">
+              <a
+                href={`/auth/sign-in?redirect=${encodeURIComponent(window.location.pathname)}`}
+                class="text-muted-foreground underline underline-offset-4"
+              >
+                or continue with email
+              </a>
+            </div>
           </div>
-        </Sheet.Content>
-      </Sheet.Root>
-    {/if}
+
+          <Sheet.Footer />
+        {/if}
+      </Sheet.Content>
+    </Sheet.Root>
   </div>
 </footer>

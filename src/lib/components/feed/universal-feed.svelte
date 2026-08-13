@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from '$app/state'
   import { goto } from '$app/navigation'
-  import { MediaQuery } from 'svelte/reactivity'
+  import { MediaQuery, SvelteURLSearchParams } from 'svelte/reactivity'
   import { createQuery } from '@tanstack/svelte-query'
   import { BookOpen, CircleAlertIcon } from '@lucide/svelte'
 
@@ -52,7 +52,7 @@
 
   // Build query parameters
   const queryParams = $derived.by(() => {
-    const params = new URLSearchParams()
+    const params = new SvelteURLSearchParams()
     params.set('page', currentPage.toString())
     params.set('limit', limit.toString())
     params.set('sort', sort)
@@ -84,7 +84,7 @@
 
   // Helper functions for URL updates
   function updateURL(updates: Record<string, string | string[] | null>) {
-    const newSearchParams = new URLSearchParams(page.url.searchParams)
+    const newSearchParams = new SvelteURLSearchParams(page.url.searchParams)
 
     for (const [key, value] of Object.entries(updates)) {
       // Remove existing values for this key
@@ -102,7 +102,10 @@
     }
 
     // Always reset to page 1 when filters change (unless we're specifically updating the page)
-    if (!updates.hasOwnProperty('page') && Object.keys(updates).some((key) => key !== 'page')) {
+    if (
+      !Object.prototype.hasOwnProperty.call(updates, 'page') &&
+      Object.keys(updates).some((key) => key !== 'page')
+    ) {
       newSearchParams.set('page', '1')
     }
 
@@ -117,7 +120,6 @@
 <div class="space-y-5">
   <!-- Toolbar -->
   <Toolbar
-    bind:limit
     bind:sort
     bind:selectedLanguages
     bind:selectedContentRatings
@@ -126,7 +128,7 @@
   />
 
   <!-- Stories -->
-  <div class="mx-auto w-full max-w-screen-lg px-2 py-3">
+  <div class="mx-auto w-full max-w-screen-lg p-3">
     <div class="space-y-3">
       {#if query.status === 'pending'}
         {#each Array(DEFAULT_LIMIT) as _, idx (idx)}

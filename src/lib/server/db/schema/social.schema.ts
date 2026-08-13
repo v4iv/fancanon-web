@@ -180,6 +180,26 @@ export const report = pgTable(
   ],
 )
 
+export const history = pgTable(
+  'history',
+  {
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    chapterId: text('chapter_id')
+      .notNull()
+      .references(() => chapter.id, { onDelete: 'cascade' }),
+    storyId: text('story_id') // denormalized — avoids a join through chapter for "distinct stories in history" queries
+      .notNull()
+      .references(() => story.id, { onDelete: 'cascade' }),
+    lastViewedAt: timestamp('last_viewed_at').defaultNow().notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.userId, table.chapterId] }),
+    index('history_user_last_viewed_idx').on(table.userId, table.lastViewedAt),
+  ],
+)
+
 /* -------------------------------------------------------------------------- */
 /*                                  Relations                                 */
 /* -------------------------------------------------------------------------- */
@@ -210,13 +230,12 @@ export const followRelations = relations(follow, ({ one }) => ({
   follower: one(user, {
     fields: [follow.followerId],
     references: [user.id],
-    relationName: 'followers',
+    relationName: 'following',
   }),
-
   followee: one(user, {
     fields: [follow.followeeId],
     references: [user.id],
-    relationName: 'following',
+    relationName: 'followers',
   }),
 }))
 
@@ -303,4 +322,10 @@ export const reportRelations = relations(report, ({ one }) => ({
     fields: [report.commentId],
     references: [comment.id],
   }),
+}))
+
+export const historyRelations = relations(history, ({ one }) => ({
+  user: one(user, { fields: [history.userId], references: [user.id] }),
+  chapter: one(chapter, { fields: [history.chapterId], references: [chapter.id] }),
+  story: one(story, { fields: [history.storyId], references: [story.id] }),
 }))

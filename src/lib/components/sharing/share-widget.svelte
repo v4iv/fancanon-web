@@ -1,21 +1,21 @@
 <script lang="ts">
-	import ShareDesktop from './share-desktop.svelte'
-	import ShareMobile from './share-mobile.svelte'
+  import ShareDesktop from './share-desktop.svelte'
+  import ShareMobile from './share-mobile.svelte'
 
-	interface Props {
-		path: string
-		title?: string
-	}
+  interface Props {
+    path: string
+    title?: string
+  }
 
-	let { path }: Props = $props()
+  let { path, title }: Props = $props()
 </script>
 
 <!-- Share Desktop -->
 <div class="hidden lg:flex">
-	<ShareDesktop {path} />
+  <ShareDesktop {title} {path} />
 </div>
 
 <!-- Share Mobile/Tablet -->
 <div class="flex lg:hidden">
-	<ShareMobile {path} />
+  <ShareMobile {title} {path} />
 </div>

@@ -1,10 +1,10 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
   import { toast } from 'svelte-sonner'
-  import { Tooltip as TooltipPrimitive } from 'bits-ui'
+  import type { Tooltip as TooltipPrimitive } from 'bits-ui'
   import { captureException } from '@sentry/sveltekit'
   import { createMutation, useQueryClient } from '@tanstack/svelte-query'
-  import { CircleCheckBigIcon, RotateCcwClockIcon } from '@lucide/svelte'
+  import { CircleCheckBigIcon, ClockIcon } from '@lucide/svelte'
 
   import { m } from '$lib/paraglide/messages.js'
   import { track } from '$lib/analytics'
@@ -132,7 +132,7 @@
     {#if readLater}
       <CircleCheckBigIcon class="size-4 text-primary" />
     {:else}
-      <RotateCcwClockIcon class="size-4 text-muted-foreground" />
+      <ClockIcon class="size-4 text-muted-foreground" />
     {/if}
     {@render children?.()}
     <span class="sr-only">{readLater ? m['story.in-read-later']() : m['story.read-later']()}</span>

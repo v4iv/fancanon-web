@@ -254,3 +254,12 @@ export const USER_REASONS: readonly [string, ...string[]] = [
   'ban evasion',
   'other',
 ]
+
+export const NO_WARNING_CHOSEN_TAG_NAME = 'author chose not to use warnings'
+
+export const VIEW_DEDUP_WINDOW_SECONDS = 60 * 30 // 30 minutes
+
+export const STORAGE_KEY = 'fc:v'
+
+export const WORD_SIMILARITY_THRESHOLD = 0.35 // title/description/author, via <%
+export const SIMILARITY_THRESHOLD = 0.3 // tag.name, via %, pg_trgm's own default

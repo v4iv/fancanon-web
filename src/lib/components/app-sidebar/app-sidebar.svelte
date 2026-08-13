@@ -4,11 +4,12 @@
   import {
     BookmarkIcon,
     ChevronRightIcon,
-    ClockIcon,
-    CrownIcon,
+    CompassIcon,
     HouseIcon,
+    LibraryBigIcon,
+    RotateCcwClockIcon,
     NewspaperIcon,
-    OrbitIcon,
+    // OrbitIcon,
   } from '@lucide/svelte'
 
   import { m } from '$lib/paraglide/messages.js'
@@ -16,12 +17,13 @@
   import { useMedia } from '$lib/hooks/use-media.svelte'
   import * as Sidebar from '$lib/components/ui/sidebar'
   import * as Collapsible from '$lib/components/ui/collapsible'
+  import { Bluesky, Discord, Reddit, X } from '$lib/components/brand-icons'
 
-  let {
-    ref = $bindable(null),
-    collapsible = 'icon',
-    ...restProps
-  }: ComponentProps<typeof Sidebar.Root> = $props()
+  interface Props extends ComponentProps<typeof Sidebar.Root> {
+    session: any
+  }
+
+  let { ref = $bindable(null), collapsible = 'icon', session, ...restProps }: Props = $props()
 
   let open = $state(true)
 
@@ -48,23 +50,23 @@
           </Sidebar.MenuButton>
         </Sidebar.MenuItem>
 
-        <Sidebar.MenuItem>
-          <Sidebar.MenuButton tooltipContent={m['sidebar.feed']()}>
-            {#snippet child({ props })}
-              <a href="/" {...props}>
-                <NewspaperIcon class="size-5" />
-                <span>{m['sidebar.feed']()}</span>
-              </a>
-            {/snippet}
-          </Sidebar.MenuButton>
-        </Sidebar.MenuItem>
+        <!-- <Sidebar.MenuItem> -->
+        <!--   <Sidebar.MenuButton tooltipContent={m['sidebar.crossovers']()}> -->
+        <!--     {#snippet child({ props })} -->
+        <!--       <a href="/" {...props}> -->
+        <!--         <OrbitIcon class="size-5" /> -->
+        <!--         <span>{m['sidebar.crossovers']()}</span> -->
+        <!--       </a> -->
+        <!--     {/snippet} -->
+        <!--   </Sidebar.MenuButton> -->
+        <!-- </Sidebar.MenuItem> -->
 
         <Sidebar.MenuItem>
-          <Sidebar.MenuButton tooltipContent={m['sidebar.crossovers']()}>
+          <Sidebar.MenuButton tooltipContent={m['sidebar.reading-lists']()}>
             {#snippet child({ props })}
-              <a href="/" {...props}>
-                <OrbitIcon class="size-5" />
-                <span>{m['sidebar.crossovers']()}</span>
+              <a href="/reading-lists" {...props}>
+                <LibraryBigIcon class="size-5" />
+                <span>{m['sidebar.reading-lists']()}</span>
               </a>
             {/snippet}
           </Sidebar.MenuButton>
@@ -73,7 +75,7 @@
         <Sidebar.MenuItem>
           <Sidebar.MenuButton tooltipContent={m['sidebar.bookmarks']()}>
             {#snippet child({ props })}
-              <a href="/" {...props}>
+              <a href="/bookmarks" {...props}>
                 <BookmarkIcon class="size-5" />
                 <span>{m['sidebar.bookmarks']()}</span>
               </a>
@@ -81,25 +83,38 @@
           </Sidebar.MenuButton>
         </Sidebar.MenuItem>
 
-        <Sidebar.MenuItem>
-          <Sidebar.MenuButton tooltipContent={m['sidebar.reading-lists']()}>
-            {#snippet child({ props })}
-              <a href="/" {...props}>
-                <ClockIcon class="size-5" />
-                <span>{m['sidebar.reading-lists']()}</span>
-              </a>
-            {/snippet}
-          </Sidebar.MenuButton>
-        </Sidebar.MenuItem>
+        {#if $session?.data?.user}
+          <Sidebar.MenuItem>
+            <Sidebar.MenuButton tooltipContent={m['sidebar.feed']()}>
+              {#snippet child({ props })}
+                <a href="/feed" {...props}>
+                  <NewspaperIcon class="size-5" />
+                  <span>{m['sidebar.feed']()}</span>
+                </a>
+              {/snippet}
+            </Sidebar.MenuButton>
+          </Sidebar.MenuItem>
+
+          <Sidebar.MenuItem>
+            <Sidebar.MenuButton tooltipContent={m['sidebar.history']()}>
+              {#snippet child({ props })}
+                <a href="/history" {...props}>
+                  <RotateCcwClockIcon class="size-5" />
+                  <span>{m['sidebar.history']()}</span>
+                </a>
+              {/snippet}
+            </Sidebar.MenuButton>
+          </Sidebar.MenuItem>
+        {/if}
 
         <Collapsible.Root bind:open class="group/collapsible">
           {#snippet child({ props })}
             <Sidebar.MenuItem {...props}>
               <Collapsible.Trigger>
                 {#snippet child({ props })}
-                  <Sidebar.MenuButton {...props} tooltipContent={m['sidebar.categories']()}>
-                    <CrownIcon />
-                    <span>{m['sidebar.categories']()}</span>
+                  <Sidebar.MenuButton {...props} tooltipContent={m['sidebar.explore']()}>
+                    <CompassIcon />
+                    <span>{m['sidebar.explore']()}</span>
                     <ChevronRightIcon
                       class="ms-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
                     />
@@ -132,10 +147,52 @@
   </Sidebar.Content>
 
   <Sidebar.Footer class="space-y-2 border-t py-4 group-data-[collapsible=icon]:hidden">
+    <div class="flex items-center justify-between gap-2 px-2">
+      <a
+        href="https://x.com/fancanonapp"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Bluesky"
+        class="block text-muted-foreground hover:text-primary"
+      >
+        <X className="size-4 fill-muted-foreground hover:fill-primary" />
+      </a>
+      <a
+        href="https://discord.gg/7EwXTUyp9u"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Discord"
+        class="block text-muted-foreground hover:text-primary"
+      >
+        <Discord className="size-5 fill-muted-foreground hover:fill-primary" />
+      </a>
+      <a
+        href="https://reddit.com/r/fancanon"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Reddit"
+        class="block text-muted-foreground hover:text-primary"
+      >
+        <Reddit className="size-5 fill-muted-foreground hover:fill-primary" />
+      </a>
+      <a
+        href="https://bsky.app/profile/fancanon.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Bluesky"
+        class="block text-muted-foreground hover:text-primary"
+      >
+        <Bluesky className="size-5 fill-muted-foreground hover:fill-primary" />
+      </a>
+    </div>
+
     <div class="flex flex-wrap items-center justify-center gap-2 text-xs font-semibold">
-      {#each LINKS as link}
+      {#each LINKS as link, idx (idx)}
         {@const key = `footer.${link.href}`}
-        <a href={`/${link.href}`} class="block text-foreground duration-150 hover:text-primary">
+        <a
+          href={`/${link.href}`}
+          class="block text-muted-foreground duration-150 hover:text-primary"
+        >
           <span>{m[key]()}</span>
         </a>
       {/each}

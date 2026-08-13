@@ -2,12 +2,15 @@ import type { PageLoad } from './$types'
 import { error } from '@sveltejs/kit'
 import { captureException } from '@sentry/sveltekit'
 
+import { getLocale } from '$lib/paraglide/runtime'
+
 export const prerender = true
 
 export const load: PageLoad = async () => {
   try {
-    // @ts-expect-error because it's a markdown file
-    const markdown = await import('../../../content/en/privacy-policy.md')
+    const locale = getLocale()
+
+    const markdown = await import(`../../../content/${locale}/privacy-policy.md`)
 
     return { content: markdown.default, frontmatter: markdown.metadata }
   } catch (err) {
