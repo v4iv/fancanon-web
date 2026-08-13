@@ -1,6 +1,6 @@
-import type { Handle } from '@sveltejs/kit'
+import type { Handle, HandleFetch } from '@sveltejs/kit'
 import { building, dev } from '$app/env'
-import { SENTRY_DSN } from '$app/env/public'
+import { BASE_API_URL, SENTRY_DSN } from '$app/env/public'
 import { sequence } from '@sveltejs/kit/hooks'
 import { svelteKitHandler } from 'better-auth/svelte-kit'
 import { handleErrorWithSentry, sentryHandle, initCloudflareSentryHandle } from '@sentry/sveltekit'
@@ -33,6 +33,16 @@ const handleBetterAuth: Handle = async ({ event, resolve }) => {
 }
 
 export const handleError = handleErrorWithSentry()
+
+export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
+  if (request.url.startsWith(BASE_API_URL)) {
+    const cookie = event.request.headers.get('cookie') || ''
+
+    request.headers.set('cookie', cookie)
+  }
+
+  return fetch(request)
+}
 
 export const handle: Handle = sequence(
   initCloudflareSentryHandle({
