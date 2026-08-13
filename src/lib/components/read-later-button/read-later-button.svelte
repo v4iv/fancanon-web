@@ -62,7 +62,6 @@
       await client.cancelQueries()
       readLaterCount += 1
       readLater = true
-
       return { readLaterCount }
     },
     onSuccess: () => {
