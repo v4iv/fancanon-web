@@ -13,7 +13,7 @@
 
   const statsQuery = createQuery(() => ({
     queryKey: ['stats'],
-    queryFn: async () => {
+    queryFn: async (): Promise<any> => {
       const res = await fetch('/api/dashboard/stats')
 
       if (!res.ok) {

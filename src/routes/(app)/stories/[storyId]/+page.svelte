@@ -1,7 +1,8 @@
 <script lang="ts">
-  import type { Component } from 'svelte'
   import type { PageProps } from './$types'
+  import type { Component } from 'svelte'
   import { goto } from '$app/navigation'
+  import { BASE_API_URL } from '$app/env/public'
   import { numify } from 'numify'
   import { toast } from 'svelte-sonner'
   import { formatDistanceToNow } from 'date-fns'
@@ -73,18 +74,19 @@
     'Additional Tags': RectangleEllipsisIcon,
   }
 
-  const deleteStory = async (): Promise<any> => {
-    const res = await fetch(`/api/stories/${data.story.id}/delete`, { method: 'DELETE' })
-
-    if (!res.ok) {
-      throw new Error('Network response was not ok')
-    }
-
-    return res.json()
-  }
-
   const deleteStoryMutation = createMutation(() => ({
-    mutationFn: deleteStory,
+    mutationFn: async () => {
+      const res = await fetch(`${BASE_API_URL}/v1/stories/${data.story.id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      })
+
+      if (!res.ok) {
+        throw new Error('Network response was not ok')
+      }
+
+      return res.json()
+    },
     onMutate: async () => {
       await client.cancelQueries()
 

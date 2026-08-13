@@ -1,5 +1,6 @@
 <script lang="ts">
   import { invalidate } from '$app/navigation'
+  import { BASE_API_URL } from '$app/env/public'
   import { toast } from 'svelte-sonner'
   import { createMutation, useQueryClient } from '@tanstack/svelte-query'
   import { captureException } from '@sentry/sveltekit'
@@ -10,7 +11,10 @@
   let { id }: { id: string } = $props()
 
   const deleteStory = async (storyId: string): Promise<any> => {
-    const res = await fetch(`/api/stories/${storyId}/delete`, { method: 'DELETE' })
+    const res = await fetch(`${BASE_API_URL}/v1/stories/${storyId}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    })
 
     if (!res.ok) {
       throw new Error('Network response was not ok')

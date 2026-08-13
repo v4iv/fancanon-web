@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
   import { toast } from 'svelte-sonner'
-  import { ORIGIN } from '$app/env/public'
+  import { BASE_API_URL, ORIGIN } from '$app/env/public'
   import { numify } from 'numify'
   import { formatDistanceToNow } from 'date-fns'
   import { createMutation, useQueryClient } from '@tanstack/svelte-query'
@@ -63,18 +63,19 @@
     groupedTags.warnings.filter(({ tag }) => !NO_WARNING_TAG_NAMES.includes(tag.name)),
   )
 
-  const deleteStory = async (): Promise<any> => {
-    const res = await fetch(`/api/stories/${story.id}/delete`, { method: 'DELETE' })
-
-    if (!res.ok) {
-      throw new Error('Network response was not ok')
-    }
-
-    return res.json()
-  }
-
   const deleteStoryMutation = createMutation(() => ({
-    mutationFn: deleteStory,
+    mutationFn: async () => {
+      const res = await fetch(`${BASE_API_URL}/v1/stories/${story.id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      })
+
+      if (!res.ok) {
+        throw new Error('Network response was not ok')
+      }
+
+      return res.json()
+    },
     onMutate: async () => {
       await client.cancelQueries()
 

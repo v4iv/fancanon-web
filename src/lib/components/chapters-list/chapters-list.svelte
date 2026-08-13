@@ -30,6 +30,7 @@
   import { Separator } from '$lib/components/ui/separator'
   import { ShareWidget } from '$lib/components/sharing'
   import { ReportChapter } from '$lib/components/reporting'
+  import { BASE_API_URL } from '$app/env/public'
 
   interface Props {
     isAuthor: boolean
@@ -43,7 +44,7 @@
   const client = useQueryClient()
 
   const fetchChapters = async (): Promise<any> => {
-    const res = await fetch(`/api/stories/${storyId}/chapters`)
+    const res = await fetch(`${BASE_API_URL}/v1/stories/${storyId}/chapters`)
 
     if (!res.ok) {
       throw new Error('Network response was not ok')

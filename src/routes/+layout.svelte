@@ -4,7 +4,7 @@
   // import { page } from '$app/state'
   // import { resolve } from '$app/paths'
   import { browser, dev } from '$app/env'
-  import { GTAG_ID } from '$app/env/public'
+  // import { GTAG_ID } from '$app/env/public'
   // import type { Pathname } from '$app/types'
   import { ModeWatcher } from 'mode-watcher'
   import { ProgressBar } from '@prgm/sveltekit-progress-bar'
@@ -30,20 +30,19 @@
   />
 
   <!-- Google tag (gtag.js) -->
-  {#if !dev}
-    <script async src={`https://www.googletagmanager.com/gtag/js?id=${GTAG_ID}`}></script>
-
-    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-    {@html `
-   <script>
-     window.dataLayer = window.dataLayer || []
-     function gtag(){dataLayer.push(arguments);}
-     gtag('js', new Date())
-
-     gtag('config', '${GTAG_ID}')
-   </script>
-	 `}
-  {/if}
+  <!-- {#if !dev && browser} -->
+  <!--   <script async src={`https://www.googletagmanager.com/gtag/js?id=${GTAG_ID}`}></script> -->
+  <!--   <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+  <!--   {@html ` -->
+  <!--  <script> -->
+  <!--    window.dataLayer = window.dataLayer || [] -->
+  <!--    function gtag(){dataLayer.push(arguments);} -->
+  <!--    gtag('js', new Date()) -->
+  <!---->
+  <!--    gtag('config', '${GTAG_ID}') -->
+  <!--  </script> -->
+  <!-- `} -->
+  <!-- {/if} -->
 </svelte:head>
 
 <ProgressBar class="text-primary" zIndex={100} />
