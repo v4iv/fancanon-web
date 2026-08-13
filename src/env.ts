@@ -44,4 +44,6 @@ export const variables = defineEnvVars({
   SENTRY_AUTH_TOKEN: {
     description: 'Sentry Auth Token',
   },
+  UPSTASH_REDIS_REST_URL: {},
+  UPSTASH_REDIS_REST_TOKEN: {},
 })
