@@ -64,7 +64,7 @@
         {#each feeds as feed, idx (idx)}
           <Tabs.Content value={feed.slug}>
             <InfiniteFeed
-              api={`/feed/${feed.slug}`}
+              api={`/v1/feed/${feed.slug}`}
               queryKeys={[feed.slug, 'stories']}
               limit={DEFAULT_LIMIT}
               enabled={currentTab === feed.slug || feed.slug === 'hot' || feed.slug === 'new'}

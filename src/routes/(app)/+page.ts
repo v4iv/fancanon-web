@@ -10,9 +10,12 @@ export const load: PageLoad = async ({ parent, fetch }) => {
   await queryClient.prefetchInfiniteQuery({
     queryKey: ['hot', 'stories'],
     queryFn: async ({ pageParam }: { pageParam: number | undefined }) => {
-      const res = await fetch(`${BASE_API_URL}/feed/hot?page=${pageParam}&limit=${DEFAULT_LIMIT}`, {
-        credentials: 'include',
-      })
+      const res = await fetch(
+        `${BASE_API_URL}/v1/feed/hot?page=${pageParam}&limit=${DEFAULT_LIMIT}`,
+        {
+          credentials: 'include',
+        },
+      )
       if (!res.ok) {
         throw new Error('Network response was not ok')
       }
@@ -24,9 +27,12 @@ export const load: PageLoad = async ({ parent, fetch }) => {
   await queryClient.prefetchInfiniteQuery({
     queryKey: ['new', 'stories'],
     queryFn: async ({ pageParam }: { pageParam: number | undefined }) => {
-      const res = await fetch(`${BASE_API_URL}/feed/new?page=${pageParam}&limit=${DEFAULT_LIMIT}`, {
-        credentials: 'include',
-      })
+      const res = await fetch(
+        `${BASE_API_URL}/v1/feed/new?page=${pageParam}&limit=${DEFAULT_LIMIT}`,
+        {
+          credentials: 'include',
+        },
+      )
       if (!res.ok) {
         throw new Error('Network response was not ok')
       }

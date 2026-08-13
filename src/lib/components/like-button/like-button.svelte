@@ -31,7 +31,7 @@
   const client = useQueryClient()
 
   const likeStory = async (): Promise<any> => {
-    const res = await fetch(`${BASE_API_URL}/stories/${storyId}/like`, {
+    const res = await fetch(`${BASE_API_URL}/v1/stories/${storyId}/like`, {
       credentials: 'include',
     })
 
@@ -43,7 +43,7 @@
   }
 
   const unlikeStory = async (): Promise<{ likes: number }> => {
-    const res = await fetch(`${BASE_API_URL}/stories/${storyId}/unlike`, {
+    const res = await fetch(`${BASE_API_URL}/v1/stories/${storyId}/unlike`, {
       method: 'DELETE',
       credentials: 'include',
     })
