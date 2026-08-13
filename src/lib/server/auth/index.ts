@@ -43,10 +43,6 @@ const options = {
   },
   secondaryStorage: !dev ? redisSecondaryStorage : undefined,
   session: {
-    cookieCache: {
-      enabled: true,
-      maxAge: 5 * 60,
-    },
     storeSessionInDatabase: true,
   },
   experimental: { joins: true },
