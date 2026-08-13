@@ -16,6 +16,7 @@
     PlusIcon,
     Trash2Icon,
   } from '@lucide/svelte'
+  import { BASE_API_URL } from '$app/env/public'
   import { captureException } from '@sentry/sveltekit'
 
   import { track } from '$lib/analytics'
@@ -30,7 +31,6 @@
   import { Separator } from '$lib/components/ui/separator'
   import { ShareWidget } from '$lib/components/sharing'
   import { ReportChapter } from '$lib/components/reporting'
-  import { BASE_API_URL } from '$app/env/public'
 
   interface Props {
     isAuthor: boolean
@@ -44,7 +44,9 @@
   const client = useQueryClient()
 
   const fetchChapters = async (): Promise<any> => {
-    const res = await fetch(`${BASE_API_URL}/v1/stories/${storyId}/chapters`)
+    const res = await fetch(`${BASE_API_URL}/v1/stories/${storyId}/chapters`, {
+      credentials: 'include',
+    })
 
     if (!res.ok) {
       throw new Error('Network response was not ok')

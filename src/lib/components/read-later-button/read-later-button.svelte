@@ -32,7 +32,7 @@
   const client = useQueryClient()
 
   const addToReadLater = async (): Promise<any> => {
-    const res = await fetch(`${BASE_API_URL}/v1/stories/${storyId}/add-to-read-later`, {
+    const res = await fetch(`${BASE_API_URL}/v1/stories/${storyId}/read-later`, {
       credentials: 'include',
     })
 
@@ -44,7 +44,7 @@
   }
 
   const removeFromReadLater = async (): Promise<any> => {
-    const res = await fetch(`${BASE_API_URL}/v1/stories/${storyId}/remove-from-read-later`, {
+    const res = await fetch(`${BASE_API_URL}/v1/stories/${storyId}/read-later`, {
       method: 'DELETE',
       credentials: 'include',
     })

@@ -43,7 +43,7 @@
   }
 
   const unlikeStory = async (): Promise<{ likes: number }> => {
-    const res = await fetch(`${BASE_API_URL}/v1/stories/${storyId}/unlike`, {
+    const res = await fetch(`${BASE_API_URL}/v1/stories/${storyId}/like`, {
       method: 'DELETE',
       credentials: 'include',
     })

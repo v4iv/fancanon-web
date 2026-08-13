@@ -1,7 +1,7 @@
 {
   "name": "fancanon-web",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.9.0@next",
   "type": "module",
   "scripts": {
     "dev": "vite dev",
@@ -42,7 +42,7 @@
     "@tanstack/svelte-query": "^6.1.38",
     "@tanstack/svelte-query-devtools": "^6.1.38",
     "@tanstack/svelte-table": "^9.1.2",
-    "@types/node": "^24",
+    "@types/node": "^26.2.0",
     "@types/slug": "^5.0.9",
     "auth": "^1.6.27",
     "better-auth": "^1.6.27",
