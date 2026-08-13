@@ -2,6 +2,7 @@
   import { page } from '$app/state'
   import { goto } from '$app/navigation'
   import { numify } from 'numify'
+  import { BASE_API_URL } from '$app/env/public'
   import { createQuery } from '@tanstack/svelte-query'
   import { SvelteURLSearchParams } from 'svelte/reactivity'
   import { CircleAlertIcon, FunnelIcon, SearchIcon } from '@lucide/svelte'
@@ -46,6 +47,7 @@
     { value: 'newest', label: 'New' },
     { value: 'oldest', label: 'Old' },
   ]
+
   const completionOptions = [
     { value: 'any', label: m['feed.any']() },
     { value: 'completed', label: m['feed.completed']() },
@@ -64,7 +66,9 @@
   }
 
   const fetchSearch = async (): Promise<APIResponse> => {
-    const response = await fetch(`/api/search?${searchParams}`)
+    const response = await fetch(`${BASE_API_URL}/v1/search?${searchParams}`, {
+      credentials: 'include',
+    })
 
     if (!response.ok) {
       throw new Error('Network response was not okay')
