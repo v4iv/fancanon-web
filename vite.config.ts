@@ -1,10 +1,12 @@
 import { defineConfig, loadEnv } from 'vite'
 import { sveltekit } from '@sveltejs/kit/vite'
+import { join } from 'path'
 import { mdsvex } from 'mdsvex'
 import tailwindcss from '@tailwindcss/vite'
 import adapter from '@sveltejs/adapter-cloudflare'
 import { sentrySvelteKit } from '@sentry/sveltekit'
 import { enhancedImages } from '@sveltejs/enhanced-img'
+import { partytownVite } from '@qwik.dev/partytown/utils'
 import { paraglideVitePlugin } from '@inlang/paraglide-js'
 
 export const mdsvexOptions = { extensions: ['.svx', '.md'] }
@@ -55,6 +57,10 @@ export default defineConfig(({ mode }) => {
         project: './project.inlang',
         outdir: './src/lib/paraglide',
         emitTsDeclarations: true,
+      }),
+
+      partytownVite({
+        dest: join(__dirname, 'static', '~partytown'),
       }),
     ],
   }
