@@ -1,13 +1,70 @@
-import type { Handle, HandleFetch } from '@sveltejs/kit'
+import { redirect, type Handle, type HandleFetch } from '@sveltejs/kit'
 import { building, dev } from '$app/env'
 import { BASE_API_URL, SENTRY_DSN } from '$app/env/public'
 import { sequence } from '@sveltejs/kit/hooks'
+import { eq } from 'drizzle-orm'
 import { svelteKitHandler } from 'better-auth/svelte-kit'
-import { handleErrorWithSentry, sentryHandle, initCloudflareSentryHandle } from '@sentry/sveltekit'
+import {
+  handleErrorWithSentry,
+  sentryHandle,
+  initCloudflareSentryHandle,
+  captureException,
+} from '@sentry/sveltekit'
 
+import { db } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
+import { story } from '$lib/server/db/schema'
 import { getTextDirection } from '$lib/paraglide/runtime'
 import { paraglideMiddleware } from '$lib/paraglide/server'
+
+const handleExplicitConsent: Handle = async ({ event, resolve }) => {
+  const storyId = event.params.storyId
+
+  if (storyId) {
+    const session = await auth.api.getSession({
+      headers: event.request.headers,
+    })
+
+    try {
+      const storyRow = await db.query.story.findFirst({
+        where: eq(story.id, storyId),
+        columns: {
+          id: true,
+          contentRating: true,
+        },
+        with: {
+          author: { columns: { id: true, username: true } },
+        },
+      })
+
+      if (storyRow) {
+        if (storyRow.contentRating === 'EXPLICIT') {
+          const isAuthor = session?.user?.id === storyRow.author.id
+
+          if (!isAuthor) {
+            const hasConsent = session?.user
+              ? Boolean(session.user.explicitConsentAt)
+              : event.cookies.get('explicit-consent') === 'true'
+
+            if (!hasConsent) {
+              const targetRedirect = event.url.searchParams.get('redirect') || event.url.pathname
+
+              throw redirect(303, `/consent?redirect=${encodeURIComponent(targetRedirect)}`)
+            }
+          }
+        }
+      }
+    } catch (err) {
+      if (err && typeof err === 'object' && 'status' in err && 'location' in err) {
+        throw err
+      }
+
+      captureException(err)
+    }
+  }
+
+  return resolve(event)
+}
 
 const handleParaglide: Handle = ({ event, resolve }) =>
   paraglideMiddleware(event.request, ({ request, locale }) => {
@@ -41,7 +98,7 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
     request.headers.set('cookie', cookie)
   }
 
-  return fetch(request)
+  return fetch(request, { credentials: 'include' })
 }
 
 export const handle: Handle = sequence(
@@ -58,4 +115,5 @@ export const handle: Handle = sequence(
   sentryHandle(),
   handleParaglide,
   handleBetterAuth,
+  handleExplicitConsent,
 )

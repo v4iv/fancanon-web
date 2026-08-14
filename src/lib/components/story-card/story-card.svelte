@@ -24,6 +24,7 @@
   import { m } from '$lib/paraglide/messages.js'
   import type { StoryType } from '$lib/types'
   import { track } from '$lib/analytics'
+  import * as AlertDialog from '$lib/components/ui/alert-dialog'
   import * as Card from '$lib/components/ui/card'
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu'
   import * as Tooltip from '$lib/components/ui/tooltip'
@@ -35,7 +36,6 @@
   import { ReadLaterButton } from '$lib/components/read-later-button'
   import { CollapsibleText } from '$lib/components/collapsible-text'
   import { ReportStory } from '$lib/components/reporting'
-  import { ConfirmationDialog } from '$lib/components/confirmation-dialog'
 
   interface Props {
     story: StoryType
@@ -55,6 +55,7 @@
   let likesCount = $derived(story.likeCount || 0)
   let openReportDialog = $state(false)
   let openConfirmationDialog = $state(false)
+  let openDeleteConfirmationDialog = $state(false)
   const groupedTags = $derived.by(() => groupTagsByType(story.tags))
 
   const NO_WARNING_TAG_NAMES = ['author chose not to use warnings', 'no warnings apply']
@@ -185,15 +186,7 @@
                 class="cursor-pointer"
                 variant="destructive"
                 disabled={deleteStoryMutation.isPending}
-                onclick={(event) => {
-                  const confirmDelete = confirm(m['story.delete-confirmation']())
-
-                  if (confirmDelete) {
-                    deleteStoryMutation.mutate()
-                  } else {
-                    event.preventDefault()
-                  }
-                }}
+                onclick={() => (openDeleteConfirmationDialog = !openDeleteConfirmationDialog)}
               >
                 <Trash2Icon class="mr-2 text-destructive" />
                 <span>{m['story.delete']()}</span>
@@ -369,10 +362,46 @@
   onOpenChange={() => (openReportDialog = !openReportDialog)}
 />
 
-<ConfirmationDialog
-  title={m['story.confirmation-title']()}
-  description={m['story.confirmation-description']()}
-  path={`/stories/${story?.id}`}
-  bind:open={openConfirmationDialog}
-  onOpenChange={() => (openConfirmationDialog = !openConfirmationDialog)}
-/>
+<AlertDialog.Root bind:open={openDeleteConfirmationDialog}>
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title>Delete Story?</AlertDialog.Title>
+      <AlertDialog.Description>
+        {m['story.delete-confirmation']()}
+      </AlertDialog.Description>
+    </AlertDialog.Header>
+    <AlertDialog.Footer>
+      <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+
+      <AlertDialog.Action
+        onclick={() => {
+          deleteStoryMutation.mutate()
+        }}
+      >
+        Delete
+      </AlertDialog.Action>
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>
+
+<AlertDialog.Root bind:open={openConfirmationDialog}>
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title>{m['story.confirmation-title']()}</AlertDialog.Title>
+      <AlertDialog.Description>
+        {m['story.confirmation-description']()}
+      </AlertDialog.Description>
+    </AlertDialog.Header>
+    <AlertDialog.Footer>
+      <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+
+      <AlertDialog.Action
+        onclick={() => {
+          goto(`/stories/${story?.id}`)
+        }}
+      >
+        Continue
+      </AlertDialog.Action>
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>
