@@ -4,12 +4,10 @@
   // import { page } from '$app/state'
   // import { resolve } from '$app/paths'
   import { browser, dev } from '$app/env'
-  import { GTAG_ID } from '$app/env/public'
   // import type { Pathname } from '$app/types'
   import { ModeWatcher } from 'mode-watcher'
   import { ProgressBar } from '@prgm/sveltekit-progress-bar'
   import { QueryClientProvider } from '@tanstack/svelte-query'
-  import { partytownSnippet } from '@qwik.dev/partytown/integration'
 
   import favicon from '$lib/assets/favicon.svg'
   import { Toaster } from '$lib/components/ui/sonner'
@@ -29,32 +27,6 @@
     name="description"
     content="The Ultimate Fan Fiction Platform. For Humans, By Humans. Read, write, and share fan fiction across every fandom in a modern, community-driven experience."
   />
-
-  <script>
-    // Forward the necessary functions to the web worker layer
-    partytown = {
-      forward: ['dataLayer.push'],
-    }
-  </script>
-  <!-- eslint-disable-next-line svelte/no-at-html-tags @typescript-eslint/no-unused-expressions -->
-  {@html '<script>' + partytownSnippet() + '</script>'}
-  <!-- Google tag (gtag.js) -->
-  {#if !dev}
-    <script
-      type="text/partytown"
-      src={`https://www.googletagmanager.com/gtag/js?id=${GTAG_ID}`}
-    ></script>
-    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-    {@html `
-     <script type="text/partytown">
-       window.dataLayer = window.dataLayer || []
-       function gtag(){dataLayer.push(arguments);}
-       gtag('js', new Date())
-
-       gtag('config', '${GTAG_ID}')
-     </script>
-    `}
-  {/if}
 </svelte:head>
 
 <ProgressBar class="text-primary" zIndex={100} />

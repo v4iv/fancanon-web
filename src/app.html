@@ -1,6 +1,6 @@
 <!doctype html>
 
-<html lang="%paraglide.lang%" dir="%paraglide.dir%">
+<html lang="%paraglide.lang%" dir="%paraglide.dir%" class="scroll-smooth">
   <head>
     <meta charset="utf-8" />
 
@@ -10,7 +10,10 @@
     %sveltekit.head%
   </head>
 
-  <body class="bg-background antialiased" data-sveltekit-preload-data="hover">
+  <body
+    class="scrollbar-thin scrollbar-thumb-primary bg-background antialiased"
+    data-sveltekit-preload-data="hover"
+  >
     <div style="display: contents">%sveltekit.body%</div>
   </body>
 </html>
