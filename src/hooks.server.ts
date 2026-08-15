@@ -2,7 +2,6 @@ import { redirect, type Handle, type HandleFetch } from '@sveltejs/kit'
 import { building, dev } from '$app/env'
 import { BASE_API_URL, SENTRY_DSN } from '$app/env/public'
 import { sequence } from '@sveltejs/kit/hooks'
-import { eq } from 'drizzle-orm'
 import { svelteKitHandler } from 'better-auth/svelte-kit'
 import {
   handleErrorWithSentry,
@@ -11,9 +10,7 @@ import {
   captureException,
 } from '@sentry/sveltekit'
 
-import { db } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
-import { story } from '$lib/server/db/schema'
 import { getTextDirection } from '$lib/paraglide/runtime'
 import { paraglideMiddleware } from '$lib/paraglide/server'
 
@@ -26,16 +23,11 @@ const handleExplicitConsent: Handle = async ({ event, resolve }) => {
     })
 
     try {
-      const storyRow = await db.query.story.findFirst({
-        where: eq(story.id, storyId),
-        columns: {
-          id: true,
-          contentRating: true,
-        },
-        with: {
-          author: { columns: { id: true, username: true } },
-        },
+      const res: any = await fetch(`${BASE_API_URL}/v1/stories/${storyId}/content-rating`, {
+        credentials: 'include',
       })
+
+      const storyRow = await res.json()
 
       if (storyRow) {
         if (storyRow.contentRating === 'EXPLICIT') {
