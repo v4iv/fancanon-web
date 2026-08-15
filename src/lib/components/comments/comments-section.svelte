@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import { CircleAlertIcon, CircleIcon } from '@lucide/svelte'
+  import { BASE_API_URL } from '$app/env/public'
   import { createInfiniteQuery } from '@tanstack/svelte-query'
+  import { CircleAlertIcon, CircleIcon } from '@lucide/svelte'
 
   import type { CommentType } from '$lib/types'
   import { useSession } from '$lib/client'
@@ -18,9 +19,10 @@
 
   const session = useSession()
 
-  const fetchComments = async ({ pageParam }: { pageParam: number | undefined }) => {
+  const fetchComments = async ({ pageParam }: { pageParam: number | undefined }): Promise<any> => {
     const res = await fetch(
-      `/api/chapters/${chapterId}/comments?page=${pageParam}&limit=${DEFAULT_LIMIT}`,
+      `${BASE_API_URL}/v1/chapters/${chapterId}/comments?page=${pageParam}&limit=${DEFAULT_LIMIT}`,
+      { credentials: 'include' },
     )
 
     if (!res.ok) {

@@ -90,7 +90,7 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
     request.headers.set('cookie', cookie)
   }
 
-  return fetch(request, { credentials: 'include' })
+  return fetch(request)
 }
 
 export const handle: Handle = sequence(

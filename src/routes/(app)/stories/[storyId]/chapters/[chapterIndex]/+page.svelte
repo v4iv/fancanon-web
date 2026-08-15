@@ -52,7 +52,10 @@
   let like = $derived(Boolean(data.story.likes.length > 0))
 
   const deleteChapter = async (): Promise<any> => {
-    const res = await fetch(`/api/chapters/${data.chapter.id}/delete`, { method: 'DELETE' })
+    const res = await fetch(`${BASE_API_URL}/v1/chapters/${chapterId}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    })
 
     if (!res.ok) {
       throw new Error('Network response was not ok')

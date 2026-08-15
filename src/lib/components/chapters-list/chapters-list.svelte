@@ -56,7 +56,10 @@
   }
 
   const deleteChapter = async (chapterId: string): Promise<any> => {
-    const res = await fetch(`/api/chapters/${chapterId}/delete`, { method: 'DELETE' })
+    const res = await fetch(`${BASE_API_URL}/v1/chapters/${chapterId}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    })
 
     if (!res.ok) {
       throw new Error('Network response was not ok')
@@ -87,7 +90,7 @@
     onSettled: () => {
       track('delete_chapter')
       client.invalidateQueries({ queryKey: ['chapters', storyId] })
-      invalidate(`/api/stories/${storyId}`)
+      invalidate(`/stories/${storyId}`)
     },
   }))
 

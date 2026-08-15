@@ -1,9 +1,10 @@
 <script lang="ts">
   import { goto, invalidate } from '$app/navigation'
   import { Tooltip as TooltipPrimitive } from 'bits-ui'
-  import * as Sentry from '@sentry/sveltekit'
+  import { BASE_API_URL } from '$app/env/public'
   import { createMutation, useQueryClient } from '@tanstack/svelte-query'
   import { BookmarkIcon, BookmarkCheckIcon } from '@lucide/svelte'
+  import { captureException } from '@sentry/sveltekit'
 
   import * as Tooltip from '$lib/components/ui/tooltip'
   import { track } from '$lib/analytics'
@@ -31,13 +32,18 @@
   const client = useQueryClient()
 
   const bookmark = async (): Promise<any> => {
-    const res = await fetch(`/api/chapters/${chapterId}/bookmark`)
+    const res = await fetch(`${BASE_API_URL}/v1/chapters/${chapterId}/bookmark`, {
+      credentials: 'include',
+    })
 
     return res.json()
   }
 
   const removeBookmark = async (): Promise<any> => {
-    const res = await fetch(`/api/chapters/${chapterId}/remove-bookmark`, { method: 'DELETE' })
+    const res = await fetch(`${BASE_API_URL}/v1/chapters/${chapterId}/bookmark`, {
+      method: 'DELETE',
+      credentials: 'include',
+    })
 
     return res.json()
   }
@@ -52,7 +58,7 @@
     },
     onError: (error) => {
       bookmarked = false
-      Sentry.captureException(error)
+      captureException(error)
     },
     onSettled: () => {
       track('bookmark_chapter', {
@@ -75,7 +81,7 @@
     },
     onError: (error) => {
       bookmarked = true
-      Sentry.captureException(error)
+      captureException(error)
     },
     onSettled: () => {
       client.invalidateQueries({ queryKey: ['chapters', storyId] })
