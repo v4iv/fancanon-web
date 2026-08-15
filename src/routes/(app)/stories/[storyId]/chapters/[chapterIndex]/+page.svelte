@@ -2,6 +2,7 @@
   import type { PageProps } from './$types'
   import { untrack } from 'svelte'
   import { goto } from '$app/navigation'
+  import { BASE_API_URL } from '$app/env/public'
   import { toast } from 'svelte-sonner'
   import * as Sentry from '@sentry/sveltekit'
   import { formatDistanceToNow } from 'date-fns'
@@ -103,8 +104,9 @@
         if (timestamp < cutoff) delete viewed[id]
       }
 
-      const response = await fetch('/api/analytics/views/record', {
+      const response = await fetch(`${BASE_API_URL}/v1/analytics/views/record`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cid, sid, viewed }),
       })
