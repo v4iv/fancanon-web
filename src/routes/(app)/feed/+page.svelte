@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte'
+  import { BASE_API_URL } from '$app/env/public'
   import { createInfiniteQuery } from '@tanstack/svelte-query'
   import { CircleAlertIcon, CircleIcon, NewspaperIcon } from '@lucide/svelte'
 
@@ -14,7 +15,9 @@
   const query = createInfiniteQuery(() => ({
     queryKey: ['user', 'feed'],
     queryFn: async ({ pageParam }: { pageParam: number | undefined }) => {
-      const res = await fetch(`/api/feed?page=${pageParam}&limit=${LIMIT}`)
+      const res = await fetch(`${BASE_API_URL}/v1/feed?page=${pageParam}&limit=${LIMIT}`, {
+        credentials: 'include',
+      })
 
       if (!res.ok) {
         throw new Error('Network response was not ok')
