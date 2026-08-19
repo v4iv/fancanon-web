@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { PageProps } from './$types'
+  import { BASE_API_URL } from '$app/env/public'
   import { createQuery } from '@tanstack/svelte-query'
   import { PlusIcon } from '@lucide/svelte'
 
@@ -14,7 +15,7 @@
   const statsQuery = createQuery(() => ({
     queryKey: ['stats'],
     queryFn: async (): Promise<any> => {
-      const res = await fetch('/api/dashboard/stats')
+      const res = await fetch(`${BASE_API_URL}/v1/dashboard/stats`, { credentials: 'include' })
 
       if (!res.ok) {
         throw new Error('Network response was not ok')
