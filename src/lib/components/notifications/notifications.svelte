@@ -1,5 +1,6 @@
 <script lang="ts">
   import { untrack } from 'svelte'
+  import { BASE_API_URL } from '$app/env/public'
   import {
     createInfiniteQuery,
     createQuery,
@@ -22,13 +23,21 @@
 
   const client = useQueryClient()
 
-  const fetchNotifications = async ({ pageParam }: { pageParam: number | undefined }) => {
-    const res = await fetch(`/api/notifications?page=${pageParam}&limit=${limit}`)
+  const fetchNotifications = async ({
+    pageParam,
+  }: {
+    pageParam: number | undefined
+  }): Promise<any> => {
+    const res = await fetch(`${BASE_API_URL}/v1/notifications?page=${pageParam}&limit=${limit}`, {
+      credentials: 'include',
+    })
     return await res.json()
   }
 
-  const fetchIndicator = async () => {
-    const res = await fetch(`/api/notifications/indicator`)
+  const fetchIndicator = async (): Promise<any> => {
+    const res = await fetch(`${BASE_API_URL}/v1/notifications/indicator`, {
+      credentials: 'include',
+    })
 
     return await res.json()
   }
@@ -56,8 +65,9 @@
 
   const markSeenMutation = createMutation(() => ({
     mutationFn: (ids: string[]) =>
-      fetch('/api/notifications/mark-seen', {
+      fetch(`${BASE_API_URL}/v1/notifications`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ notificationIds: ids }),
       }),
