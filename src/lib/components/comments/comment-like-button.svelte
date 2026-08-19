@@ -1,14 +1,15 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
-  import * as Sentry from '@sentry/sveltekit'
+  import { BASE_API_URL } from '$app/env/public'
   import { createMutation, useQueryClient } from '@tanstack/svelte-query'
-  import { Heart } from '@lucide/svelte'
+  import { HeartIcon } from '@lucide/svelte'
 
   import { cn } from '$lib/utils'
   import { track } from '$lib/analytics'
   import type { SessionUserType } from '$lib/types'
   import { buttonVariants } from '$lib/components/ui/button'
   import * as Tooltip from '$lib/components/ui/tooltip'
+  import { captureException } from '@sentry/sveltekit'
 
   interface Props {
     commentId: string
@@ -29,13 +30,18 @@
   const client = useQueryClient()
 
   const likeComment = async (): Promise<{ likes: number }> => {
-    const res = await fetch(`/api/comments/${commentId}/like`)
+    const res = await fetch(`${BASE_API_URL}/v1/comments/${commentId}/like`, {
+      credentials: 'include',
+    })
 
     return res.json()
   }
 
   const unlikeComment = async (): Promise<{ likes: number }> => {
-    const res = await fetch(`/api/comments/${commentId}/unlike`, { method: 'DELETE' })
+    const res = await fetch(`${BASE_API_URL}/v1/comments/${commentId}/like`, {
+      method: 'DELETE',
+      credentials: 'include',
+    })
 
     return res.json()
   }
@@ -52,7 +58,7 @@
     onError: (error) => {
       likesCount -= 1
       liked = false
-      Sentry.captureException(error)
+      captureException(error)
     },
     onSettled: () => {
       track('like_comment')
@@ -72,7 +78,7 @@
     onError: (error) => {
       likesCount += 1
       liked = true
-      Sentry.captureException(error)
+      captureException(error)
     },
     onSettled: () => {
       client.invalidateQueries({ queryKey: ['comments', chapterId] })
@@ -101,7 +107,7 @@
       }
     }}
   >
-    <Heart class={cn('size-4', liked ? 'fill-red-500 text-red-500' : '')} />
+    <HeartIcon class={cn('size-4', liked ? 'fill-red-500 text-red-500' : '')} />
     {likesCount ? likesCount : ''}
     <span class="sr-only">{liked ? 'Unlike' : 'Like'}</span>
   </Tooltip.Trigger>

@@ -8,6 +8,7 @@
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu'
   import * as Tooltip from '$lib/components/ui/tooltip'
   import { ReportComment } from '$lib/components/reporting'
+  import { BASE_API_URL } from '$app/env/public'
 
   interface Props {
     commentId: string
@@ -23,7 +24,10 @@
   const client = useQueryClient()
 
   const deleteComment = async (): Promise<any> => {
-    const res = await fetch(`/api/comments/${commentId}/delete`, { method: 'DELETE' })
+    const res = await fetch(`${BASE_API_URL}/v1/comments/${commentId}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    })
 
     return res.json()
   }
