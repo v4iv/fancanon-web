@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { BASE_API_URL } from '$app/env/public'
   import { createInfiniteQuery, createMutation, useQueryClient } from '@tanstack/svelte-query'
   import { CircleAlertIcon, CircleIcon, RotateCcwClockIcon, Trash2Icon } from '@lucide/svelte'
   import { captureException } from '@sentry/sveltekit'
@@ -21,7 +22,9 @@
   const query = createInfiniteQuery(() => ({
     queryKey: ['user', 'history'],
     queryFn: async ({ pageParam }: { pageParam: number | undefined }) => {
-      const res = await fetch(`/api/history?page=${pageParam}&limit=${LIMIT}`)
+      const res = await fetch(`${BASE_API_URL}/v1/history?page=${pageParam}&limit=${LIMIT}`, {
+        credentials: 'include',
+      })
 
       if (!res.ok) {
         throw new Error('Network response was not ok')
@@ -31,7 +34,7 @@
     },
     initialPageParam: DEFAULT_PAGE,
     getNextPageParam: (lastPage: any) => {
-      if (lastPage.next) {
+      if (lastPage.hasMore) {
         return lastPage.next
       }
       return undefined
@@ -40,7 +43,10 @@
 
   const clearHistoryMutation = createMutation(() => ({
     mutationFn: async () => {
-      const res = await fetch(`/api/history`, { method: 'DELETE' })
+      const res = await fetch(`${BASE_API_URL}/v1/history`, {
+        method: 'DELETE',
+        credentials: 'include',
+      })
 
       if (!res.ok) {
         throw new Error('Network response was not ok')

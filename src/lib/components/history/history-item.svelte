@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
+  import { BASE_API_URL } from '$app/env/public'
   import { formatDistanceToNow } from 'date-fns'
   import { createMutation, useQueryClient } from '@tanstack/svelte-query'
   import { DeleteIcon, RotateCcwClockIcon, UserRoundIcon } from '@lucide/svelte'
@@ -35,7 +36,10 @@
 
   const deleteHistoryMutation = createMutation(() => ({
     mutationFn: async () => {
-      const res = await fetch(`/api/history/${chapter.id}`, { method: 'DELETE' })
+      const res = await fetch(`${BASE_API_URL}/v1/history/${chapter.id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      })
 
       if (!res.ok) {
         throw new Error('Network response was not ok')

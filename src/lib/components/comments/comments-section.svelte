@@ -37,8 +37,8 @@
     queryFn: fetchComments,
     initialPageParam: DEFAULT_PAGE,
     getNextPageParam: (lastPage) => {
-      if (lastPage.nextPage) {
-        return lastPage.nextPage
+      if (lastPage.hasMore) {
+        return lastPage.next
       }
       return undefined
     },

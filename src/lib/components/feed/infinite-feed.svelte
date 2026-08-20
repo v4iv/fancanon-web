@@ -37,7 +37,7 @@
     queryKey: [...queryKeys],
     queryFn: fetchStories,
     initialPageParam: DEFAULT_PAGE,
-    getNextPageParam: (lastPage) => lastPage.next ?? undefined,
+    getNextPageParam: (lastPage) => (lastPage.hasMore ? lastPage.next : undefined),
     enabled,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false, // avoid reshuffling an in-progress infinite scroll

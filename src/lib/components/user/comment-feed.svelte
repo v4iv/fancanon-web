@@ -25,7 +25,7 @@
     queryFn: fetchComments,
     initialPageParam: 1,
     getNextPageParam: (lastPage: any) => {
-      if (lastPage.next) {
+      if (lastPage.hasMore) {
         return lastPage.next
       }
       return undefined

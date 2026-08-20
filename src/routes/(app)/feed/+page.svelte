@@ -27,7 +27,7 @@
     },
     initialPageParam: DEFAULT_PAGE,
     getNextPageParam: (lastPage: any) => {
-      if (lastPage.next) {
+      if (lastPage.hasMore) {
         return lastPage.next
       }
       return undefined
