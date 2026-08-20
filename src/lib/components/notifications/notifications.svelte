@@ -58,7 +58,7 @@
   const notificationIndicatorQuery = createQuery(() => ({
     queryKey: ['notifications', 'indicator'],
     queryFn: fetchIndicator,
-    refetchInterval: 60 * 10000, // 10 minute — light enough to not matter, frequent enough to feel responsive
+    refetchInterval: 60 * 5000, // 5 minute — light enough to not matter, frequent enough to feel responsive
     refetchOnWindowFocus: true, // catches "came back from another tab" — cheap, low-risk
     staleTime: 30 * 1000,
   }))
@@ -112,15 +112,13 @@
         <h4 class="font-heading text-lg font-semibold">{m['navbar.notifications']()}</h4>
 
         {#if query.status === 'success'}
-          {#each query.data.pages as { notifications }, idx (idx)}
-            {#if notifications.length === 0}
-              <p class="text-xs text-muted-foreground">You have no new notifications</p>
-            {:else}
-              <p class="text-xs text-muted-foreground">
-                You have {query.data.pages[0].totalCount} notifications.
-              </p>
-            {/if}
-          {/each}
+          {#if query.data.pages[0].unseenCount === 0}
+            <p class="text-xs text-muted-foreground">You have no new notifications</p>
+          {:else}
+            <p class="text-xs text-muted-foreground">
+              You have {query.data.pages[0].unseenCount} notifications.
+            </p>
+          {/if}
         {/if}
       </div>
 

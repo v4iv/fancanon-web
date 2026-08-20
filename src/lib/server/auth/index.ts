@@ -40,12 +40,14 @@ const options = {
       httpOnly: true,
       domain: COOKIE_DOMAIN,
     },
+    database: {
+      joins: true,
+    },
   },
   secondaryStorage: !dev ? redisSecondaryStorage : undefined,
   session: {
     storeSessionInDatabase: true,
   },
-  experimental: { joins: true },
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
