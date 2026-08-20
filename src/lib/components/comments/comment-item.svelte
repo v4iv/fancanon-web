@@ -3,7 +3,7 @@
   import { CirclePlusIcon, MessageCircleIcon } from '@lucide/svelte'
 
   import { MAX_THREAD_LIMIT } from '$lib/constants'
-  import type { CommentType, SessionUserType } from '$lib/types'
+  import type { CommentType, UserType } from '$lib/types'
   import * as Avatar from '$lib/components/ui/avatar'
   import { Button } from '$lib/components/ui/button'
   import { CommentItem, CommentLikeButton, CommentOptions } from './index'
@@ -11,7 +11,7 @@
 
   interface Props {
     comment: CommentType
-    user?: SessionUserType
+    user?: UserType
     onViewThread: (c: CommentType) => any
     isInThreadView?: boolean
   }

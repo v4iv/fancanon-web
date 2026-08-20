@@ -15,7 +15,7 @@ import {
 } from 'drizzle-orm/pg-core'
 
 import { cuid } from '$lib/utils'
-import type { ChapterEmbed } from '$lib/types'
+import type { ChapterEmbedType } from '$lib/types'
 import { activity, bookmark, comment, like, readLater, report, user } from '$lib/server/db/schema'
 
 export const contentRatingEnum = pgEnum('content_rating', ['GENERAL', 'TEEN', 'MATURE', 'EXPLICIT'])
@@ -127,7 +127,7 @@ export const chapter = pgTable(
     chapterIndex: integer('chapter_index'),
     title: text('title').notNull(),
     content: text('content').notNull(),
-    embed: jsonb('embed').$type<ChapterEmbed | null>(),
+    embed: jsonb('embed').$type<ChapterEmbedType | null>(),
 
     // stats
     viewCount: integer('view_count').default(0).notNull(),

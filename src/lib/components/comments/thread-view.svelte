@@ -1,13 +1,13 @@
 <script lang="ts">
   import { ArrowLeftIcon } from '@lucide/svelte'
 
-  import { type CommentType, type SessionUserType } from '$lib/types'
+  import { type CommentType, type UserType } from '$lib/types'
   import { Button } from '$lib/components/ui/button'
   import { CommentItem } from './index'
 
   interface Props {
     comment: CommentType
-    user?: SessionUserType
+    user?: UserType
     onViewThread: (c: CommentType) => any
     onBack: () => void
   }

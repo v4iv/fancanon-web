@@ -6,7 +6,7 @@
 
   import { cn } from '$lib/utils'
   import { track } from '$lib/analytics'
-  import type { SessionUserType } from '$lib/types'
+  import type { UserType } from '$lib/types'
   import { buttonVariants } from '$lib/components/ui/button'
   import * as Tooltip from '$lib/components/ui/tooltip'
   import { captureException } from '@sentry/sveltekit'
@@ -16,7 +16,7 @@
     chapterId: string
     liked: boolean
     likesCount: number
-    user?: SessionUserType
+    user?: UserType
   }
 
   let {
