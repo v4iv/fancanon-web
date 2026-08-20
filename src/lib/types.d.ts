@@ -92,3 +92,8 @@ export type CommentType = {
 }
 
 export type StoryTagWithTag = { tag: { name: string; slug: string; type: string } }
+
+export type ChapterEmbed = {
+  provider: 'spotify' | 'apple-music' // | 'youtube' | 'soundcloud' | ... later
+  url: string
+}
