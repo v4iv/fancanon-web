@@ -17,8 +17,8 @@ import { captureException } from '@sentry/sveltekit'
 import { db } from '$lib/server/db'
 import { resend } from '$lib/resend'
 import { RESTRICTED_USERNAMES } from '$lib/constants'
-import { resetPasswordTemplate, verifyEmailTemplate } from '$lib/email'
 import { redisSecondaryStorage } from '$lib/server/auth/adapters/redis-secondary-storage'
+import { deleteAccountTemplate, resetPasswordTemplate, verifyEmailTemplate } from '$lib/email'
 
 const options = {
   baseURL: {
@@ -44,9 +44,13 @@ const options = {
       joins: true,
     },
   },
-  secondaryStorage: !dev ? redisSecondaryStorage : undefined,
+  // secondaryStorage: !dev ? redisSecondaryStorage : undefined,
+  secondaryStorage: redisSecondaryStorage,
   session: {
     storeSessionInDatabase: true,
+  },
+  rateLimit: {
+    storage: 'secondary-storage',
   },
   emailAndPassword: {
     enabled: true,
@@ -62,7 +66,7 @@ const options = {
           html: resetPasswordTemplate(url),
         })
 
-        captureException(error)
+        if (error) captureException(error)
       }
     },
   },
@@ -81,7 +85,7 @@ const options = {
           html: verifyEmailTemplate(url),
         })
 
-        captureException(error)
+        if (error) captureException(error)
       }
     },
   },
@@ -112,6 +116,32 @@ const options = {
         type: 'number',
         required: false,
         defaultValue: null,
+      },
+    },
+    changeEmail: {
+      enabled: true,
+    },
+    deleteUser: {
+      enabled: true,
+      sendDeleteAccountVerification: async ({
+        user, // The user object
+        url, // The auto-generated URL for deletion
+        token, // The verification token  (can be used to generate custom URL)
+      }) => {
+        if (dev) {
+          console.log(user, url, token)
+        } else {
+          const { error } = await resend.emails.send({
+            from: 'fancanon <noreply@fancanon.com>',
+            to: user.email,
+            subject: 'Verify Delete Account Request — fancanon',
+            html: deleteAccountTemplate(url),
+          })
+
+          if (error) {
+            captureException(error)
+          }
+        }
       },
     },
   },

@@ -4,7 +4,7 @@ export default function verifyEmailTemplate(url: string) {
         <html>
           <head>
             <meta charset="UTF-8" />
-            <title>Confirm Your Email — fancanon</title>
+            <title>Verify Your Email — fancanon</title>
           </head>
           <body style="margin: 0; padding: 0; background-color: #f0fdfa; font-family: 'Helvetica Neue', Helvetica, 'Avenir Next', Avenir, sans-serif;">
             <table width="100%" cellpadding="0" cellspacing="0">
@@ -21,14 +21,14 @@ export default function verifyEmailTemplate(url: string) {
                     <!-- Body -->
                     <tr>
                       <td style="padding: 40px;">
-                        <h2 style="margin-top: 0; color: #042f2e; font-size: 20px;">Confirm Your Email</h2>
+                        <h2 style="margin-top: 0; color: #042f2e; font-size: 20px;">Verify Your Email Address</h2>
                         <p style="color: #115e59; font-size: 16px; line-height: 1.5;">
-                         Just one more step to get started with your <span style="font-weight: 100;">fancanon</span> account. Click the button below to confirm your email address.
+                          Please confirm your email address to complete your account setup or update request for <span style="font-weight: 100;">fancanon</span>.
                         </p>
                         <p style="margin: 30px 0; text-align: center;">
-                          <a href="${url}" style="background-color: #0d9488; color: #f0fdfa; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block;">Confirm Email</a>
+                          <a href="${url}" style="background-color: #0d9488; color: #f0fdfa; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block;">Verify Email</a>
                         </p>
-                        <p style="color: #115e59; font-size: 14px;">If you didn't sign up for <span style="font-weight: 100;">fancanon</span>, <a href="mailto:support@fancanon.com" style="color: #0f766e;">Contact Us</a> immediately.</p>
+                        <p style="color: #115e59; font-size: 14px;">If you didn't request this change or sign up for <span style="font-weight: 100;">fancanon</span>, you can safely ignore this email or <a href="mailto:support@fancanon.com" style="color: #0f766e;">Contact Us</a> if you have concerns.</p>
                       </td>
                     </tr>
                     <!-- Footer -->

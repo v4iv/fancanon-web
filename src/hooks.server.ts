@@ -14,6 +14,16 @@ import { auth } from '$lib/server/auth'
 import { getTextDirection } from '$lib/paraglide/runtime'
 import { paraglideMiddleware } from '$lib/paraglide/server'
 
+export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
+  if (request.url.startsWith(BASE_API_URL)) {
+    const cookie = event.request.headers.get('cookie') || ''
+
+    request.headers.set('cookie', cookie)
+  }
+
+  return fetch(request)
+}
+
 const handleExplicitConsent: Handle = async ({ event, resolve }) => {
   const storyId = event.params.storyId
 
@@ -82,16 +92,6 @@ const handleBetterAuth: Handle = async ({ event, resolve }) => {
 }
 
 export const handleError = handleErrorWithSentry()
-
-export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
-  if (request.url.startsWith(BASE_API_URL)) {
-    const cookie = event.request.headers.get('cookie') || ''
-
-    request.headers.set('cookie', cookie)
-  }
-
-  return fetch(request)
-}
 
 export const handle: Handle = sequence(
   initCloudflareSentryHandle({
