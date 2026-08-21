@@ -44,12 +44,19 @@
 
     isLoading = true
 
-    const res = await fetch(`${searchAPI}=${query}`)
-    const data = await res.json()
+    const res = await fetch(`${searchAPI}=${query}`, { credentials: 'include' })
 
-    isLoading = false
+    if (!res.ok) {
+      options = { results: [] }
+
+      isLoading = false
+    }
+
+    const data: any = await res.json()
 
     options = data
+
+    isLoading = false
   }
 
   // We want to refocus the trigger button when the user selects

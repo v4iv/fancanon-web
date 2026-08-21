@@ -3,7 +3,6 @@
 
   import { Separator } from '$lib/components/ui/separator'
   import { NavbarMini } from '$lib/components/navbar'
-  import { Footer } from '$lib/components/footer'
 
   const Teapot = (await import('$lib/assets/kawaii/418-Teapot.png?format=avif')).default
   const NotFound = (await import('$lib/assets/kawaii/404-NotFound.png?format=avif')).default
@@ -94,5 +93,3 @@
     </div>
   {/if}
 </main>
-
-<Footer />

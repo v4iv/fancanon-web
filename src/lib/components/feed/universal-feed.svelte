@@ -44,8 +44,8 @@
       : Object.keys(Languages),
   )
   let selectedContentRatings = $derived<string[]>(
-    searchParams.getAll('contentRating').length
-      ? searchParams.getAll('contentRating')
+    searchParams.getAll('ratings').length
+      ? searchParams.getAll('ratings')
       : Object.values(ContentRating),
   )
   let completion = $derived(searchParams.get('completion') || 'any')
@@ -58,7 +58,7 @@
     params.set('sort', sort)
 
     selectedLanguages.forEach((lang) => params.append('languages', lang))
-    selectedContentRatings.forEach((rating) => params.append('contentRating', rating))
+    selectedContentRatings.forEach((rating) => params.append('ratings', rating))
 
     if (completion !== 'any') {
       params.set('completion', completion)

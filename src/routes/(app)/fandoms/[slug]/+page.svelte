@@ -7,12 +7,13 @@
   import Badge from '$lib/components/ui/badge/badge.svelte'
   import { UniversalFeed } from '$lib/components/feed'
   import { CollapsibleText } from '$lib/components/collapsible-text'
+  import { BASE_API_URL } from '$app/env/public'
 
   let { data }: PageProps = $props()
 
   const slug = $derived(page.params.slug ?? '')
 
-  let api = $derived(`/api/fandoms/${slug}`)
+  let api = $derived(`${BASE_API_URL}/v1/fandoms/${slug}`)
 </script>
 
 <Helmet title={`${data.fandom.name} | Fandoms | fancanon`} />

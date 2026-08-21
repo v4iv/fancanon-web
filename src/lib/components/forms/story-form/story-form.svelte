@@ -1,6 +1,7 @@
 <script lang="ts">
   import { toast } from 'svelte-sonner'
   import { goto } from '$app/navigation'
+  import { BASE_API_URL } from '$app/env/public'
   import { isHttpError, type RemoteForm } from '@sveltejs/kit'
   import { useQueryClient } from '@tanstack/svelte-query'
   import { CircleAlertIcon, CircleIcon } from '@lucide/svelte'
@@ -148,7 +149,7 @@
         bind:value={fandoms}
         createFormPath="/fandoms/new"
         createActionLabel="Add New Fandom"
-        searchAPI="/api/fandoms/search?q"
+        searchAPI={`${BASE_API_URL}/v1/fandoms/search?q`}
         placeholder="Select one or more fandoms..."
       />
 

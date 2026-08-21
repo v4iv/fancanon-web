@@ -46,7 +46,7 @@
       ? selectedContentRatings.filter((r: string) => r !== rating)
       : [...selectedContentRatings, rating]
 
-    updateURL({ contentRating: newRatings })
+    updateURL({ ratings: newRatings })
   }
 
   function updateCompletion(newCompletion: string) {
