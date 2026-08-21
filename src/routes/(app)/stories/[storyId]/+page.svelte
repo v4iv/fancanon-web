@@ -136,64 +136,53 @@
       <div class="flex items-center gap-2">
         <ShareWidget path={`/stories/${data.story.id}`} />
 
-        <Tooltip.Root>
-          <Tooltip.Trigger>
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger
-                class={buttonVariants({ variant: 'ghost', size: 'icon-lg', class: 'rounded-full' })}
-              >
-                <EllipsisVerticalIcon class="size-4" />
-                <span class="sr-only">{m['story.more-options']()}</span>
-              </DropdownMenu.Trigger>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger
+            class={buttonVariants({ variant: 'ghost', size: 'icon-lg', class: 'rounded-full' })}
+          >
+            <EllipsisVerticalIcon class="size-4" />
+            <span class="sr-only">{m['story.more-options']()}</span>
+          </DropdownMenu.Trigger>
 
-              <DropdownMenu.Content class="w-full">
-                <DropdownMenu.Group>
-                  {#if isAuthor}
-                    <DropdownMenu.Item>
-                      <a
-                        href={`/stories/${data.story.id}/edit`}
-                        class="flex w-full items-center gap-2"
-                      >
-                        <PencilIcon class="mr-2 size-4" />
-                        <span>{m['story.edit']()}</span>
-                      </a>
-                    </DropdownMenu.Item>
+          <DropdownMenu.Content class="w-full">
+            <DropdownMenu.Group>
+              {#if isAuthor}
+                <DropdownMenu.Item>
+                  <a href={`/stories/${data.story.id}/edit`} class="flex w-full items-center gap-2">
+                    <PencilIcon class="mr-2 size-4" />
+                    <span>{m['story.edit']()}</span>
+                  </a>
+                </DropdownMenu.Item>
 
-                    <DropdownMenu.Item
-                      class="cursor-pointer"
-                      variant="destructive"
-                      onclick={(event) => {
-                        const confirmDelete = confirm(m['story.delete-confirmation']())
+                <DropdownMenu.Item
+                  class="cursor-pointer"
+                  variant="destructive"
+                  onclick={(event) => {
+                    const confirmDelete = confirm(m['story.delete-confirmation']())
 
-                        if (confirmDelete) {
-                          deleteStoryMutation.mutate()
-                        } else {
-                          event.preventDefault()
-                        }
-                      }}
-                    >
-                      <Trash2Icon class="mr-2" />
-                      <span>{m['story.delete']()}</span>
-                    </DropdownMenu.Item>
-                  {:else}
-                    <DropdownMenu.Item
-                      class="cursor-pointer"
-                      variant="destructive"
-                      onclick={() => (openReportDialog = !openReportDialog)}
-                    >
-                      <FlagIcon class="mr-2" />
-                      <span>{m['story.report']()}</span>
-                    </DropdownMenu.Item>
-                  {/if}
-                </DropdownMenu.Group>
-              </DropdownMenu.Content>
-            </DropdownMenu.Root>
-          </Tooltip.Trigger>
-
-          <Tooltip.Content>
-            <p>{m['story.more-options']()}</p>
-          </Tooltip.Content>
-        </Tooltip.Root>
+                    if (confirmDelete) {
+                      deleteStoryMutation.mutate()
+                    } else {
+                      event.preventDefault()
+                    }
+                  }}
+                >
+                  <Trash2Icon class="mr-2" />
+                  <span>{m['story.delete']()}</span>
+                </DropdownMenu.Item>
+              {:else}
+                <DropdownMenu.Item
+                  class="cursor-pointer"
+                  variant="destructive"
+                  onclick={() => (openReportDialog = !openReportDialog)}
+                >
+                  <FlagIcon class="mr-2" />
+                  <span>{m['story.report']()}</span>
+                </DropdownMenu.Item>
+              {/if}
+            </DropdownMenu.Group>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
       </div>
     </div>
 
