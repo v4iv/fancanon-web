@@ -6,8 +6,8 @@
   import { BookmarkIcon, BookmarkCheckIcon } from '@lucide/svelte'
   import { captureException } from '@sentry/sveltekit'
 
-  import * as Tooltip from '$lib/components/ui/tooltip'
   import { track } from '$lib/analytics'
+  import * as Tooltip from '$lib/components/ui/tooltip'
 
   interface Props extends TooltipPrimitive.TriggerProps {
     storyTitle?: string

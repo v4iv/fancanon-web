@@ -5,13 +5,13 @@
   import remarkParse from 'remark-parse'
   import remarkGfm from 'remark-gfm'
   import { toString as mdastToString } from 'mdast-util-to-string'
-  import { Pause, Play, Repeat, Speech, Square } from '@lucide/svelte'
+  import { PauseIcon, PlayIcon, RepeatIcon, SpeechIcon, SquareIcon } from '@lucide/svelte'
 
   import { track } from '$lib/analytics'
-  import { buttonVariants } from '$lib/components/ui/button'
+  import { Languages } from '$lib/constants'
   import * as Popover from '$lib/components/ui/popover'
   import * as Tooltip from '$lib/components/ui/tooltip'
-  import { Languages } from '$lib/constants'
+  import { buttonVariants } from '$lib/components/ui/button'
 
   interface Props {
     text: string
@@ -128,131 +128,118 @@
   let isNarratable = $derived(Boolean(speechLang))
 </script>
 
-<Tooltip.Root>
-  <Tooltip.Trigger>
-    <Popover.Root>
-      <Popover.Trigger
-        class={buttonVariants({ variant: !isSpeaking ? 'outline' : 'default', size: 'icon' })}
-      >
-        <Speech />
-        <span class="sr-only">Narration</span>
-      </Popover.Trigger>
+<Popover.Root>
+  <Popover.Trigger
+    class={buttonVariants({ variant: !isSpeaking ? 'outline' : 'default', size: 'icon' })}
+  >
+    <SpeechIcon />
+    <span class="sr-only">Narration</span>
+  </Popover.Trigger>
 
-      <Popover.Content class="w-40">
-        {#if !isSupported}
-          <p><strong>Narration</strong> isn't supported in this browser.</p>
-        {:else if isNarratable}
-          <div class="flex items-center justify-center gap-2">
-            {#if !isSpeaking}
-              <Tooltip.Root>
-                <Tooltip.Trigger
-                  disabled={!isSupported}
-                  onclick={startReading}
-                  class={buttonVariants({
-                    variant: 'outline',
-                    size: 'icon',
-                    class: 'rounded-full',
-                  })}
-                >
-                  <Play />
-                  <span class="sr-only">Start Narration</span>
-                </Tooltip.Trigger>
+  <Popover.Content class="w-40">
+    {#if !isSupported}
+      <p><strong>Narration</strong> isn't supported in this browser.</p>
+    {:else if isNarratable}
+      <div class="flex items-center justify-center gap-2">
+        {#if !isSpeaking}
+          <Tooltip.Root>
+            <Tooltip.Trigger
+              disabled={!isSupported}
+              onclick={startReading}
+              class={buttonVariants({
+                variant: 'outline',
+                size: 'icon',
+                class: 'rounded-full',
+              })}
+            >
+              <PlayIcon />
+              <span class="sr-only">Start Narration</span>
+            </Tooltip.Trigger>
 
-                <Tooltip.Content>
-                  <p>Start Narration</p>
-                </Tooltip.Content>
-              </Tooltip.Root>
-            {:else}
-              {#if isPaused}
-                <Tooltip.Root>
-                  <Tooltip.Trigger
-                    onclick={resumeReading}
-                    class={buttonVariants({
-                      variant: 'outline',
-                      size: 'icon',
-                      class: 'rounded-full',
-                    })}
-                  >
-                    <Play />
-                    <span class="sr-only">Resume Narration</span>
-                  </Tooltip.Trigger>
-
-                  <Tooltip.Content>
-                    <p>Resume Narration</p>
-                  </Tooltip.Content>
-                </Tooltip.Root>
-              {:else}
-                <Tooltip.Root>
-                  <Tooltip.Trigger
-                    onclick={pauseReading}
-                    class={buttonVariants({
-                      variant: 'default',
-                      size: 'icon',
-                      class: 'rounded-full',
-                    })}
-                  >
-                    <Pause />
-                    <span class="sr-only">Pause Narration</span>
-                  </Tooltip.Trigger>
-
-                  <Tooltip.Content>
-                    <p>Pause Narration</p>
-                  </Tooltip.Content>
-                </Tooltip.Root>
-              {/if}
-              <Tooltip.Root>
-                <Tooltip.Trigger
-                  onclick={restartReading}
-                  class={buttonVariants({
-                    variant: 'outline',
-                    size: 'icon',
-                    class: 'rounded-full',
-                  })}
-                >
-                  <Repeat />
-                  <span class="sr-only">Restart Narration</span>
-                </Tooltip.Trigger>
-
-                <Tooltip.Content>
-                  <p>Restart Narration</p>
-                </Tooltip.Content>
-              </Tooltip.Root>
-            {/if}
-
+            <Tooltip.Content>
+              <p>Start Narration</p>
+            </Tooltip.Content>
+          </Tooltip.Root>
+        {:else}
+          {#if isPaused}
             <Tooltip.Root>
               <Tooltip.Trigger
-                onclick={stopReading}
-                disabled={!isSpeaking}
+                onclick={resumeReading}
                 class={buttonVariants({
-                  variant: 'destructive',
+                  variant: 'outline',
                   size: 'icon',
                   class: 'rounded-full',
                 })}
               >
-                <Square />
-                <span class="sr-only">Stop Narration</span>
+                <PlayIcon />
+                <span class="sr-only">Resume Narration</span>
               </Tooltip.Trigger>
 
               <Tooltip.Content>
-                <p>Stop Narration</p>
+                <p>Resume Narration</p>
               </Tooltip.Content>
             </Tooltip.Root>
-          </div>
-        {:else}
-          <p>
-            <strong>Narration</strong> is only available for English, Spanish, and French stories at the
-            moment.
-          </p>
-        {/if}
-      </Popover.Content>
-    </Popover.Root>
-  </Tooltip.Trigger>
+          {:else}
+            <Tooltip.Root>
+              <Tooltip.Trigger
+                onclick={pauseReading}
+                class={buttonVariants({
+                  variant: 'default',
+                  size: 'icon',
+                  class: 'rounded-full',
+                })}
+              >
+                <PauseIcon />
+                <span class="sr-only">Pause Narration</span>
+              </Tooltip.Trigger>
 
-  <Tooltip.Content>
-    {#if isSupported}
-      <p>Narration</p>
+              <Tooltip.Content>
+                <p>Pause Narration</p>
+              </Tooltip.Content>
+            </Tooltip.Root>
+          {/if}
+          <Tooltip.Root>
+            <Tooltip.Trigger
+              onclick={restartReading}
+              class={buttonVariants({
+                variant: 'outline',
+                size: 'icon',
+                class: 'rounded-full',
+              })}
+            >
+              <RepeatIcon />
+              <span class="sr-only">Restart Narration</span>
+            </Tooltip.Trigger>
+
+            <Tooltip.Content>
+              <p>Restart Narration</p>
+            </Tooltip.Content>
+          </Tooltip.Root>
+        {/if}
+
+        <Tooltip.Root>
+          <Tooltip.Trigger
+            onclick={stopReading}
+            disabled={!isSpeaking}
+            class={buttonVariants({
+              variant: 'destructive',
+              size: 'icon',
+              class: 'rounded-full',
+            })}
+          >
+            <SquareIcon />
+            <span class="sr-only">Stop Narration</span>
+          </Tooltip.Trigger>
+
+          <Tooltip.Content>
+            <p>Stop Narration</p>
+          </Tooltip.Content>
+        </Tooltip.Root>
+      </div>
     {:else}
-      <p>Narration is only available for English, Spanish, and French stories at the moment.</p>
+      <p>
+        <strong>Narration</strong> is only available for English, Spanish, and French stories at the moment.
+      </p>
     {/if}
-  </Tooltip.Content>
-</Tooltip.Root>
+  </Popover.Content>
+</Popover.Root>

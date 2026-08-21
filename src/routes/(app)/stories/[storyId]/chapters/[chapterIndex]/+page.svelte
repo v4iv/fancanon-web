@@ -154,7 +154,7 @@
               </Breadcrumb.Item>
             </Tooltip.Trigger>
             <Tooltip.Content>
-              <p>{data.story.title}</p>
+              {data.story.title}
             </Tooltip.Content>
           </Tooltip.Root>
           <Breadcrumb.Separator />
@@ -183,67 +183,59 @@
 
         <ShareWidget path={`/stories/${data.story.id}/chapters/${data.chapter.chapterIndex}`} />
 
-        <Tooltip.Root>
-          <Tooltip.Trigger>
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger
-                class={buttonVariants({ variant: 'ghost', size: 'icon-lg', class: 'rounded-full' })}
-              >
-                <EllipsisVerticalIcon class="size-4" />
-                <span class="sr-only">Options</span>
-              </DropdownMenu.Trigger>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger
+            class={buttonVariants({ variant: 'ghost', size: 'icon-lg', class: 'rounded-full' })}
+          >
+            <EllipsisVerticalIcon class="size-4" />
+            <span class="sr-only">Options</span>
+          </DropdownMenu.Trigger>
 
-              <DropdownMenu.Content class="w-full">
-                <DropdownMenu.Group>
-                  {#if $session?.data?.user?.id === data.chapter.authorId}
-                    <DropdownMenu.Item>
-                      <a
-                        href={`/stories/${data.story.id}/chapters/${data.chapter.chapterIndex}/edit`}
-                        class="flex w-full items-center gap-2"
-                      >
-                        <PencilIcon class="mr-2 size-4" />
-                        <span>Edit</span>
-                      </a>
-                    </DropdownMenu.Item>
+          <DropdownMenu.Content class="w-full">
+            <DropdownMenu.Group>
+              {#if $session?.data?.user?.id === data.chapter.authorId}
+                <DropdownMenu.Item>
+                  <a
+                    href={`/stories/${data.story.id}/chapters/${data.chapter.chapterIndex}/edit`}
+                    class="flex w-full items-center gap-2"
+                  >
+                    <PencilIcon class="mr-2 size-4" />
+                    <span>Edit</span>
+                  </a>
+                </DropdownMenu.Item>
 
-                    <DropdownMenu.Item
-                      class="cursor-pointer"
-                      variant="destructive"
-                      disabled={deleteChapterMutation.isPending}
-                      onclick={(event) => {
-                        const confirmDelete = confirm(
-                          'Are you sure you want to delete this Chapter? Once deleted it cannont be recovered.',
-                        )
+                <DropdownMenu.Item
+                  class="cursor-pointer"
+                  variant="destructive"
+                  disabled={deleteChapterMutation.isPending}
+                  onclick={(event) => {
+                    const confirmDelete = confirm(
+                      'Are you sure you want to delete this Chapter? Once deleted it cannont be recovered.',
+                    )
 
-                        if (confirmDelete) {
-                          deleteChapterMutation.mutate()
-                        } else {
-                          event.preventDefault()
-                        }
-                      }}
-                    >
-                      <Trash2Icon class="mr-2" />
-                      <span>Delete</span>
-                    </DropdownMenu.Item>
-                  {:else}
-                    <DropdownMenu.Item
-                      class="cursor-pointer"
-                      variant="destructive"
-                      onclick={() => (openReportDialog = !openReportDialog)}
-                    >
-                      <FlagIcon class="mr-2" />
-                      <span>Report</span>
-                    </DropdownMenu.Item>
-                  {/if}
-                </DropdownMenu.Group>
-              </DropdownMenu.Content>
-            </DropdownMenu.Root>
-          </Tooltip.Trigger>
-
-          <Tooltip.Content>
-            <p>Options</p>
-          </Tooltip.Content>
-        </Tooltip.Root>
+                    if (confirmDelete) {
+                      deleteChapterMutation.mutate()
+                    } else {
+                      event.preventDefault()
+                    }
+                  }}
+                >
+                  <Trash2Icon class="mr-2" />
+                  <span>Delete</span>
+                </DropdownMenu.Item>
+              {:else}
+                <DropdownMenu.Item
+                  class="cursor-pointer"
+                  variant="destructive"
+                  onclick={() => (openReportDialog = !openReportDialog)}
+                >
+                  <FlagIcon class="mr-2" />
+                  <span>Report</span>
+                </DropdownMenu.Item>
+              {/if}
+            </DropdownMenu.Group>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
       </div>
     </div>
 
@@ -280,69 +272,67 @@
     <!-- Toolbar -->
     <div class="sticky top-0 z-30 space-y-5 bg-background">
       <div class="border-b py-3">
-        <div
-          class="mx-auto flex w-full max-w-screen-md items-center justify-between px-3 font-mono text-sm font-semibold"
-        >
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger class={buttonVariants({ variant: 'outline', size: 'sm' })}>
-              Chapter {data.chapter.chapterIndex}
-              <ChevronDownIcon />
-            </DropdownMenu.Trigger>
+        <div class="mx-auto w-full max-w-screen-md space-y-2 px-3">
+          <div class="flex items-center justify-between font-mono text-sm font-semibold">
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger class={buttonVariants({ variant: 'outline', size: 'sm' })}>
+                Chapter {data.chapter.chapterIndex}
+                <ChevronDownIcon />
+              </DropdownMenu.Trigger>
 
-            <DropdownMenu.Content>
-              <DropdownMenu.Group>
-                <DropdownMenu.Label>Select Chapter</DropdownMenu.Label>
+              <DropdownMenu.Content>
+                <DropdownMenu.Group>
+                  <DropdownMenu.Label>Select Chapter</DropdownMenu.Label>
 
-                <DropdownMenu.Separator />
+                  <DropdownMenu.Separator />
 
-                {#each data.story.chapters as chapter, idx (idx)}
-                  {#if chapter.chapterIndex === data.chapter.chapterIndex}
-                    <DropdownMenu.Item disabled>
-                      Chapter {chapter.chapterIndex}
-                    </DropdownMenu.Item>
-                  {:else}
-                    <DropdownMenu.Item>
-                      <a
-                        href={`/stories/${data.story.id}/chapters/${chapter.chapterIndex}`}
-                        class="flex w-full items-center gap-2"
-                      >
+                  {#each data.story.chapters as chapter, idx (idx)}
+                    {#if chapter.chapterIndex === data.chapter.chapterIndex}
+                      <DropdownMenu.Item disabled>
                         Chapter {chapter.chapterIndex}
-                      </a>
-                    </DropdownMenu.Item>
-                  {/if}
-                {/each}
-              </DropdownMenu.Group>
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
+                      </DropdownMenu.Item>
+                    {:else}
+                      <DropdownMenu.Item>
+                        <a
+                          href={`/stories/${data.story.id}/chapters/${chapter.chapterIndex}`}
+                          class="flex w-full items-center gap-2"
+                        >
+                          Chapter {chapter.chapterIndex}
+                        </a>
+                      </DropdownMenu.Item>
+                    {/if}
+                  {/each}
+                </DropdownMenu.Group>
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
 
-          <div class="flex space-x-2">
-            <Narration text={data.chapter.content} language={data.story.language} />
+            <div class="flex space-x-2">
+              <Narration text={data.chapter.content} language={data.story.language} />
 
-            <Tooltip.Root>
-              <Tooltip.Trigger class={buttonVariants({ variant: 'outline', size: 'icon' })}>
-                <a href="#comments">
-                  <MessageCircleIcon />
-                  <span class="sr-only">Jump to Comments</span>
-                </a>
-              </Tooltip.Trigger>
+              <Tooltip.Root>
+                <Tooltip.Trigger class={buttonVariants({ variant: 'outline', size: 'icon' })}>
+                  <a href="#comments">
+                    <MessageCircleIcon />
+                    <span class="sr-only">Jump to Comments</span>
+                  </a>
+                </Tooltip.Trigger>
+              </Tooltip.Root>
 
-              <Tooltip.Content><p>Jump to Comments</p></Tooltip.Content>
-            </Tooltip.Root>
-
-            <BookmarkButton
-              class={buttonVariants({
-                variant: bookmarked ? 'secondary' : 'outline',
-                size: 'icon',
-              })}
-              storyId={data.story.id}
-              storyTitle={data.story.title}
-              chapterId={data.chapter.id}
-              chapterTitle={data.chapter.title.length
-                ? data.chapter.title
-                : `Chapter ${data.chapter.chapterIndex}`}
-              user={$session?.data?.user}
-              bind:bookmarked
-            />
+              <BookmarkButton
+                class={buttonVariants({
+                  variant: bookmarked ? 'secondary' : 'outline',
+                  size: 'icon',
+                })}
+                storyId={data.story.id}
+                storyTitle={data.story.title}
+                chapterId={data.chapter.id}
+                chapterTitle={data.chapter.title.length
+                  ? data.chapter.title
+                  : `Chapter ${data.chapter.chapterIndex}`}
+                user={$session?.data?.user}
+                bind:bookmarked
+              />
+            </div>
           </div>
         </div>
       </div>
