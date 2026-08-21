@@ -75,7 +75,6 @@
     </Button>
   </div>
 
-  <!-- logo & app name -->
   {#if uwuState.enabled}
     <!-- uwu -->
     <div class="shrink-0">
