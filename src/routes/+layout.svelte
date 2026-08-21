@@ -14,7 +14,7 @@
   import { TooltipProvider } from '$lib/components/ui/tooltip'
   // import { locales, localizeHref } from '$lib/paraglide/runtime'
 
-  const SvelteQueryDevtools = (await import('@tanstack/svelte-query-devtools')).SvelteQueryDevtools
+  // const SvelteQueryDevtools = (await import('@tanstack/svelte-query-devtools')).SvelteQueryDevtools
 
   let { data, children }: LayoutProps = $props()
 </script>
@@ -39,7 +39,7 @@
   </TooltipProvider>
 
   {#if dev && browser}
-    <SvelteQueryDevtools />
+    <!-- <SvelteQueryDevtools /> -->
   {/if}
 </QueryClientProvider>
 

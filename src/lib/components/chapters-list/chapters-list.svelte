@@ -28,7 +28,6 @@
   import * as Tooltip from '$lib/components/ui/tooltip'
   import { Button, buttonVariants } from '$lib/components/ui/button'
   import { Skeleton } from '$lib/components/ui/skeleton'
-  import { Separator } from '$lib/components/ui/separator'
   import { ShareWidget } from '$lib/components/sharing'
   import { ReportChapter } from '$lib/components/reporting'
 
@@ -145,20 +144,16 @@
                       </div>
                     </Item.Title>
 
-                    <Item.Description class="flex h-4 items-center gap-2 text-xs">
-                      <EyeIcon class="size-3" />
-
-                      <span>
+                    <Item.Description class="flex flex-wrap items-center gap-2 text-xs">
+                      <span class="flex items-center gap-2">
+                        <EyeIcon class="size-3" />
                         {m['story.views']({
                           count: numify(chapter.viewCount),
                         })}
                       </span>
 
-                      <Separator orientation="vertical" />
-
-                      <CalendarIcon class="size-3" />
-
-                      <span>
+                      <span class="flex items-center gap-2">
+                        <CalendarIcon class="size-3" />
                         {formatDistanceToNow(new Date(chapter.createdAt)) + ' ago'}
                       </span>
                     </Item.Description>

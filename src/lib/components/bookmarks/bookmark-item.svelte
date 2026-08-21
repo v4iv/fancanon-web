@@ -71,7 +71,7 @@
                   </div>
                 </Item.Title>
 
-                <Item.Description class="flex h-4 items-center gap-2 text-xs">
+                <Item.Description class="flex items-center gap-2 text-xs">
                   <CalendarIcon class="size-3" />
 
                   <span>

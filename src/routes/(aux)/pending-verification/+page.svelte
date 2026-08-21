@@ -83,14 +83,14 @@
           <Card.Description></Card.Description>
         </Card.Header>
         {#if email}
-          <Card.Content class="text-center">
-            <h2 class="text-3xl">
+          <Card.Content class="text-center wrap-break-word">
+            <h2 class="text-xl">
               {m['pending-verification-page.check-inbox']({ email })}
             </h2>
           </Card.Content>
 
           <Card.Footer class="flex-col text-sm">
-            <div class="flex items-center justify-center">
+            <div class="flex flex-wrap items-center justify-center">
               {m['pending-verification-page.did-not-recieve']()}
               <Button variant="link" onclick={handleResend} disabled={isDisabled}>
                 {#if isSending}

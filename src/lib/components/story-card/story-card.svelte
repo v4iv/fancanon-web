@@ -305,7 +305,7 @@
       <!-- Like Button -->
       <LikeButton
         class={buttonVariants({
-          variant: like ? 'secondary' : 'ghost',
+          variant: like ? 'secondary' : 'outline',
           size: 'sm',
           class: 'rounded-full',
         })}
@@ -342,7 +342,7 @@
         class={buttonVariants({
           variant: readLater ? 'secondary' : 'outline',
           size: 'sm',
-          class: 'rounded-full',
+          class: 'rounded-full first:gap-0',
         })}
         storyTitle={story.title}
         storyId={story.id}
@@ -350,7 +350,9 @@
         bind:readLater
         bind:readLaterCount
       >
-        {readLater ? m['story.in-read-later']() : m['story.read-later']()}
+        <span class="hidden md:block">
+          {readLater ? m['story.in-read-later']() : m['story.read-later']()}
+        </span>
       </ReadLaterButton>
     </div>
   </Card.Footer>
