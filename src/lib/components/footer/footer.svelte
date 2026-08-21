@@ -1,6 +1,8 @@
 <script lang="ts">
   import { LINKS } from '$lib/constants'
+  import { Button } from '$lib/components/ui/button'
   import { Bluesky, Discord, Reddit, X } from '$lib/components/brand-icons'
+  import { toggleUwu, uwuState } from '$lib/hooks/uwu.svelte'
 </script>
 
 <footer class="border-t py-10 md:py-16">
@@ -57,5 +59,15 @@
     <p class="block text-center font-mono text-sm text-muted-foreground">
       Copyright &copy; {new Date().getFullYear()} fancanon &bull; All rights reserved
     </p>
+
+    <div class="mx-auto flex justify-center">
+      <Button type="button" variant="link" size="xs" onclick={toggleUwu}>
+        {#if uwuState.enabled}
+          no uwu plz
+        {:else}
+          uwu?
+        {/if}
+      </Button>
+    </div>
   </div>
 </footer>

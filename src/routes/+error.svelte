@@ -1,9 +1,8 @@
 <script lang="ts">
   import { page } from '$app/state'
-  import { ORIGIN } from '$app/env/public'
 
-  import { m } from '$lib/paraglide/messages.js'
   import { Separator } from '$lib/components/ui/separator'
+  import { NavbarMini } from '$lib/components/navbar'
   import { Footer } from '$lib/components/footer'
 
   const Teapot = (await import('$lib/assets/kawaii/418-Teapot.png?format=avif')).default
@@ -22,12 +21,7 @@
   <meta name="description" content="The Ultimate Fanfiction Platform" />
 </svelte:head>
 
-<header class="flex w-full items-center justify-center border-b p-4">
-  <a href={`${ORIGIN}`} class="flex shrink-0 items-center gap-2">
-    <img src="/logo.svg" alt="fancanon logo that links to home" width={24} height={24} />
-    <span class="text-2xl font-thin tracking-wider">{m['app-name']()}</span>
-  </a>
-</header>
+<NavbarMini />
 
 <main class="mx-auto flex min-h-screen w-full max-w-screen-lg items-center justify-center">
   {#if page.status === 403}

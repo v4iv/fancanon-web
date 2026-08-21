@@ -17,7 +17,9 @@
   import { useMedia } from '$lib/hooks/use-media.svelte'
   import * as Sidebar from '$lib/components/ui/sidebar'
   import * as Collapsible from '$lib/components/ui/collapsible'
+  import { Button } from '$lib/components/ui/button'
   import { Bluesky, Discord, Reddit, X } from '$lib/components/brand-icons'
+  import { toggleUwu, uwuState } from '$lib/hooks/uwu.svelte'
 
   interface Props extends ComponentProps<typeof Sidebar.Root> {
     session: any
@@ -198,10 +200,18 @@
       {/each}
     </div>
 
-    <div class="space-y-2">
+    <div class="flex flex-col justify-center space-y-2">
       <p class="block text-center font-mono text-xs font-extralight text-muted-foreground">
         {m['footer.copyright']({ year: new Date().getFullYear() })}
       </p>
+
+      <Button type="button" variant="link" size="xs" onclick={toggleUwu}>
+        {#if uwuState.enabled}
+          no uwu plz
+        {:else}
+          uwu?
+        {/if}
+      </Button>
     </div>
   </Sidebar.Footer>
 </Sidebar.Root>

@@ -1,10 +1,12 @@
 <script lang="ts">
   import { m } from '$lib/paraglide/messages.js'
+  import uwu from '$lib/assets/kawaii/uwu-shadow.svg'
   import { DEFAULT_LIMIT } from '$lib/constants'
   import * as Tabs from '$lib/components/ui/underline-tabs'
   import { Helmet } from '$lib/components/helmet'
   import { Ripple } from '$lib/components/ripple'
   import InfiniteFeed from '$lib/components/feed/infinite-feed.svelte'
+  import { uwuState } from '$lib/hooks/uwu.svelte'
 
   const feeds = [
     { name: 'new', slug: 'new' },
@@ -36,18 +38,30 @@
 
 <div class="relative min-h-screen w-full">
   <!-- Hero -->
-  <div class="relative w-full py-20">
-    <div class="mx-auto w-full max-w-screen-lg space-y-5 p-3 text-center">
-      <h1 class="font-heading text-3xl">
-        {m['home-page.hero-title']()}
-        <span class="font-sans font-thin tracking-wider">{m['app-name']()}</span>
-      </h1>
+  {#if uwuState.enabled}
+    <div class="relative w-full py-15">
+      <div class="relative z-10 mx-auto w-full max-w-screen-lg space-y-5 p-3 text-center">
+        <div class="mx-auto flex items-center justify-center">
+          <img src={uwu} alt={m['app-name']()} class="h-32 w-auto" />
+        </div>
+      </div>
 
-      <p>{m['home-page.hero-subtitle']()}</p>
+      <Ripple />
     </div>
+  {:else}
+    <div class="relative w-full py-20">
+      <div class="mx-auto w-full max-w-screen-lg space-y-5 p-3 text-center">
+        <h1 class="font-heading text-3xl">
+          {m['home-page.hero-title']()}
+          <span class="font-sans font-thin tracking-wider">{m['app-name']()}</span>
+        </h1>
 
-    <Ripple />
-  </div>
+        <p>{m['home-page.hero-subtitle']()}</p>
+      </div>
+
+      <Ripple />
+    </div>
+  {/if}
 
   <div class="w-full py-5">
     <Tabs.Root bind:value={getValue, setValue} class="relative w-full">

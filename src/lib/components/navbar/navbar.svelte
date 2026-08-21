@@ -14,9 +14,12 @@
     CastleIcon,
   } from '@lucide/svelte'
 
+  import logo from '$lib/assets/logo.svg'
+  import uwu from '$lib/assets/kawaii/uwu-shadow.svg'
   import { signIn, signOut } from '$lib/client'
   import { m } from '$lib/paraglide/messages.js'
   import { track } from '$lib/analytics'
+  import { uwuState } from '$lib/hooks/uwu.svelte'
   import { useSidebar } from '$lib/components/ui/sidebar'
   import * as Avatar from '$lib/components/ui/avatar'
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu'
@@ -73,12 +76,29 @@
   </div>
 
   <!-- logo & app name -->
-  <div class="shrink-0">
-    <a href="/" class="flex items-center gap-1 p-2">
-      <img src="/logo.svg" alt="fancanon logo that links to home" width={24} height={24} />
-      <span class="text-2xl font-thin tracking-wider">{m['app-name']()}</span>
-    </a>
-  </div>
+  {#if uwuState.enabled}
+    <!-- uwu -->
+    <div class="shrink-0">
+      <a href="/" class="flex items-center gap-1 p-2">
+        <img src={uwu} alt="fancanon logo that links to home" class="h-8 w-auto" />
+        <span class="sr-only">{m['app-name']()}</span>
+      </a>
+    </div>
+  {:else}
+    <!-- logo & app name -->
+    <div class="shrink-0">
+      <a href="/" class="flex items-center gap-1 p-2">
+        <img
+          src={logo}
+          alt="fancanon logo that links to home"
+          class="size-6"
+          width={24}
+          height={24}
+        />
+        <span class="text-2xl font-thin tracking-wider">{m['app-name']()}</span>
+      </a>
+    </div>
+  {/if}
 
   <!-- search box -->
   <div class="hidden flex-1 justify-center md:flex">

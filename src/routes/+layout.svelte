@@ -1,7 +1,8 @@
 <script lang="ts">
   import './layout.css'
   import type { LayoutProps } from './$types'
-  // import { page } from '$app/state'
+  import { onMount } from 'svelte'
+  import { page } from '$app/state'
   // import { resolve } from '$app/paths'
   import { browser, dev } from '$app/env'
   // import type { Pathname } from '$app/types'
@@ -10,6 +11,7 @@
   import { QueryClientProvider } from '@tanstack/svelte-query'
 
   import favicon from '$lib/assets/favicon.svg'
+  import { initUwu } from '$lib/hooks/uwu.svelte'
   import { Toaster } from '$lib/components/ui/sonner'
   import { TooltipProvider } from '$lib/components/ui/tooltip'
   // import { locales, localizeHref } from '$lib/paraglide/runtime'
@@ -17,6 +19,10 @@
   // const SvelteQueryDevtools = (await import('@tanstack/svelte-query-devtools')).SvelteQueryDevtools
 
   let { data, children }: LayoutProps = $props()
+
+  onMount(() => {
+    initUwu(page.url.searchParams.get('uwu'))
+  })
 </script>
 
 <svelte:head>
