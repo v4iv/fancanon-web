@@ -1,15 +1,24 @@
 <script lang="ts">
   import type { PageProps } from './$types'
-  import { ExternalLink } from '@lucide/svelte'
+  import { toast } from 'svelte-sonner'
+  import { CircleAlertIcon, ExternalLink } from '@lucide/svelte'
 
+  import { deleteAccountCommand } from '$lib/remote/user/data.remote'
   import { Helmet } from '$lib/components/helmet'
+  import * as AlertDialog from '$lib/components/ui/alert-dialog'
   import * as Avatar from '$lib/components/ui/avatar'
   import { Button } from '$lib/components/ui/button'
-  import { Input } from '$lib/components/ui/input'
   import { Separator } from '$lib/components/ui/separator'
+  import {
+    UpdateEmailForm,
+    UpdateNameForm,
+    UpdateUsernameForm,
+  } from '$lib/components/forms/settings'
   import { ChangePasswordForm } from '$lib/components/forms/change-password-form'
 
   let { data }: PageProps = $props()
+
+  let open = $state(false)
 </script>
 
 <Helmet title="Settings | fancanon" />
@@ -45,13 +54,7 @@
           </Button>
         </div>
 
-        <p class="text-lg">Name</p>
-
-        <Input value={data.user.name} disabled />
-
-        <p class="text-sm">
-          Changing of name is not currently available. (Will be available soon.)
-        </p>
+        <UpdateNameForm currentValue={data.user.name} />
       </div>
     </section>
 
@@ -63,21 +66,9 @@
       <Separator />
 
       <div class="space-y-3">
-        <p class="text-lg">Email</p>
+        <UpdateEmailForm currentValue={data.user.email} />
 
-        <Input value={data.user.email} disabled />
-
-        <p class="text-sm">
-          Changing of email is not currently available. (Will be available soon.)
-        </p>
-
-        <p class="text-lg">Username</p>
-
-        <Input value={data.user.username} disabled />
-
-        <p class="text-sm">
-          Changing of username is not currently available. (Will be available soon.)
-        </p>
+        <UpdateUsernameForm currentValue={data.user.username} />
       </div>
     </section>
 
@@ -94,5 +85,48 @@
         <div class="rounded-xl border p-5"><ChangePasswordForm /></div>
       </div>
     </section>
+
+    <section class="space-y-4">
+      <header class="flex items-center gap-2 text-destructive">
+        <CircleAlertIcon class="" />
+
+        <h2 class="font-heading text-2xl uppercase">Danger</h2>
+      </header>
+
+      <Separator />
+
+      <div class="space-y-3">
+        <Button variant="destructive" class="w-full" onclick={() => (open = !open)}
+          >Delete Account Permanently</Button
+        >
+      </div>
+    </section>
   </div>
 </div>
+
+<AlertDialog.Root bind:open>
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title>Permanently Delete Account?</AlertDialog.Title>
+      <AlertDialog.Description>
+        This is permanent and once deleted we won't be able to recover any of your data and your
+        username will become free to be used by others and... we'll be sorry to see you go 😢
+      </AlertDialog.Description>
+    </AlertDialog.Header>
+    <AlertDialog.Footer>
+      <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+
+      <AlertDialog.Action
+        onclick={async () => {
+          await deleteAccountCommand()
+          toast.error('Account Delete Verification Email Sent', {
+            description: 'Please Check Your Inbox',
+          })
+          open = !open
+        }}
+      >
+        Send Verification Email
+      </AlertDialog.Action>
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>

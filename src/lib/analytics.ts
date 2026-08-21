@@ -42,6 +42,10 @@ export type AnalyticsEvent =
   | 'accept_explicit_consent'
   | 'delete_history'
   | 'clear_history'
+  | 'change_name'
+  | 'change_email'
+  | 'change_username'
+  | 'delete_account'
 
 export function track(event: AnalyticsEvent, params: Record<string, unknown> = {}) {
   if (!browser || dev) return
