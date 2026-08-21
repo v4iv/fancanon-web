@@ -222,6 +222,11 @@ export enum ContentRating {
   EXPLICIT = 'EXPLICIT',
 }
 
+export enum EmbedProviders {
+  spotify = 'Spotify',
+  'apple-music' = 'Apple Music',
+}
+
 export const REASONS: readonly [string, ...string[]] = [
   'inappropriate content',
   'hate speech',

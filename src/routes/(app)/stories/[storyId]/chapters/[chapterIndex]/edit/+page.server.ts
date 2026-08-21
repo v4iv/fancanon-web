@@ -37,6 +37,7 @@ export const load: PageServerLoad = async ({ params, request }) => {
   const currentData = {
     title: chapterRow.title.length ? chapterRow.title : undefined,
     content: chapterRow.content,
+    embed: chapterRow.embed,
     completed: storyRow.completed,
   }
 

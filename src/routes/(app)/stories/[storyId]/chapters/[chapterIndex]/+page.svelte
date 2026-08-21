@@ -37,6 +37,8 @@
   import { ReportChapter } from '$lib/components/reporting'
   import { CustomHeading } from '$lib/components/markdown-overrides/custom-heading'
 
+  const MusicPlayer = (await import('$lib/components/music-player')).MusicPlayer
+
   let { data }: PageProps = $props()
 
   let openReportDialog = $state(false)
@@ -348,6 +350,10 @@
 
     <!-- Chapter -->
     <div class="mx-auto w-full max-w-screen-md space-y-5 px-3 py-5">
+      {#if data.chapter.embed}
+        <MusicPlayer embed={data.chapter.embed} />
+      {/if}
+
       <Prose>
         <SvelteMarkdown source={data.chapter.content} renderers={{ heading: CustomHeading }} />
       </Prose>

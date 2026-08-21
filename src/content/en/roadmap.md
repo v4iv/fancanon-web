@@ -2,7 +2,7 @@
 title: Roadmap
 description: Roadmap of upcoming features for fancanon
 subtitle: Roadmap of upcoming features for fancanon. (No we will not be in beta forever.)
-step: 7
+step: 8
 steps:
   - step: 1
     title: Modern Reading Experience
@@ -35,7 +35,7 @@ steps:
       with useful analytics.
   - step: 8
     title: Music Pairing
-    description: Authors can attach Spotify playlists to individual chapters,
+    description: Authors can attach Apple Music/Spotify playlists to individual chapters,
       letting readers experience the soundtrack that inspired each scene.
   - step: 9
     title: Curated Collections

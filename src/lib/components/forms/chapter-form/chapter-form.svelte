@@ -3,10 +3,12 @@
   import { goto } from '$app/navigation'
   import { isHttpError, type RemoteForm } from '@sveltejs/kit'
   import { useQueryClient } from '@tanstack/svelte-query'
-  import { CircleIcon } from '@lucide/svelte'
+  import { CircleIcon, MusicIcon } from '@lucide/svelte'
   import { captureException } from '@sentry/sveltekit'
 
   import { track } from '$lib/analytics'
+  import type { ChapterEmbedType } from '$lib/types'
+  import { EmbedProviders } from '$lib/constants'
   import * as Field from '$lib/components/ui/field'
   import { Button } from '$lib/components/ui/button'
   import { Input } from '$lib/components/ui/input'
@@ -21,6 +23,7 @@
     currentData?: {
       title?: string
       content: string
+      embed: ChapterEmbedType | null
       completed: boolean
     }
   }
@@ -35,7 +38,14 @@
   let completed = $derived(storyCompleted)
 
   // svelte-ignore state_referenced_locally
-  if (editing && currentData) fields.set({ ...currentData })
+  if (editing && currentData)
+    fields.set({
+      title: currentData.title,
+      content: currentData.content,
+      completed: currentData.completed,
+      embedProvider: currentData.embed?.provider,
+      embedUrl: currentData.embed?.url,
+    })
 
   let content = $derived.by(() => {
     if (editing && currentData) return currentData.content
@@ -117,6 +127,56 @@
         <Field.Error>{issue.message}</Field.Error>
       {/each}
     </Field.Field>
+
+    <!-- Embed Music -->
+    <Field.Group class="rounded-xl border border-input p-5">
+      <Field.Legend class="flex items-center gap-2">
+        <MusicIcon class="size-4 text-rose-500" />Embed Music
+      </Field.Legend>
+
+      <Field.Field>
+        <Field.Label for="provider">Provider</Field.Label>
+
+        <select
+          id="provider"
+          class="w-full rounded-lg border border-input bg-background dark:bg-input/30"
+          {...fields.embedProvider.as('select')}
+          disabled={submitting}
+          required
+        >
+          {#each Object.entries(EmbedProviders) as [value, label] (value)}
+            <option {value}>
+              {label}
+            </option>
+          {/each}
+        </select>
+
+        <Field.Description>Currently we only support Spotify & Apple Music.</Field.Description>
+
+        {#each fields.embedProvider.issues() as issue, idx (idx)}
+          <Field.Error>{issue.message}</Field.Error>
+        {/each}
+      </Field.Field>
+
+      <Field.Field>
+        <Field.Label for="url">Playlist URL</Field.Label>
+
+        <Input
+          id="url"
+          placeholder="eg - https://open.spotify.com/playlist/xxxxxx"
+          {...fields.embedUrl.as('text')}
+          disabled={submitting}
+        />
+
+        <Field.Description></Field.Description>
+
+        {#each fields.embedUrl.issues() as issue, idx (idx)}
+          <Field.Error>{issue.message}</Field.Error>
+        {/each}
+      </Field.Field>
+    </Field.Group>
+
+    <Field.Separator />
 
     <!-- Completed -->
     <Field.Field orientation="horizontal">
