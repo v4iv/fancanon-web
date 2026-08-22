@@ -14,7 +14,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { customSession, username } from 'better-auth/plugins'
 import { captureException } from '@sentry/sveltekit'
 
-import { db } from '$lib/server/db'
+import { db, type DatabaseType } from '$lib/server/db'
 import { resend } from '$lib/resend'
 import { RESTRICTED_USERNAMES } from '$lib/constants'
 import { redisSecondaryStorage } from '$lib/server/auth/adapters/redis-secondary-storage'
@@ -179,3 +179,166 @@ export const auth = betterAuth({
     sveltekitCookies(getRequestEvent), // make sure this is the last plugin in the array
   ],
 })
+
+export function createAuth(database: DatabaseType) {
+  const options = {
+    baseURL: {
+      allowedHosts: ALLOWED_HOSTS.split(','),
+      protocol: dev ? 'http' : 'https',
+      fallback: ORIGIN,
+    },
+    secret: BETTER_AUTH_SECRET,
+    database: drizzleAdapter(database, { provider: 'pg' }),
+    advanced: {
+      cookiePrefix: 'fancanon',
+      crossSubDomainCookies: {
+        enabled: true,
+        domain: COOKIE_DOMAIN,
+      },
+      defaultCookieAttributes: {
+        sameSite: 'none',
+        secure: true,
+        httpOnly: true,
+        domain: COOKIE_DOMAIN,
+      },
+      database: {
+        joins: true,
+      },
+    },
+    secondaryStorage: !dev ? redisSecondaryStorage : undefined,
+    session: {
+      storeSessionInDatabase: true,
+    },
+    rateLimit: {
+      storage: 'secondary-storage',
+    },
+    emailAndPassword: {
+      enabled: true,
+      requireEmailVerification: true,
+      sendResetPassword: async ({ url, user }) => {
+        if (dev) {
+          console.log('\nReset Password Link: ', url)
+        } else {
+          const { error } = await resend.emails.send({
+            from: 'fancanon <noreply@fancanon.com>',
+            to: user.email,
+            subject: 'Reset Your Password — fancanon',
+            html: resetPasswordTemplate(url),
+          })
+
+          if (error) captureException(error)
+        }
+      },
+    },
+    emailVerification: {
+      sendOnSignUp: true,
+      sendOnSignIn: true,
+      autoSignInAfterVerification: true,
+      sendVerificationEmail: async ({ user, url }) => {
+        if (dev) {
+          console.log('\nConfirm Your Email Link: ', url)
+        } else {
+          const { error } = await resend.emails.send({
+            from: 'fancanon <noreply@fancanon.com>',
+            to: user.email,
+            subject: 'Confirm Your Email — fancanon',
+            html: verifyEmailTemplate(url),
+          })
+
+          if (error) captureException(error)
+        }
+      },
+    },
+    socialProviders: {
+      google: {
+        prompt: 'select_account consent',
+        clientId: GOOGLE_CLIENT_ID as string,
+        clientSecret: GOOGLE_CLIENT_SECRET as string,
+        accessType: 'offline',
+        // Optional: Map or manipulate incoming Google profile fields
+        mapProfileToUser: async (profile) => {
+          return {
+            // Generates a tentative username from their Google email handle
+            username: profile.email.split('@')[0],
+          }
+        },
+      },
+    },
+    // additional fields for user
+    user: {
+      additionalFields: {
+        explicitConsentAt: {
+          type: 'date',
+          required: false,
+          defaultValue: null,
+        },
+        explicitConsentVersion: {
+          type: 'number',
+          required: false,
+          defaultValue: null,
+        },
+      },
+      changeEmail: {
+        enabled: true,
+      },
+      deleteUser: {
+        enabled: true,
+        sendDeleteAccountVerification: async ({
+          user, // The user object
+          url, // The auto-generated URL for deletion
+          token, // The verification token  (can be used to generate custom URL)
+        }) => {
+          if (dev) {
+            console.log(user, url, token)
+          } else {
+            const { error } = await resend.emails.send({
+              from: 'fancanon <noreply@fancanon.com>',
+              to: user.email,
+              subject: 'Verify Delete Account Request — fancanon',
+              html: deleteAccountTemplate(url),
+            })
+
+            if (error) {
+              captureException(error)
+            }
+          }
+        },
+      },
+    },
+    plugins: [
+      username({
+        usernameValidator: (username) => {
+          const normalized = username.trim().toLowerCase()
+
+          if (dev) return true
+
+          return (
+            !RESTRICTED_USERNAMES.some(
+              (restricted) =>
+                normalized === restricted ||
+                normalized.startsWith(restricted) ||
+                normalized.endsWith(restricted),
+            ) && /^[a-zA-Z0-9_.]+$/.test(username)
+          )
+        },
+      }),
+    ],
+  } satisfies BetterAuthOptions
+
+  return betterAuth({
+    ...options,
+    plugins: [
+      ...(options.plugins ?? []),
+      customSession(async ({ user, session }) => {
+        // now both user and session will infer the fields added by plugins and your custom fields
+        return {
+          user,
+          session,
+        }
+      }, options), // pass options here
+      sveltekitCookies(getRequestEvent), // make sure this is the last plugin in the array
+    ],
+  })
+}
+
+export type AuthType = ReturnType<typeof createAuth>

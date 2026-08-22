@@ -1,6 +1,7 @@
 import { redirect, type Handle, type HandleFetch } from '@sveltejs/kit'
 import { building, dev } from '$app/env'
 import { BASE_API_URL, SENTRY_DSN } from '$app/env/public'
+import { eq } from 'drizzle-orm'
 import { sequence } from '@sveltejs/kit/hooks'
 import { svelteKitHandler } from 'better-auth/svelte-kit'
 import {
@@ -11,7 +12,8 @@ import {
 } from '@sentry/sveltekit'
 
 import { createDb } from '$lib/server/db'
-import { auth } from '$lib/server/auth'
+import { createAuth } from '$lib/server/auth'
+import { story } from '$lib/server/db/schema'
 import { getTextDirection } from '$lib/paraglide/runtime'
 import { paraglideMiddleware } from '$lib/paraglide/server'
 
@@ -34,6 +36,13 @@ export const handleDb: Handle = async ({ event, resolve }) => {
 }
 
 const handleBetterAuth: Handle = async ({ event, resolve }) => {
+  if (!event.platform?.env) {
+    throw new Error('Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
+  const auth = createAuth(db)
+
   const session = await auth.api.getSession({ headers: event.request.headers })
 
   if (session) {
@@ -60,16 +69,28 @@ const handleExplicitConsent: Handle = async ({ event, resolve }) => {
   const storyId = event.params.storyId
 
   if (storyId) {
+    if (!event.platform?.env) {
+      throw new Error('Platform Not Found!')
+    }
+
+    const db = createDb(event.platform.env)
+    const auth = createAuth(db)
+
     const session = await auth.api.getSession({
       headers: event.request.headers,
     })
 
     try {
-      const res: any = await fetch(`${BASE_API_URL}/v1/stories/${storyId}/content-rating`, {
-        credentials: 'include',
+      const storyRow = await db.query.story.findFirst({
+        where: eq(story.id, storyId),
+        columns: {
+          id: true,
+          contentRating: true,
+        },
+        with: {
+          author: { columns: { id: true, username: true } },
+        },
       })
-
-      const storyRow = await res.json()
 
       if (storyRow) {
         if (storyRow.contentRating === 'EXPLICIT') {
