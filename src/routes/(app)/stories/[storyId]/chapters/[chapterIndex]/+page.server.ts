@@ -3,11 +3,16 @@ import { error } from '@sveltejs/kit'
 import { and, asc, eq } from 'drizzle-orm'
 import { captureException } from '@sentry/sveltekit'
 
-import { db } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
+import { getDb, type DatabaseType } from '$lib/server/db'
 import { story, chapter, like, bookmark } from '$lib/server/db/schema'
 
-async function fetchPageData(storyId: string, chapterIndex: number, userId: string) {
+async function fetchPageData(
+  db: DatabaseType,
+  storyId: string,
+  chapterIndex: number,
+  userId: string,
+) {
   return Promise.all([
     db.query.story.findFirst({
       where: eq(story.id, storyId),
@@ -38,18 +43,24 @@ async function fetchPageData(storyId: string, chapterIndex: number, userId: stri
   ])
 }
 
-export const load: PageServerLoad = async ({ params, request }) => {
+export const load: PageServerLoad = async ({ platform, params, request }) => {
   const storyId = params.storyId
   const chapterIndex = Number(params.chapterIndex)
 
   const session = await auth.api.getSession({ headers: request.headers })
   const userId = session?.user?.id ?? ''
 
+  if (!platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = getDb(platform.env)
+
   let storyRow: Awaited<ReturnType<typeof fetchPageData>>[0]
   let chapterRow: Awaited<ReturnType<typeof fetchPageData>>[1]
 
   try {
-    ;[storyRow, chapterRow] = await fetchPageData(storyId, chapterIndex, userId)
+    ;[storyRow, chapterRow] = await fetchPageData(db, storyId, chapterIndex, userId)
   } catch (err) {
     captureException(err)
     error(500, 'Something Went Wrong!')

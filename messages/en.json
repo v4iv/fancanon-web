@@ -138,7 +138,7 @@
     "email": "Email",
     "email-placeholder": "eg - johnsmith94@example.com",
     "password": "Password",
-    "confirm-password": "Confirm Password",
+    "confirm-password": "Confirm",
     "password-directive-one": "Must be at least 8 characters long",
     "password-directive-two": "Preferably alphanumeric with a mix of upper & lowercase alphabets",
     "password-directive-three": "Also may contain special characters (@,!,_,- etc) for extra strength",

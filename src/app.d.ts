@@ -1,5 +1,7 @@
 import type { User, Session } from 'better-auth'
 
+import type { DatabaseType } from '$lib/server/db'
+
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
 declare global {
@@ -12,6 +14,7 @@ declare global {
     }
 
     interface Locals {
+      db: DatabaseType
       user?: User
       session?: Session
     }

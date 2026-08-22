@@ -299,24 +299,6 @@
 
         <Tooltip.Content>{m['story.views']({ count: numify(story.viewCount) })}</Tooltip.Content>
       </Tooltip.Root>
-    </div>
-
-    <div class="flex flex-wrap items-center gap-2">
-      <!-- Like Button -->
-      <LikeButton
-        class={buttonVariants({
-          variant: like ? 'secondary' : 'outline',
-          size: 'sm',
-          class: 'rounded-full',
-        })}
-        storyTitle={story.title}
-        storyId={story.id}
-        user={$session.data?.user}
-        bind:like
-        bind:likesCount
-      >
-        {likesCount > 0 ? numify(likesCount) : ''}
-      </LikeButton>
 
       <!-- Comment Count -->
       <Tooltip.Root>
@@ -336,6 +318,24 @@
           })}
         </Tooltip.Content>
       </Tooltip.Root>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2">
+      <!-- Like Button -->
+      <LikeButton
+        class={buttonVariants({
+          variant: like ? 'secondary' : 'outline',
+          size: 'sm',
+          class: 'rounded-full',
+        })}
+        storyTitle={story.title}
+        storyId={story.id}
+        user={$session.data?.user}
+        bind:like
+        bind:likesCount
+      >
+        {likesCount > 0 ? numify(likesCount) : ''}
+      </LikeButton>
 
       <!-- Read Later Button -->
       <ReadLaterButton

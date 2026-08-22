@@ -12,7 +12,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
     error(res.status, res.statusText)
   }
 
-  const data = await res.json()
+  const data: any = await res.json()
 
   return { ...data }
 }
