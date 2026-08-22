@@ -16,7 +16,11 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
-      sentrySvelteKit({ authToken: env.SENTRY_AUTH_TOKEN }),
+      sentrySvelteKit({
+        org: 'fancanon',
+        project: 'fancanon',
+        authToken: env.SENTRY_AUTH_TOKEN,
+      }),
 
       enhancedImages(),
 
@@ -45,6 +49,9 @@ export default defineConfig(({ mode }) => {
           instrumentation: {
             server: true,
           },
+          tracing: {
+            server: true,
+          },
         },
         typescript: {
           config: (config) => {
@@ -60,7 +67,7 @@ export default defineConfig(({ mode }) => {
       }),
 
       partytownVite({
-        dest: join(__dirname, 'static', '~partytown'),
+        dest: join(import.meta.dirname, 'static', '~partytown'),
       }),
     ],
   }
