@@ -1,4 +1,5 @@
 import type { SecondaryStorage } from 'better-auth'
+import { captureException } from '@sentry/sveltekit'
 
 import { redis } from '$lib/server/redis'
 
@@ -25,7 +26,7 @@ export const redisSecondaryStorage: SecondaryStorage = {
       // Convert to string for any other type
       return String(value)
     } catch (error) {
-      console.error('Redis get error:', error)
+      captureException(error)
       return null
     }
   },
@@ -43,7 +44,7 @@ export const redisSecondaryStorage: SecondaryStorage = {
         await redis.set(key, stringValue)
       }
     } catch (error) {
-      console.error('Redis set error:', error)
+      captureException(error)
       throw error
     }
   },
@@ -52,7 +53,7 @@ export const redisSecondaryStorage: SecondaryStorage = {
     try {
       await redis.del(key)
     } catch (error) {
-      console.error('Redis delete error:', error)
+      captureException(error)
       throw error
     }
   },
