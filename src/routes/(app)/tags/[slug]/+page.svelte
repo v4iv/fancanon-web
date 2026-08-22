@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { page } from '$app/state'
   import type { PageProps } from './$types'
+  import { page } from '$app/state'
+  import { BASE_API_URL } from '$app/env/public'
   import { Hash, HashIcon, LinkIcon } from '@lucide/svelte'
 
   import { Helmet } from '$lib/components/helmet'
@@ -12,7 +13,7 @@
 
   const slug = $derived(page.params.slug ?? '')
 
-  let api = $derived(`/api/tags/${encodeURIComponent(slug)}`)
+  let api = $derived(`${BASE_API_URL}/v1/tags/${encodeURIComponent(slug)}`)
 </script>
 
 <Helmet title={`#${data.tag.name} | Tags | fancanon`} />

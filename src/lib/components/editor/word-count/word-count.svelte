@@ -30,7 +30,7 @@
 </script>
 
 <div
-  class="absolute right-0 bottom-0 left-0 flex h-6 w-full justify-end gap-2 border-t pt-2 text-xs text-muted-foreground"
+  class="absolute right-0 bottom-0 left-0 flex h-8 w-full justify-end gap-2 border-t pt-2 text-xs text-muted-foreground"
 >
   <span class="flex items-center gap-2">
     <WholeWordIcon class="size-4 text-muted-foreground" />

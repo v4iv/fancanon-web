@@ -226,7 +226,7 @@
         <Field.Label>Content Rating*</Field.Label>
 
         <select
-          class="w-full border border-input bg-background dark:bg-input/30"
+          class="flex w-fit items-center justify-between gap-1.5 rounded-lg border border-input bg-transparent py-2 pr-2 pl-2.5 text-sm whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground data-[size=default]:h-8 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
           {...fields.contentRating.as('select')}
           disabled={submitting}
           required
@@ -266,7 +266,7 @@
         <Field.Label>Language*</Field.Label>
 
         <select
-          class="w-full border border-input bg-background dark:bg-input/30"
+          class="flex w-fit items-center justify-between gap-1.5 rounded-lg border border-input bg-transparent py-2 pr-2 pl-2.5 text-sm whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground data-[size=default]:h-8 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
           {...fields.language.as('select')}
           disabled={submitting}
           required
@@ -305,7 +305,8 @@
             disabled={submitting}
             fetchSuggestions={async (q) => {
               const res = await fetch(
-                `/api/tags/search?q=${encodeURIComponent(q)}&type=RELATIONSHIP`,
+                `${BASE_API_URL}/v1/tags/search?q=${encodeURIComponent(q)}&type=RELATIONSHIP&limit=10`,
+                { credentials: 'include' },
               )
               return res.json()
             }}
@@ -333,7 +334,10 @@
             validate={validateTags}
             disabled={submitting}
             fetchSuggestions={async (q) => {
-              const res = await fetch(`/api/tags/search?q=${encodeURIComponent(q)}&type=CHARACTER`)
+              const res = await fetch(
+                `${BASE_API_URL}/v1/tags/search?q=${encodeURIComponent(q)}&type=CHARACTER&limit=10`,
+                { credentials: 'include' },
+              )
               return res.json()
             }}
           />
@@ -359,7 +363,10 @@
             validate={validateTags}
             disabled={submitting}
             fetchSuggestions={async (q) => {
-              const res = await fetch(`/api/tags/search?q=${encodeURIComponent(q)}&type=FREEFORM`)
+              const res = await fetch(
+                `${BASE_API_URL}/v1/tags/search?q=${encodeURIComponent(q)}&type=FREEFORM&limit=10`,
+                { credentials: 'include' },
+              )
               return res.json()
             }}
           />
