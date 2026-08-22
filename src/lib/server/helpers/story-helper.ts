@@ -1,9 +1,9 @@
 import { eq } from 'drizzle-orm'
 
-import type { db } from '$lib/server/db'
+import type { DatabaseType } from '$lib/server/db'
 import { category, fandom, like, readLater } from '$lib/server/db/schema'
 
-type DbTransaction = Parameters<Parameters<(typeof db)['transaction']>[0]>[0]
+type DbTransaction = Parameters<Parameters<DatabaseType['transaction']>[0]>[0]
 
 export async function getOrCreateOriginalContentFandom(tx: DbTransaction): Promise<string> {
   let categoryRow = await tx.query.category.findFirst({

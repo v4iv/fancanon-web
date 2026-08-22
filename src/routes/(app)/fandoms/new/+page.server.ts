@@ -2,20 +2,21 @@ import type { PageServerLoad } from './$types'
 import { error, redirect } from '@sveltejs/kit'
 
 import { createDb } from '$lib/server/db'
-import { auth } from '$lib/server/auth'
+import { createAuth } from '$lib/server/auth'
 
 export const load: PageServerLoad = async ({ platform, request }) => {
-  const session = await auth.api.getSession({ headers: request.headers })
-
-  if (!session?.user) {
-    redirect(303, `/auth/sign-in?redirect=${encodeURIComponent('/fandoms/new')}`)
-  }
-
   if (!platform?.env) {
     error(500, 'Platform Not Found!')
   }
 
   const db = createDb(platform.env)
+  const auth = createAuth(db)
+
+  const session = await auth.api.getSession({ headers: request.headers })
+
+  if (!session?.user) {
+    redirect(303, `/auth/sign-in?redirect=${encodeURIComponent('/fandoms/new')}`)
+  }
 
   const categories = await db.query.category.findMany({
     columns: { id: true, name: true },

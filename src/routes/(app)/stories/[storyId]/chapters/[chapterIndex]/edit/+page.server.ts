@@ -2,21 +2,23 @@ import { error, redirect } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 import { and, eq } from 'drizzle-orm'
 
-import { auth } from '$lib/server/auth'
-import { story, chapter } from '$lib/server/db/schema'
 import { createDb } from '$lib/server/db'
+import { createAuth } from '$lib/server/auth'
+import { story, chapter } from '$lib/server/db/schema'
 
 export const load: PageServerLoad = async ({ platform, params, request }) => {
-  const session = await auth.api.getSession({ headers: request.headers })
-  if (!session?.user) {
-    redirect(303, '/auth/sign-in')
-  }
-
   if (!platform?.env) {
     error(500, 'Platform Not Found!')
   }
 
   const db = createDb(platform.env)
+  const auth = createAuth(db)
+
+  const session = await auth.api.getSession({ headers: request.headers })
+  if (!session?.user) {
+    redirect(303, '/auth/sign-in')
+  }
+
   const storyId = params.storyId
   const chapterIndex = Number(params.chapterIndex)
 

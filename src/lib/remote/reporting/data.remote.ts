@@ -3,7 +3,7 @@ import { form, getRequestEvent } from '$app/server'
 import { captureException } from '@sentry/sveltekit'
 
 import { createDb } from '$lib/server/db'
-import { auth } from '$lib/server/auth'
+import { createAuth } from '$lib/server/auth'
 import { report } from '$lib/server/db/schema'
 import {
   reportChapterSchema,
@@ -14,13 +14,15 @@ import {
 
 export const reportStory = form(reportStorySchema, async (data) => {
   const event = getRequestEvent()
-  const session = await auth.api.getSession({ headers: event.request.headers })
 
   if (!event.platform?.env) {
     error(500, 'Platform Not Found!')
   }
 
   const db = createDb(event.platform.env)
+  const auth = createAuth(db)
+
+  const session = await auth.api.getSession({ headers: event.request.headers })
 
   try {
     const [createdReport] = await db
@@ -42,13 +44,15 @@ export const reportStory = form(reportStorySchema, async (data) => {
 
 export const reportChapter = form(reportChapterSchema, async (data) => {
   const event = getRequestEvent()
-  const session = await auth.api.getSession({ headers: event.request.headers })
 
   if (!event.platform?.env) {
     error(500, 'Platform Not Found!')
   }
 
   const db = createDb(event.platform.env)
+  const auth = createAuth(db)
+
+  const session = await auth.api.getSession({ headers: event.request.headers })
 
   try {
     const [createdReport] = await db
@@ -71,13 +75,15 @@ export const reportChapter = form(reportChapterSchema, async (data) => {
 
 export const reportComment = form(reportCommentSchema, async (data) => {
   const event = getRequestEvent()
-  const session = await auth.api.getSession({ headers: event.request.headers })
 
   if (!event.platform?.env) {
     error(500, 'Platform Not Found!')
   }
 
   const db = createDb(event.platform.env)
+  const auth = createAuth(db)
+
+  const session = await auth.api.getSession({ headers: event.request.headers })
 
   try {
     const [createdReport] = await db
@@ -101,13 +107,14 @@ export const reportComment = form(reportCommentSchema, async (data) => {
 export const reportUser = form(reportUserSchema, async (data) => {
   const event = getRequestEvent()
 
-  const session = await auth.api.getSession({ headers: event.request.headers })
-
   if (!event.platform?.env) {
     error(500, 'Platform Not Found!')
   }
 
   const db = createDb(event.platform.env)
+  const auth = createAuth(db)
+
+  const session = await auth.api.getSession({ headers: event.request.headers })
 
   try {
     const [createdReport] = await db

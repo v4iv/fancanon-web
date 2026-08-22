@@ -3,11 +3,18 @@ import { error, redirect } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
 
 import { createDb } from '$lib/server/db'
-import { auth } from '$lib/server/auth'
+import { createAuth } from '$lib/server/auth'
 import { tag } from '$lib/server/db/schema'
 import { NO_WARNING_CHOSEN_TAG_NAME } from '$lib/constants'
 
 export const load: PageServerLoad = async ({ platform, request }) => {
+  if (!platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(platform.env)
+  const auth = createAuth(db)
+
   const session = await auth.api.getSession({
     headers: request.headers,
   })
@@ -15,12 +22,6 @@ export const load: PageServerLoad = async ({ platform, request }) => {
   if (!session?.user) {
     throw redirect(303, `/auth/sign-in?redirect=${encodeURIComponent('/stories/new')}`)
   }
-
-  if (!platform?.env) {
-    error(500, 'Platform Not Found!')
-  }
-
-  const db = createDb(platform.env)
 
   const warnings = await db.query.tag.findMany({
     where: eq(tag.type, 'WARNING'),

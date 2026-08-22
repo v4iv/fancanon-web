@@ -2,13 +2,20 @@ import type { PageServerLoad } from './$types'
 import { error, redirect } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
 
-import { db } from '$lib/server/db'
-import { auth } from '$lib/server/auth'
+import { createDb } from '$lib/server/db'
+import { createAuth } from '$lib/server/auth'
 import { story, tag } from '$lib/server/db/schema'
 import { NO_WARNING_CHOSEN_TAG_NAME } from '$lib/constants'
 import type { StorySchemaOutput } from '$lib/components/forms/story-form'
 
-export const load: PageServerLoad = async ({ params, request }) => {
+export const load: PageServerLoad = async ({ platform, params, request }) => {
+  if (!platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(platform.env)
+  const auth = createAuth(db)
+
   const session = await auth.api.getSession({ headers: request.headers })
   if (!session?.user) {
     redirect(303, '/auth/sign-in')

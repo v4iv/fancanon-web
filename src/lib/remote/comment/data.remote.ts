@@ -4,23 +4,24 @@ import { eq, sql } from 'drizzle-orm'
 import { captureException } from '@sentry/sveltekit'
 
 import { createDb } from '$lib/server/db'
-import { auth } from '$lib/server/auth'
+import { createAuth } from '$lib/server/auth'
 import { schema as commentSchema } from '$lib/components/forms/comment-form'
 import { activity, chapter, comment, notification, story } from '$lib/server/db/schema'
 
 export const addNewComment = form(commentSchema, async (data) => {
   const event = getRequestEvent()
 
-  const session = await auth.api.getSession({ headers: event.request.headers })
-  if (!session?.user) {
-    error(401, 'Unauthorized')
-  }
-
   if (!event.platform?.env) {
     error(500, 'Platform Not Found!')
   }
 
   const db = createDb(event.platform.env)
+  const auth = createAuth(db)
+
+  const session = await auth.api.getSession({ headers: event.request.headers })
+  if (!session?.user) {
+    error(401, 'Unauthorized')
+  }
 
   const chapterRow = await db.query.chapter.findFirst({
     where: eq(chapter.id, data.chapterId),

@@ -3,7 +3,7 @@ import { error } from '@sveltejs/kit'
 import { and, asc, eq } from 'drizzle-orm'
 import { captureException } from '@sentry/sveltekit'
 
-import { auth } from '$lib/server/auth'
+import { createAuth } from '$lib/server/auth'
 import { createDb, type DatabaseType } from '$lib/server/db'
 import { story, chapter, like, bookmark } from '$lib/server/db/schema'
 
@@ -47,14 +47,15 @@ export const load: PageServerLoad = async ({ platform, params, request }) => {
   const storyId = params.storyId
   const chapterIndex = Number(params.chapterIndex)
 
-  const session = await auth.api.getSession({ headers: request.headers })
-  const userId = session?.user?.id ?? ''
-
   if (!platform?.env) {
     error(500, 'Platform Not Found!')
   }
 
   const db = createDb(platform.env)
+  const auth = createAuth(db)
+
+  const session = await auth.api.getSession({ headers: request.headers })
+  const userId = session?.user?.id ?? ''
 
   let storyRow: Awaited<ReturnType<typeof fetchPageData>>[0]
   let chapterRow: Awaited<ReturnType<typeof fetchPageData>>[1]

@@ -4,7 +4,7 @@ import { captureException } from '@sentry/sveltekit'
 import { and, eq, notInArray } from 'drizzle-orm'
 
 import { createDb } from '$lib/server/db'
-import { auth } from '$lib/server/auth'
+import { createAuth } from '$lib/server/auth'
 import {
   createStoryTagLinks,
   resolveStoryTagIds,
@@ -17,6 +17,13 @@ import { getOrCreateOriginalContentFandom } from '$lib/server/helpers/story-help
 export const createNewStory = form(storySchema, async (data) => {
   const event = getRequestEvent()
 
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
+  const auth = createAuth(db)
+
   const session = await auth.api.getSession({ headers: getRequestEvent().request.headers })
   if (!session?.user) {
     error(401, 'Unauthorized')
@@ -26,14 +33,8 @@ export const createNewStory = form(storySchema, async (data) => {
 
   let createdStory: typeof story.$inferSelect
 
-  if (!event.platform?.env) {
-    error(500, 'Platform Not Found!')
-  }
-
-  const db = createDb(event.platform.env)
-
   try {
-    const resolvedTags = await resolveStoryTagIds({
+    const resolvedTags = await resolveStoryTagIds(db, {
       relationshipTags: data.relationshipTags,
       characterTags: data.characterTags,
       freeformTags: data.freeformTags,
@@ -81,6 +82,14 @@ export const createNewStory = form(storySchema, async (data) => {
 
 export const editStory = form(storySchema, async (data) => {
   const event = getRequestEvent()
+
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
+  const auth = createAuth(db)
+
   const session = await auth.api.getSession({ headers: event.request.headers })
   if (!session?.user) {
     error(401, 'Unauthorized')
@@ -93,12 +102,6 @@ export const editStory = form(storySchema, async (data) => {
     error(400, 'Missing storyId')
   }
 
-  if (!event.platform?.env) {
-    error(500, 'Platform Not Found!')
-  }
-
-  const db = createDb(event.platform.env)
-
   const storyRow = await db.query.story.findFirst({ where: eq(story.id, storyId) })
   if (!storyRow) {
     error(404, 'Not Found')
@@ -108,7 +111,7 @@ export const editStory = form(storySchema, async (data) => {
   }
 
   try {
-    const resolvedTags = await resolveStoryTagIds({
+    const resolvedTags = await resolveStoryTagIds(db, {
       relationshipTags: data.relationshipTags,
       characterTags: data.characterTags,
       freeformTags: data.freeformTags,

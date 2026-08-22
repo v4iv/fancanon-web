@@ -1,12 +1,19 @@
 import type { PageServerLoad } from './$types'
 import { error, redirect } from '@sveltejs/kit'
-
-import { db } from '$lib/server/db'
-import { auth } from '$lib/server/auth'
 import { eq } from 'drizzle-orm'
+
+import { createDb } from '$lib/server/db'
+import { createAuth } from '$lib/server/auth'
 import { story } from '$lib/server/db/schema'
 
-export const load: PageServerLoad = async ({ request, params }) => {
+export const load: PageServerLoad = async ({ platform, request, params }) => {
+  if (!platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(platform.env)
+  const auth = createAuth(db)
+
   const session = await auth.api.getSession({
     headers: request.headers,
   })

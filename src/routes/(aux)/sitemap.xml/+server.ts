@@ -2,8 +2,9 @@ import type { RequestHandler } from './$types'
 import { ORIGIN } from '$app/env/public'
 import { ne } from 'drizzle-orm'
 
-import { db } from '$lib/server/db'
+import { createDb } from '$lib/server/db'
 import { story, category, fandom, tag } from '$lib/server/db/schema'
+import { error } from '@sveltejs/kit'
 
 const SITE_URL = ORIGIN
 
@@ -26,7 +27,13 @@ function urlEntry(loc: string, lastmod?: Date, changefreq?: string, priority?: n
 	</url>`
 }
 
-export const GET: RequestHandler = async () => {
+export const GET: RequestHandler = async ({ platform }) => {
+  if (!platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(platform.env)
+
   const [stories, categories, fandoms, tags] = await Promise.all([
     db
       .select({ id: story.id, updatedAt: story.updatedAt })

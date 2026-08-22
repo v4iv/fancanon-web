@@ -1,15 +1,15 @@
 import slug from 'slug'
 import { and, eq, inArray, sql } from 'drizzle-orm'
 
-import { db } from '$lib/server/db'
+import type { DatabaseType } from '$lib/server/db'
 import { tag, storyTag } from '$lib/server/db/schema'
 import { NO_WARNING_CHOSEN_TAG_NAME } from '$lib/constants'
 
 slug.charmap['/'] = '-'
 slug.charmap['&'] = '-'
 
-type DbTransaction = Parameters<Parameters<(typeof db)['transaction']>[0]>[0]
-type DbOrTx = typeof db | DbTransaction
+type DbTransaction = Parameters<Parameters<DatabaseType['transaction']>[0]>[0]
+type DbOrTx = DatabaseType | DbTransaction
 type TagType = (typeof tag.type.enumValues)[number]
 
 async function resolveWarningTags(client: DbOrTx, warningNames: string[]) {
@@ -55,12 +55,15 @@ type ResolvedTagIds = {
  * and has no correctness dependency on the story row existing yet. Keeping
  * this outside the transaction is what keeps the actual transaction short.
  */
-export async function resolveStoryTagIds(tags: {
-  relationshipTags: string[]
-  characterTags: string[]
-  freeformTags: string[]
-  warningTags: string[]
-}): Promise<ResolvedTagIds> {
+export async function resolveStoryTagIds(
+  db: DatabaseType,
+  tags: {
+    relationshipTags: string[]
+    characterTags: string[]
+    freeformTags: string[]
+    warningTags: string[]
+  },
+): Promise<ResolvedTagIds> {
   const [relationshipIds, characterIds, freeformIds, warningIds] = await Promise.all([
     resolveTags(db, tags.relationshipTags, 'RELATIONSHIP'),
     resolveTags(db, tags.characterTags, 'CHARACTER'),

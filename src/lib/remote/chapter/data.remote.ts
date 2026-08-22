@@ -4,7 +4,7 @@ import { and, eq, sql } from 'drizzle-orm'
 import { captureException } from '@sentry/sveltekit'
 
 import { createDb } from '$lib/server/db'
-import { auth } from '$lib/server/auth'
+import { createAuth } from '$lib/server/auth'
 import { computeWordCount } from '$lib/utils'
 import { fanoutActivity } from '$lib/server/helpers/feed-helper'
 import { activity, chapter, story } from '$lib/server/db/schema'
@@ -13,18 +13,19 @@ import { schema as chapterSchema } from '$lib/components/forms/chapter-form'
 export const addNewChapter = form(chapterSchema, async (data) => {
   const event = getRequestEvent()
 
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
+  const auth = createAuth(db)
+
   const storyId = event.params.storyId as string
 
   const session = await auth.api.getSession({ headers: event.request.headers })
   if (!session?.user) {
     error(401, 'Unauthorized')
   }
-
-  if (!event.platform?.env) {
-    error(500, 'Platform Not Found!')
-  }
-
-  const db = createDb(event.platform.env)
 
   const storyRow = await db.query.story.findFirst({
     where: and(eq(story.id, storyId), eq(story.authorId, session.user.id)),
@@ -102,7 +103,7 @@ export const addNewChapter = form(chapterSchema, async (data) => {
   // Fan out separately — a failure here shouldn't turn an already-
   // successful chapter creation into an error response for the user.
   try {
-    fanoutActivity(createdActivityId)
+    fanoutActivity(db, createdActivityId)
   } catch (err) {
     captureException(err)
   }
@@ -118,16 +119,17 @@ export const addNewChapter = form(chapterSchema, async (data) => {
 export const editChapter = form(chapterSchema, async (data) => {
   const event = getRequestEvent()
 
-  const session = await auth.api.getSession({ headers: event.request.headers })
-  if (!session?.user) {
-    error(401, 'Unauthorized')
-  }
-
   if (!event.platform?.env) {
     error(500, 'Platform Not Found!')
   }
 
   const db = createDb(event.platform.env)
+  const auth = createAuth(db)
+
+  const session = await auth.api.getSession({ headers: event.request.headers })
+  if (!session?.user) {
+    error(401, 'Unauthorized')
+  }
 
   const storyId = event.params.storyId as string
 

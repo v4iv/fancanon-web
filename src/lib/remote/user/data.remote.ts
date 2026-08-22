@@ -5,7 +5,7 @@ import { APIError } from 'better-auth/api'
 import { captureException } from '@sentry/sveltekit'
 
 import { createDb } from '$lib/server/db'
-import { auth } from '$lib/server/auth'
+import { createAuth } from '$lib/server/auth'
 import { user } from '$lib/server/db/schema'
 import { schema } from '$lib/components/forms/consent-form'
 import {
@@ -16,13 +16,15 @@ import {
 
 export const contentConsent = form(schema, async () => {
   const event = getRequestEvent()
-  const session = await auth.api.getSession({ headers: event.request.headers })
 
   if (!event.platform?.env) {
     error(500, 'Platform Not Found!')
   }
 
   const db = createDb(event.platform.env)
+  const auth = createAuth(db)
+
+  const session = await auth.api.getSession({ headers: event.request.headers })
 
   try {
     if (session?.user) {
@@ -54,6 +56,13 @@ export const contentConsent = form(schema, async () => {
 export const updateName = form(updateNameFormSchema, async (data) => {
   const event = getRequestEvent()
 
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
+  const auth = createAuth(db)
+
   try {
     await auth.api.updateUser({
       body: {
@@ -69,6 +78,13 @@ export const updateName = form(updateNameFormSchema, async (data) => {
 
 export const updateEmail = form(updateEmailFormSchema, async (data) => {
   const event = getRequestEvent()
+
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
+  const auth = createAuth(db)
 
   try {
     await auth.api.changeEmail({
@@ -90,6 +106,13 @@ export const updateEmail = form(updateEmailFormSchema, async (data) => {
 export const updateUsername = form(updateUsernameFormSchema, async (data) => {
   const event = getRequestEvent()
 
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
+  const auth = createAuth(db)
+
   try {
     await auth.api.updateUser({
       body: {
@@ -109,6 +132,13 @@ export const updateUsername = form(updateUsernameFormSchema, async (data) => {
 
 export const deleteAccountCommand = command(async () => {
   const event = getRequestEvent()
+
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
+  const auth = createAuth(db)
 
   try {
     await auth.api.deleteUser({

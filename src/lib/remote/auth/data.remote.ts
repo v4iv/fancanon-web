@@ -4,15 +4,23 @@ import { error } from '@sveltejs/kit'
 import { APIError } from 'better-auth/api'
 import { captureException } from '@sentry/sveltekit'
 
-import { auth } from '$lib/server/auth'
+import { createAuth } from '$lib/server/auth'
 import { schema as signUpSchema } from '$lib/components/forms/sign-up-form'
 import { schema as signInSchema } from '$lib/components/forms/sign-in-form'
 import { schema as resetPasswordSchema } from '$lib/components/forms/reset-password-form'
 import { schema as forgotPasswordSchema } from '$lib/components/forms/forgot-password-form'
 import { schema as changePasswordSchema } from '$lib/components/forms/change-password-form'
+import { createDb } from '$lib/server/db'
 
 export const signUp = form(signUpSchema, async (data) => {
   const event = getRequestEvent()
+
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
+  const auth = createAuth(db)
 
   try {
     // Gravatar uses MD5 hashes from an email address to get the image
@@ -44,6 +52,13 @@ export const signUp = form(signUpSchema, async (data) => {
 export const signIn = form(signInSchema, async (data) => {
   const event = getRequestEvent()
 
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
+  const auth = createAuth(db)
+
   try {
     await auth.api.signInEmail({
       body: {
@@ -68,6 +83,13 @@ export const signIn = form(signInSchema, async (data) => {
 export const resetPassword = form(resetPasswordSchema, async (data) => {
   const event = getRequestEvent()
 
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
+  const auth = createAuth(db)
+
   try {
     await auth.api.resetPassword({
       body: {
@@ -91,6 +113,13 @@ export const resetPassword = form(resetPasswordSchema, async (data) => {
 export const forgotPassword = form(forgotPasswordSchema, async (data) => {
   const event = getRequestEvent()
 
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
+  const auth = createAuth(db)
+
   try {
     await auth.api.requestPasswordReset({
       body: {
@@ -113,6 +142,13 @@ export const forgotPassword = form(forgotPasswordSchema, async (data) => {
 
 export const changePassword = form(changePasswordSchema, async (data) => {
   const event = getRequestEvent()
+
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
+  const auth = createAuth(db)
 
   try {
     await auth.api.changePassword({
