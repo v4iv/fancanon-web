@@ -1,5 +1,6 @@
 <script lang="ts">
   import { LINKS } from '$lib/constants'
+  import logo from '$lib/assets/logo.svg'
   import { Button } from '$lib/components/ui/button'
   import { Bluesky, Discord, Reddit, X } from '$lib/components/brand-icons'
   import { toggleUwu, uwuState } from '$lib/hooks/uwu.svelte'
@@ -8,7 +9,13 @@
 <footer class="border-t py-10 md:py-16">
   <div class="mx-auto max-w-5xl px-6">
     <a href="/" aria-label="go home" class="mx-auto block size-fit">
-      <img src="/logo.svg" alt="fancanon logo" />
+      <img
+        src={logo}
+        alt="fancanon logo that links to home"
+        class="size-6"
+        width={24}
+        height={24}
+      />
     </a>
     <div class="my-8 flex flex-wrap justify-center gap-6 text-sm">
       {#each LINKS as link, idx (idx)}
@@ -22,7 +29,7 @@
         href="https://x.com/fancanonapp"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Bluesky"
+        aria-label="X (Twitter)"
         class="block text-muted-foreground hover:text-primary"
       >
         <X className="size-5 fill-muted-foreground hover:fill-primary" />

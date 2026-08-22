@@ -154,7 +154,7 @@
         href="https://x.com/fancanonapp"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Bluesky"
+        aria-label="X (Twitter)"
         class="block text-muted-foreground hover:text-primary"
       >
         <X className="size-4 fill-muted-foreground hover:fill-primary" />

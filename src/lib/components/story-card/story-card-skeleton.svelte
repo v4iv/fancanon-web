@@ -59,14 +59,16 @@
   <Card.Footer class="items-center justify-between">
     <!-- Chapters -->
     <div class="flex items-center gap-1">
-      <Skeleton class="size-4" />
-      <Skeleton class="size-4" />
+      <!-- chapter Count -->
+      <Skeleton class="h-7 w-10 rounded-full" />
+      <!-- view Count -->
+      <Skeleton class="h-7 w-10 rounded-full" />
+      <!-- comment Count -->
+      <Skeleton class="h-7 w-10 rounded-full" />
     </div>
 
     <div class="flex items-center gap-2">
       <!-- Like Button -->
-      <Skeleton class="h-7 w-10 rounded-full" />
-      <!-- Comment Count -->
       <Skeleton class="h-7 w-10 rounded-full" />
       <!-- Read Later Button -->
       <Skeleton class="h-7 w-24 rounded-full" />
