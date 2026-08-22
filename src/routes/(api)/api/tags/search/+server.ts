@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types'
 import { json, error } from '@sveltejs/kit'
-import { and, asc, desc, eq, ilike } from 'drizzle-orm'
+import { and, asc, desc, ilike, inArray } from 'drizzle-orm'
 import { captureException } from '@sentry/sveltekit'
 
 import { db } from '$lib/server/db'
@@ -18,23 +18,21 @@ export const GET: RequestHandler = async ({ url }) => {
     error(400, 'Invalid or missing tag type')
   }
 
+  const types: (typeof tagTypeEnum.enumValues)[number][] =
+    type === 'FREEFORM'
+      ? ['FREEFORM', 'FANDOM_FREEFORM']
+      : [type as (typeof tagTypeEnum.enumValues)[number]]
+
   try {
     const tags = await db
       .select({ name: tag.name, usageCount: tag.usageCount })
       .from(tag)
-      .where(
-        and(
-          eq(tag.type, type as (typeof tagTypeEnum.enumValues)[number]),
-          ilike(tag.name, `%${q}%`),
-        ),
-      )
+      .where(and(inArray(tag.type, types), ilike(tag.name, `%${q}%`)))
       .orderBy(desc(tag.usageCount), asc(tag.name))
       .limit(10)
-
     return json(tags.map((t) => t.name))
   } catch (err) {
     captureException(err)
-
     error(500, 'Something went wrong!')
   }
 }

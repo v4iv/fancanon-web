@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts" generics="TValue = string">
   import { tick } from 'svelte'
   import { CheckIcon, ChevronsUpDownIcon, LoaderCircleIcon, XIcon } from '@lucide/svelte'
 
@@ -6,57 +6,79 @@
   import * as Popover from '$lib/components/ui/popover'
   import * as Command from '$lib/components/ui/command'
   import { buttonVariants } from '$lib/components/ui/button/button.svelte'
+  import { captureException } from '@sentry/sveltekit'
 
-  interface Props {
-    value: any[]
+  export interface ComboboxOption<TValue> {
+    label: string
+    value: TValue
+  }
+
+  interface Props<TValue> {
+    value: ComboboxOption<TValue>[]
     disabled?: boolean
-    searchAPI: string
+    search: (query: string, signal: AbortSignal) => Promise<ComboboxOption<TValue>[]>
     placeholder?: string
+    minQueryLength?: number
+    debounceMs?: number
     allowCreate?: boolean
     createActionLabel?: string
     createFormPath?: string
-    // onValueChange?: (value: string[]) => void
   }
 
   let {
     value = $bindable([]),
     disabled = false,
-    searchAPI,
+    search,
     placeholder = '',
+    minQueryLength = 3,
+    debounceMs = 200,
     allowCreate = false,
     createActionLabel = 'Add New',
     createFormPath = '',
-  }: Props = $props()
+  }: Props<TValue> = $props()
 
   let query = $state('')
   let open = $state(false)
   let isLoading = $state(false)
+  let hasError = $state(false)
   let triggerRef = $state<HTMLButtonElement>(null!)
-  let options: {
-    results: {
-      label: string
-      value: string
-    }[]
-  } = $state({ results: [] })
+  let results: ComboboxOption<TValue>[] = $state([])
 
-  async function typeaheadSearch() {
-    if (query.length < 3) return
+  let debounceTimer: ReturnType<typeof setTimeout>
+  let abortController: AbortController | null = null
 
-    isLoading = true
+  function onQueryInput() {
+    clearTimeout(debounceTimer)
+    hasError = false
 
-    const res = await fetch(`${searchAPI}=${query}`, { credentials: 'include' })
-
-    if (!res.ok) {
-      options = { results: [] }
-
+    if (query.length < minQueryLength) {
+      abortController?.abort()
+      results = []
       isLoading = false
+      return
     }
 
-    const data: any = await res.json()
+    isLoading = true
+    debounceTimer = setTimeout(runSearch, debounceMs)
+  }
 
-    options = data
+  async function runSearch() {
+    abortController?.abort()
+    abortController = new AbortController()
+    const { signal } = abortController
 
-    isLoading = false
+    try {
+      const found = await search(query, signal)
+      if (signal.aborted) return
+      results = found
+      isLoading = false
+    } catch (err) {
+      captureException(err)
+      if (signal.aborted) return
+      hasError = true
+      results = []
+      isLoading = false
+    }
   }
 
   // We want to refocus the trigger button when the user selects
@@ -91,12 +113,10 @@
               onclick={(event) => {
                 event.preventDefault()
                 event.stopPropagation()
-                //remove option from remoteForm
-                value = value.filter((o: { value: string }) => o.value !== option.value)
+                value = value.filter((o) => o.value !== option.value)
               }}
             >
               <XIcon />
-
               <span class="sr-only">Remove</span>
             </button>
           </div>
@@ -116,7 +136,7 @@
         placeholder="Search..."
         class="h-9"
         bind:value={query}
-        oninput={typeaheadSearch}
+        oninput={onQueryInput}
       />
 
       <Command.List>
@@ -126,13 +146,13 @@
               <LoaderCircleIcon class="size-4 animate-spin" />
               Loading...
             </Command.Item>
+          {:else if hasError}
+            <Command.Item disabled>Something went wrong. Try again.</Command.Item>
           {:else}
-            {#each options.results as option, idx (idx)}
+            {#each results as option, idx (idx)}
               <Command.Item
-                value={option.value}
-                disabled={Boolean(
-                  value.find((item: { value: string }) => item.value === option.value),
-                )}
+                value={option.label}
+                disabled={Boolean(value.find((item) => item.value === option.value))}
                 onSelect={() => {
                   value = [...value, option]
                   closeAndFocusTrigger()
@@ -142,21 +162,19 @@
                 <CheckIcon
                   class={cn(
                     'ml-auto size-4',
-                    value.find((item: { value: string }) => item.value === option.value)
-                      ? 'opacity-100'
-                      : 'opacity-0',
+                    value.find((item) => item.value === option.value) ? 'opacity-100' : 'opacity-0',
                   )}
                 />
               </Command.Item>
             {/each}
           {/if}
 
-          {#if query.length >= 3 && !isLoading && options.results.length === 0}
+          {#if query.length >= minQueryLength && !isLoading && !hasError && results.length === 0}
             <Command.Item disabled>No result found.</Command.Item>
           {/if}
         </Command.Group>
 
-        {#if allowCreate && query.length >= 3 && !isLoading && options.results.length === 0}
+        {#if allowCreate && query.length >= minQueryLength && !isLoading && results.length === 0}
           <Command.Separator />
 
           <Command.Group>

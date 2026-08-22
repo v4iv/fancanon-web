@@ -145,12 +145,28 @@
 
       <AsyncCombobox
         disabled={submitting}
-        allowCreate
         bind:value={fandoms}
-        createFormPath="/fandoms/new"
-        createActionLabel="Add New Fandom"
-        searchAPI={`${BASE_API_URL}/v1/fandoms/search?q`}
         placeholder="Select one or more fandoms..."
+        allowCreate
+        createFormPath="/fandoms/new"
+        search={(q, signal) =>
+          client.fetchQuery({
+            queryKey: ['fandoms-search', q],
+            queryFn: async () => {
+              const res = await fetch(
+                `${BASE_API_URL}/v1/fandoms/search?q=${encodeURIComponent(q)}`,
+                {
+                  credentials: 'include',
+                  signal,
+                },
+              )
+              if (!res.ok) throw new Error('Fandom search failed')
+              const fandoms: { results: { label: string; value: string }[] } = await res.json()
+              return fandoms.results
+            },
+            retry: 1,
+            staleTime: 30_000,
+          })}
       />
 
       <input id="fandoms" {...fields.fandoms.as('hidden', JSON.stringify(fandoms))} />
