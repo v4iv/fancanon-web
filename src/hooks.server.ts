@@ -158,6 +158,7 @@ export const handle: Handle = sequence(
   }),
   sentryHandle(),
   handleParaglide,
+  handleDb,
   handleBetterAuth,
   handleExplicitConsent,
 )

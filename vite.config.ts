@@ -22,6 +22,10 @@ export default defineConfig(({ mode }) => {
         authToken: env.SENTRY_AUTH_TOKEN,
       }),
 
+      partytownVite({
+        dest: join(import.meta.dirname, 'static', '~partytown'),
+      }),
+
       enhancedImages(),
 
       tailwindcss(),
@@ -64,10 +68,6 @@ export default defineConfig(({ mode }) => {
         project: './project.inlang',
         outdir: './src/lib/paraglide',
         emitTsDeclarations: true,
-      }),
-
-      partytownVite({
-        dest: join(import.meta.dirname, 'static', '~partytown'),
       }),
     ],
   }
