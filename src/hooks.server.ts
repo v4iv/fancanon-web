@@ -27,7 +27,7 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
   return fetch(request)
 }
 
-export const handleDb: Handle = async ({ event, resolve }) => {
+const handleDb: Handle = async ({ event, resolve }) => {
   // Skip execution entirely during the build step
   if (building) {
     return resolve(event)
