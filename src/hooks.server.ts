@@ -28,6 +28,11 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 }
 
 export const handleDb: Handle = async ({ event, resolve }) => {
+  // Skip execution entirely during the build step
+  if (building) {
+    return resolve(event)
+  }
+
   if (event.platform?.env) {
     event.locals.db = createDb(event.platform.env)
   }
@@ -36,6 +41,11 @@ export const handleDb: Handle = async ({ event, resolve }) => {
 }
 
 const handleBetterAuth: Handle = async ({ event, resolve }) => {
+  // Skip execution entirely during the build step
+  if (building) {
+    return resolve(event)
+  }
+
   if (!event.platform?.env) {
     throw new Error('Platform Not Found!')
   }
