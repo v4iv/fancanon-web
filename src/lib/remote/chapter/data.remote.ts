@@ -3,7 +3,7 @@ import { form, getRequestEvent } from '$app/server'
 import { and, eq, sql } from 'drizzle-orm'
 import { captureException } from '@sentry/sveltekit'
 
-import { db } from '$lib/server/db'
+import { createDb } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
 import { computeWordCount } from '$lib/utils'
 import { fanoutActivity } from '$lib/server/helpers/feed-helper'
@@ -19,6 +19,12 @@ export const addNewChapter = form(chapterSchema, async (data) => {
   if (!session?.user) {
     error(401, 'Unauthorized')
   }
+
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
 
   const storyRow = await db.query.story.findFirst({
     where: and(eq(story.id, storyId), eq(story.authorId, session.user.id)),
@@ -116,6 +122,12 @@ export const editChapter = form(chapterSchema, async (data) => {
   if (!session?.user) {
     error(401, 'Unauthorized')
   }
+
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
 
   const storyId = event.params.storyId as string
 

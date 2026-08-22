@@ -10,7 +10,7 @@ import {
   captureException,
 } from '@sentry/sveltekit'
 
-import { getDb } from '$lib/server/db'
+import { createDb } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
 import { getTextDirection } from '$lib/paraglide/runtime'
 import { paraglideMiddleware } from '$lib/paraglide/server'
@@ -27,7 +27,7 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
 
 export const handleDb: Handle = async ({ event, resolve }) => {
   if (event.platform?.env) {
-    event.locals.db = getDb(event.platform.env)
+    event.locals.db = createDb(event.platform.env)
   }
 
   return resolve(event)

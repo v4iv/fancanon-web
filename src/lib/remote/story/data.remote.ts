@@ -3,7 +3,7 @@ import { form, getRequestEvent } from '$app/server'
 import { captureException } from '@sentry/sveltekit'
 import { and, eq, notInArray } from 'drizzle-orm'
 
-import { db } from '$lib/server/db'
+import { createDb } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
 import {
   createStoryTagLinks,
@@ -15,6 +15,8 @@ import { schema as storySchema } from '$lib/components/forms/story-form'
 import { getOrCreateOriginalContentFandom } from '$lib/server/helpers/story-helper'
 
 export const createNewStory = form(storySchema, async (data) => {
+  const event = getRequestEvent()
+
   const session = await auth.api.getSession({ headers: getRequestEvent().request.headers })
   if (!session?.user) {
     error(401, 'Unauthorized')
@@ -23,6 +25,12 @@ export const createNewStory = form(storySchema, async (data) => {
   const fandoms: { value: string }[] = JSON.parse(data.fandoms)
 
   let createdStory: typeof story.$inferSelect
+
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
 
   try {
     const resolvedTags = await resolveStoryTagIds({
@@ -79,10 +87,17 @@ export const editStory = form(storySchema, async (data) => {
   }
 
   const fandoms: { value: string }[] = JSON.parse(data.fandoms)
+
   const storyId = event.params.storyId
   if (!storyId) {
     error(400, 'Missing storyId')
   }
+
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
 
   const storyRow = await db.query.story.findFirst({ where: eq(story.id, storyId) })
   if (!storyRow) {

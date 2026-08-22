@@ -3,7 +3,7 @@ import { form, getRequestEvent } from '$app/server'
 import { eq, sql } from 'drizzle-orm'
 import { captureException } from '@sentry/sveltekit'
 
-import { db } from '$lib/server/db'
+import { createDb } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
 import { schema as commentSchema } from '$lib/components/forms/comment-form'
 import { activity, chapter, comment, notification, story } from '$lib/server/db/schema'
@@ -15,6 +15,12 @@ export const addNewComment = form(commentSchema, async (data) => {
   if (!session?.user) {
     error(401, 'Unauthorized')
   }
+
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
 
   const chapterRow = await db.query.chapter.findFirst({
     where: eq(chapter.id, data.chapterId),

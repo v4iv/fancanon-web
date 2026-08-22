@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm'
 import { APIError } from 'better-auth/api'
 import { captureException } from '@sentry/sveltekit'
 
-import { db } from '$lib/server/db'
+import { createDb } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
 import { user } from '$lib/server/db/schema'
 import { schema } from '$lib/components/forms/consent-form'
@@ -17,6 +17,12 @@ import {
 export const contentConsent = form(schema, async () => {
   const event = getRequestEvent()
   const session = await auth.api.getSession({ headers: event.request.headers })
+
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
 
   try {
     if (session?.user) {

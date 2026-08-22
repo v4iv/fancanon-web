@@ -4,7 +4,7 @@ import { and, eq } from 'drizzle-orm'
 
 import { auth } from '$lib/server/auth'
 import { story, chapter } from '$lib/server/db/schema'
-import { getDb } from '$lib/server/db'
+import { createDb } from '$lib/server/db'
 
 export const load: PageServerLoad = async ({ platform, params, request }) => {
   const session = await auth.api.getSession({ headers: request.headers })
@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ platform, params, request }) => {
     error(500, 'Platform Not Found!')
   }
 
-  const db = getDb(platform.env)
+  const db = createDb(platform.env)
   const storyId = params.storyId
   const chapterIndex = Number(params.chapterIndex)
 

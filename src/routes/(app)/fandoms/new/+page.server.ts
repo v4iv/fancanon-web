@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types'
 import { error, redirect } from '@sveltejs/kit'
 
-import { getDb } from '$lib/server/db'
+import { createDb } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
 
 export const load: PageServerLoad = async ({ platform, request }) => {
@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({ platform, request }) => {
     error(500, 'Platform Not Found!')
   }
 
-  const db = getDb(platform.env)
+  const db = createDb(platform.env)
 
   const categories = await db.query.category.findMany({
     columns: { id: true, name: true },

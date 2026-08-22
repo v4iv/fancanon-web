@@ -3,7 +3,7 @@ import { form, getRequestEvent } from '$app/server'
 import slug from 'slug'
 import { captureException } from '@sentry/sveltekit'
 
-import { db } from '$lib/server/db'
+import { createDb } from '$lib/server/db'
 import { auth } from '$lib/server/auth'
 import { fandom } from '$lib/server/db/schema'
 import { schema as createFandomSchema } from '$lib/components/forms/fandom-form'
@@ -13,10 +13,18 @@ slug.charmap['&'] = '-'
 slug.charmap['('] = '-'
 
 export const createNewFandom = form(createFandomSchema, async (data) => {
+  const event = getRequestEvent()
+
   const session = await auth.api.getSession({ headers: getRequestEvent().request.headers })
   if (!session?.user) {
     error(401, 'Unauthorized')
   }
+
+  if (!event.platform?.env) {
+    error(500, 'Platform Not Found!')
+  }
+
+  const db = createDb(event.platform.env)
 
   try {
     const [createdFandom] = await db

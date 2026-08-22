@@ -11,7 +11,7 @@ const client = postgres(DATABASE_URL)
 
 export const db = drizzle(client, { schema, logger: dev })
 
-export function getDb(env: App.Platform['env']) {
+export function createDb(env: App.Platform['env']) {
   const databaseUrl = env.HYPERDRIVE.connectionString
 
   if (!databaseUrl) {
@@ -24,4 +24,4 @@ export function getDb(env: App.Platform['env']) {
   return drizzle(client, { schema, logger: dev })
 }
 
-export type DatabaseType = ReturnType<typeof getDb>
+export type DatabaseType = ReturnType<typeof createDb>

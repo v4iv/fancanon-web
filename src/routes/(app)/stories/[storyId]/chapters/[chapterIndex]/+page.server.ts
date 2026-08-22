@@ -4,7 +4,7 @@ import { and, asc, eq } from 'drizzle-orm'
 import { captureException } from '@sentry/sveltekit'
 
 import { auth } from '$lib/server/auth'
-import { getDb, type DatabaseType } from '$lib/server/db'
+import { createDb, type DatabaseType } from '$lib/server/db'
 import { story, chapter, like, bookmark } from '$lib/server/db/schema'
 
 async function fetchPageData(
@@ -54,7 +54,7 @@ export const load: PageServerLoad = async ({ platform, params, request }) => {
     error(500, 'Platform Not Found!')
   }
 
-  const db = getDb(platform.env)
+  const db = createDb(platform.env)
 
   let storyRow: Awaited<ReturnType<typeof fetchPageData>>[0]
   let chapterRow: Awaited<ReturnType<typeof fetchPageData>>[1]

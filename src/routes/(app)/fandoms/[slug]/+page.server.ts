@@ -2,7 +2,7 @@ import type { PageServerLoad } from './$types'
 import { error } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
 
-import { getDb } from '$lib/server/db'
+import { createDb } from '$lib/server/db'
 import { fandom } from '$lib/server/db/schema'
 
 export const load: PageServerLoad = async ({ platform, params }) => {
@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ platform, params }) => {
     error(500, 'Platform Not Found!')
   }
 
-  const db = getDb(platform.env)
+  const db = createDb(platform.env)
 
   const fandomRow = await db.query.fandom.findFirst({
     where: eq(fandom.slug, slug),
